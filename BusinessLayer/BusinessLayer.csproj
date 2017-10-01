@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="API\Model\" />
+    <Folder Include="API\API\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="7.0.1" />
+    <PackageReference Include="RestSharp" Version="2.1.1.11" />
+  </ItemGroup>
+
+</Project>

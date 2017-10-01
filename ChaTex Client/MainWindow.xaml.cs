@@ -1,4 +1,7 @@
-﻿using System;
+﻿using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +23,7 @@ namespace ChaTex_Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        DefaultApi defaultAPI = new DefaultApi();
         public MainWindow()
         {
             InitializeComponent();
@@ -27,7 +31,17 @@ namespace ChaTex_Client
 
         private void btnSendRequest_Click(object sender, RoutedEventArgs e)
         {
+            var person = new Person();
+            person.Name = "André";
+
+            var message = new Message();
+            message.Id = 1;
+            message.Sender = person;
+            message.Content = "Hemmelig besked..";
+
+            defaultAPI.CreateMessage(message: message);
             MessageBox.Show("A request has been sent! :) ");
+
         }
     }
 }

@@ -24,5 +24,10 @@ namespace ChaTex_Client
         {
             InitializeComponent();
         }
+
+        private void btnSendRequest_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("A request has been sent!");
+        }
     }
 }

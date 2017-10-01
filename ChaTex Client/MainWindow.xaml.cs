@@ -27,7 +27,7 @@ namespace ChaTex_Client
 
         private void btnSendRequest_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("A request has been sent! :)");
+            MessageBox.Show("A request has been sent! :) ");
         }
     }
 }

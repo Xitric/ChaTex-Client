@@ -20,6 +20,13 @@ namespace IO.Swagger.Model {
     public long? Id { get; set; }
 
     /// <summary>
+    /// Gets or Sets CreationTime
+    /// </summary>
+    [DataMember(Name="creationTime", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "creationTime")]
+    public DateTime? CreationTime { get; set; }
+
+    /// <summary>
     /// Gets or Sets Content
     /// </summary>
     [DataMember(Name="content", EmitDefaultValue=false)]
@@ -42,6 +49,7 @@ namespace IO.Swagger.Model {
       var sb = new StringBuilder();
       sb.Append("class Message {\n");
       sb.Append("  Id: ").Append(Id).Append("\n");
+      sb.Append("  CreationTime: ").Append(CreationTime).Append("\n");
       sb.Append("  Content: ").Append(Content).Append("\n");
       sb.Append("  Sender: ").Append(Sender).Append("\n");
       sb.Append("}\n");

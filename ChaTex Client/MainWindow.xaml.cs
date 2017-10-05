@@ -23,7 +23,7 @@ namespace ChaTex_Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        DefaultApi defaultAPI = new DefaultApi();
+        MessagesApi messageApi = new MessagesApi();
         public MainWindow()
         {
             InitializeComponent();
@@ -38,8 +38,10 @@ namespace ChaTex_Client
             message.Id = 1;
             message.Sender = person;
             message.Content = "Hemmelig besked..";
+            message.CreationTime = DateTime.Now;
 
-            defaultAPI.CreateMessage(message: message);
+            //messageApi.ApiMessagesPost(message);
+            var allMessages = messageApi.ApiMessagesGet();
             MessageBox.Show("A request has been sent! :) ");
 
         }

@@ -11,34 +11,34 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class Message {
+  public class GetMessage {
     /// <summary>
     /// Gets or Sets Id
     /// </summary>
-    [DataMember(Name="id", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "id")]
+    [DataMember(Name="Id", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Id")]
     public long? Id { get; set; }
 
     /// <summary>
     /// Gets or Sets CreationTime
     /// </summary>
-    [DataMember(Name="creationTime", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "creationTime")]
+    [DataMember(Name="CreationTime", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "CreationTime")]
     public DateTime? CreationTime { get; set; }
 
     /// <summary>
     /// Gets or Sets Content
     /// </summary>
-    [DataMember(Name="content", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "content")]
+    [DataMember(Name="Content", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Content")]
     public string Content { get; set; }
 
     /// <summary>
     /// Gets or Sets Sender
     /// </summary>
-    [DataMember(Name="sender", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "sender")]
-    public Person Sender { get; set; }
+    [DataMember(Name="Sender", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Sender")]
+    public User Sender { get; set; }
 
 
     /// <summary>
@@ -47,7 +47,7 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class Message {\n");
+      sb.Append("class GetMessage {\n");
       sb.Append("  Id: ").Append(Id).Append("\n");
       sb.Append("  CreationTime: ").Append(CreationTime).Append("\n");
       sb.Append("  Content: ").Append(Content).Append("\n");

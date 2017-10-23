@@ -27,10 +27,14 @@ namespace ChaTex_Client
         public MainWindow()
         {
             InitializeComponent();
+            this.Hide();
+            Window abc = new Login();
+            abc.Show();
         }
 
         private void btnSendRequest_Click(object sender, RoutedEventArgs e)
         {
+
             //var person = new Person();
             //person.Name = "André";
 

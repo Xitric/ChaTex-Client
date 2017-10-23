@@ -31,18 +31,18 @@ namespace ChaTex_Client
 
         private void btnSendRequest_Click(object sender, RoutedEventArgs e)
         {
-            var person = new Person();
-            person.Name = "André";
+            //var person = new Person();
+            //person.Name = "André";
 
-            var message = new Message();
-            message.Id = 1;
-            message.Sender = person;
-            message.Content = "Hemmelig besked..";
-            message.CreationTime = DateTime.Now;
+            //var message = new Message();
+            //message.Id = 1;
+            //message.Sender = person;
+            //message.Content = "Hemmelig besked..";
+            //message.CreationTime = DateTime.Now;
 
-            //messageApi.ApiMessagesPost(message);
-            var allMessages = messageApi.ApiMessagesGet();
-            MessageBox.Show("A request has been sent! :) ");
+            ////messageApi.ApiMessagesPost(message);
+            //var allMessages = messageApi.ApiMessagesGet();
+            //MessageBox.Show("A request has been sent! :) ");
 
         }
     }

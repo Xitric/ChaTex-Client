@@ -88,8 +88,8 @@ namespace IO.Swagger.Client
                 request.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);
 
             // add file parameter, if any
-            foreach(var param in fileParams)
-                request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
+           // foreach(var param in fileParams)
+             //   request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
 
             if (postBody != null) // http body (model) parameter
                 request.AddParameter("application/json", postBody, ParameterType.RequestBody);
@@ -125,13 +125,13 @@ namespace IO.Swagger.Client
         /// <param name="name">Parameter name.</param>
         /// <param name="stream">Input stream.</param>
         /// <returns>FileParameter.</returns>
-        public FileParameter ParameterToFile(string name, Stream stream)
-        {
-            if (stream is FileStream)
-                return FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
-            else
-                return FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
-        }
+       // public FileParameter ParameterToFile(string name, Stream stream)
+        //{
+        //    if (stream is FileStream)
+        //        return FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
+        //    else
+        //        return FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
+        //}
     
         /// <summary>
         /// If parameter is DateTime, output in a formatted string (default ISO 8601), customizable with Configuration.DateTime.

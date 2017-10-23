@@ -25,9 +25,19 @@ namespace ChaTex_Client {
 
         private void SignInBtn_Click(object sender, RoutedEventArgs e) {
             var usersapi = new UsersApi();
-            MessageBox.Show("\"" + EmailText.Text + "\"");
-            String resp = usersapi.Login(EmailText.Text);
-            MessageBox.Show(resp, "RESP OUTPUT", MessageBoxButton.OKCancel);
+            try
+            {
+                String resp = usersapi.Login(EmailText.Text);
+                MessageBox.Show(resp, "RESP OUTPUT", MessageBoxButton.OKCancel);
+                Configuration.ApiKey.Add("Token", resp);
+            }
+            catch (ApiException er)
+            {
+                if (er.ErrorCode == 404)
+                    MessageBox.Show(er.ErrorContent.ToString(), "Error logging in", MessageBoxButton.OK, MessageBoxImage.Error);
+                else
+                    throw er;
+            }
         }
     }
 }

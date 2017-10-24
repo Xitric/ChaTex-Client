@@ -14,11 +14,10 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Get the available groups to a user. Get the available groups to the user with the specified ID.
         /// </summary>
-        /// <param name="userID">ID of the user</param>
         /// <returns>List&lt;Group&gt;</returns>
-        List<Group> GetGroupsForUser (long? userID);
+        List<Group> GetGroupsForUser ();
         /// <summary>
-        /// Login a user Login a user who has specified an e-mail
+        /// Login a user Login the user with the specified e-mail
         /// </summary>
         /// <param name="userEmail">The user&#39;s email</param>
         /// <returns>string</returns>
@@ -81,19 +80,14 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Get the available groups to a user. Get the available groups to the user with the specified ID.
         /// </summary>
-        /// <param name="userID">ID of the user</param> 
         /// <returns>List&lt;Group&gt;</returns>            
-        public List<Group> GetGroupsForUser (long? userID)
+        public List<Group> GetGroupsForUser ()
         {
             
-            // verify the required parameter 'userID' is set
-            if (userID == null) throw new ApiException(400, "Missing required parameter 'userID' when calling GetGroupsForUser");
-            
     
-            var path = "/users/{userID}/groups";
+            var path = "/users/me/groups";
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "userID" + "}", ApiClient.ParameterToString(userID));
-    
+                
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
             var formParams = new Dictionary<String, String>();
@@ -116,7 +110,7 @@ namespace IO.Swagger.Api
         }
     
         /// <summary>
-        /// Login a user Login a user who has specified an e-mail
+        /// Login a user Login the user with the specified e-mail
         /// </summary>
         /// <param name="userEmail">The user&#39;s email</param> 
         /// <returns>string</returns>            

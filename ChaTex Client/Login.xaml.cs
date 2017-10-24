@@ -27,14 +27,14 @@ namespace ChaTex_Client {
             var usersapi = new UsersApi();
             try
             {
-                String resp = usersapi.Login(EmailText.Text);
-                MessageBox.Show(resp, "RESP OUTPUT", MessageBoxButton.OKCancel);
-                Configuration.ApiKey.Add("Token", resp);
+                var token = usersapi.Login(EmailText.Text);
+                MessageBox.Show(token, "RESP OUTPUT", MessageBoxButton.OKCancel);
+                Configuration.ApiKey.Add("token", token);
             }
             catch (ApiException er)
             {
                 if (er.ErrorCode == 404)
-                    MessageBox.Show(er.ErrorContent.ToString(), "Error logging in", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(er.Message, "Error logging in", MessageBoxButton.OK, MessageBoxImage.Error);
                 else
                     throw er;
             }

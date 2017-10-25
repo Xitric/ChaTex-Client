@@ -156,5 +156,14 @@
   <ItemGroup>
     <Resource Include="res\placeholder_profile_photo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pictures\button\emojiIcon.png" />
+    <Resource Include="pictures\button\gifIcon.png" />
+    <Resource Include="pictures\button\paperclipIcon.png" />
+    <Resource Include="pictures\person\person-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ChaTexIcon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

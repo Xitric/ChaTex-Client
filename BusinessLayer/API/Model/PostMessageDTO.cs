@@ -11,27 +11,20 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class Group {
+  public class PostMessageDTO {
     /// <summary>
-    /// Gets or Sets Id
+    /// Gets or Sets Content
     /// </summary>
-    [DataMember(Name="Id", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "Id")]
-    public long? Id { get; set; }
+    [DataMember(Name="Content", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Content")]
+    public string Content { get; set; }
 
     /// <summary>
-    /// Gets or Sets Name
+    /// Gets or Sets Author
     /// </summary>
-    [DataMember(Name="Name", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "Name")]
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Gets or Sets Channels
-    /// </summary>
-    [DataMember(Name="Channels", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "Channels")]
-    public List<Channel> Channels { get; set; }
+    [DataMember(Name="Author", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Author")]
+    public int? Author { get; set; }
 
 
     /// <summary>
@@ -40,10 +33,9 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class Group {\n");
-      sb.Append("  Id: ").Append(Id).Append("\n");
-      sb.Append("  Name: ").Append(Name).Append("\n");
-      sb.Append("  Channels: ").Append(Channels).Append("\n");
+      sb.Append("class PostMessageDTO {\n");
+      sb.Append("  Content: ").Append(Content).Append("\n");
+      sb.Append("  Author: ").Append(Author).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

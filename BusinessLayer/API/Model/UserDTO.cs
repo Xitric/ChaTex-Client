@@ -11,13 +11,13 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class User {
+  public class UserDTO {
     /// <summary>
     /// Gets or Sets Id
     /// </summary>
     [DataMember(Name="Id", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "Id")]
-    public long? Id { get; set; }
+    public int? Id { get; set; }
 
     /// <summary>
     /// Gets or Sets FirstName
@@ -54,7 +54,7 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class User {\n");
+      sb.Append("class UserDTO {\n");
       sb.Append("  Id: ").Append(Id).Append("\n");
       sb.Append("  FirstName: ").Append(FirstName).Append("\n");
       sb.Append("  MiddleInitial: ").Append(MiddleInitial).Append("\n");

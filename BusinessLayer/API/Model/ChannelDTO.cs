@@ -11,20 +11,20 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class PostMessage {
+  public class ChannelDTO {
     /// <summary>
-    /// Gets or Sets Content
+    /// Gets or Sets Id
     /// </summary>
-    [DataMember(Name="Content", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "Content")]
-    public string Content { get; set; }
+    [DataMember(Name="Id", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Id")]
+    public int? Id { get; set; }
 
     /// <summary>
-    /// Gets or Sets Author
+    /// Gets or Sets Name
     /// </summary>
-    [DataMember(Name="Author", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "Author")]
-    public long? Author { get; set; }
+    [DataMember(Name="Name", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Name")]
+    public string Name { get; set; }
 
 
     /// <summary>
@@ -33,9 +33,9 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class PostMessage {\n");
-      sb.Append("  Content: ").Append(Content).Append("\n");
-      sb.Append("  Author: ").Append(Author).Append("\n");
+      sb.Append("class ChannelDTO {\n");
+      sb.Append("  Id: ").Append(Id).Append("\n");
+      sb.Append("  Name: ").Append(Name).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

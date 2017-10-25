@@ -24,7 +24,7 @@ namespace IO.Swagger.Client
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "http://10.126.88.243:51976/1.0.0")
+        public ApiClient(String basePath = "http://chatextest.azurewebsites.net/1.0.0")
         {
             BasePath = basePath;
             RestClient = new RestClient(BasePath);
@@ -80,7 +80,10 @@ namespace IO.Swagger.Client
                 request.AddHeader(param.Key, param.Value);
 
             if (Configuration.ApiKey.ContainsKey("token"))
+            {
+                String str = Configuration.ApiKey["token"];
                 request.AddHeader("token", Configuration.ApiKey["token"]);
+            }
             // add query parameter, if any
             foreach (var param in queryParams)
                 request.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);

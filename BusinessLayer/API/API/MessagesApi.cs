@@ -15,25 +15,25 @@ namespace IO.Swagger.Api
         /// Send a message Send a message to the server
         /// </summary>
         /// <param name="message">The message object</param>
-        /// <returns>GetMessage</returns>
-        GetMessage CreateMessage (PostMessage message);
+        /// <returns></returns>
+        void CreateMessage (PostMessageDTO message);
         /// <summary>
         /// Find message by ID Returns a message with the specified ID
         /// </summary>
         /// <param name="messageID">ID of the message to fetch</param>
-        /// <returns>GetMessage</returns>
-        GetMessage GetMessageByID (long? messageID);
+        /// <returns>GetMessageDTO</returns>
+        GetMessageDTO GetMessageByID (int? messageID);
         /// <summary>
         /// Get all messages Returns all messages in the database
         /// </summary>
-        /// <returns>List&lt;GetMessage&gt;</returns>
-        List<GetMessage> GetMessages ();
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>
+        List<GetMessageDTO> GetMessages ();
         /// <summary>
         /// Wait for and get the next message Blocking call that will wait for the next message to be sent to the server. Once a message arrives, it will be returned.
         /// </summary>
         /// <param name="since"></param>
-        /// <returns>List&lt;GetMessage&gt;</returns>
-        List<GetMessage> WaitMessage (DateTime? since);
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>
+        List<GetMessageDTO> WaitMessage (DateTime? since);
     }
   
     /// <summary>
@@ -93,8 +93,8 @@ namespace IO.Swagger.Api
         /// Send a message Send a message to the server
         /// </summary>
         /// <param name="message">The message object</param> 
-        /// <returns>GetMessage</returns>            
-        public GetMessage CreateMessage (PostMessage message)
+        /// <returns></returns>            
+        public void CreateMessage (PostMessageDTO message)
         {
             
             // verify the required parameter 'message' is set
@@ -123,15 +123,15 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CreateMessage: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (GetMessage) ApiClient.Deserialize(response.Content, typeof(GetMessage), response.Headers);
+            return;
         }
     
         /// <summary>
         /// Find message by ID Returns a message with the specified ID
         /// </summary>
         /// <param name="messageID">ID of the message to fetch</param> 
-        /// <returns>GetMessage</returns>            
-        public GetMessage GetMessageByID (long? messageID)
+        /// <returns>GetMessageDTO</returns>            
+        public GetMessageDTO GetMessageByID (int? messageID)
         {
             
             // verify the required parameter 'messageID' is set
@@ -160,14 +160,14 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetMessageByID: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (GetMessage) ApiClient.Deserialize(response.Content, typeof(GetMessage), response.Headers);
+            return (GetMessageDTO) ApiClient.Deserialize(response.Content, typeof(GetMessageDTO), response.Headers);
         }
     
         /// <summary>
         /// Get all messages Returns all messages in the database
         /// </summary>
-        /// <returns>List&lt;GetMessage&gt;</returns>            
-        public List<GetMessage> GetMessages ()
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
+        public List<GetMessageDTO> GetMessages ()
         {
             
     
@@ -192,15 +192,15 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetMessages: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<GetMessage>) ApiClient.Deserialize(response.Content, typeof(List<GetMessage>), response.Headers);
+            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
         }
     
         /// <summary>
         /// Wait for and get the next message Blocking call that will wait for the next message to be sent to the server. Once a message arrives, it will be returned.
         /// </summary>
         /// <param name="since"></param> 
-        /// <returns>List&lt;GetMessage&gt;</returns>            
-        public List<GetMessage> WaitMessage (DateTime? since)
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
+        public List<GetMessageDTO> WaitMessage (DateTime? since)
         {
             
             // verify the required parameter 'since' is set
@@ -229,7 +229,7 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling WaitMessage: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<GetMessage>) ApiClient.Deserialize(response.Content, typeof(List<GetMessage>), response.Headers);
+            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
         }
     
     }

@@ -24,12 +24,25 @@ namespace ChaTex_Client
     public partial class MainWindow : Window
     {
         MessagesApi messageApi = new MessagesApi();
+        Window Login;
+        Window Overview;
         public MainWindow()
         {
             InitializeComponent();
             this.Hide();
-            Window abc = new Login();
-            abc.Show();
+            PromptLogin();// - c for test
+            //Window ov = new Overview();
+            //ov.Show();
+        }
+        private void PromptLogin() {
+            Login = new Login(this);
+            Login.Show();
+        }
+
+        public void CompletedLogin() {
+            Login.Close();
+            Overview = new Overview();
+            Overview.Show();
         }
 
         private void btnSendRequest_Click(object sender, RoutedEventArgs e)

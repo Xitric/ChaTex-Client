@@ -19,8 +19,11 @@ namespace ChaTex_Client {
     /// Interaction logic for Login.xaml
     /// </summary>
     public partial class Login : Window {
-        public Login() {
+
+        MainWindow parent;
+        public Login(MainWindow parent) {
             InitializeComponent();
+            this.parent = parent;
         }
 
         private void SignInBtn_Click(object sender, RoutedEventArgs e) {
@@ -28,7 +31,6 @@ namespace ChaTex_Client {
             try
             {
                 var token = usersapi.Login(EmailText.Text);
-                MessageBox.Show(token, "RESP OUTPUT", MessageBoxButton.OKCancel);
                 Configuration.ApiKey.Add("token", token);
             }
             catch (ApiException er)
@@ -38,6 +40,8 @@ namespace ChaTex_Client {
                 else
                     throw er;
             }
+
+            parent.CompletedLogin();
         }
     }
 }

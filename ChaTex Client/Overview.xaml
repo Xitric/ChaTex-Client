@@ -19,12 +19,14 @@
             <Image Height="65" Margin="0,0,0,15" Source="res/placeholder_profile_photo.png" />
             <Button Content="Chats" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Margin="10,0" Style="{DynamicResource MaterialDesignFloatingActionButton}"/>
             <Button Content="Groups" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Margin="10,5,10,0" Style="{DynamicResource MaterialDesignFloatingActionButton}"/>
+            <Button x:Name="newGroupBtn"  Content="New&#10;Group" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Margin="10,5,10,0" Style="{DynamicResource MaterialDesignFloatingActionButton}" Click="NewGroupBtn_Click"/>
         </StackPanel>
 
         <TreeView x:Name="TViewGroups" HorizontalAlignment="Left" Margin="90,0,0,0.5" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type BLayer:GroupDTO}" ItemsSource="{Binding Channels}">
                     <StackPanel Orientation="Horizontal">
+                        
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>

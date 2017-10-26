@@ -43,6 +43,76 @@ namespace ChaTex_Client {
             UsersApi usersApi = new UsersApi();       
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
             TViewGroups.ItemsSource = groups;
+
+            AddMessage(new GetMessageDTO
+            {
+                Content = "Test1",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName1",
+                    LastName = "LName1"
+                }
+            });
+
+            AddMessage(new GetMessageDTO
+            {
+                Content = "Test2",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName2",
+                    LastName = "LName2"
+                }
+            });
+
+            AddMessage(new GetMessageDTO
+            {
+                Content = "Test3",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName1",
+                    LastName = "LName1"
+                }
+            });
+        }
+
+        //TODO: TView change listener to clear SP
+
+        void AddMessage(GetMessageDTO message) {
+            DockPanel dockPanel = new DockPanel
+            {
+                Height = Double.NaN,
+                LastChildFill = false,
+                Width = Double.NaN
+            };
+
+            StackPanel stackPanel = new StackPanel();
+            dockPanel.Children.Add(stackPanel);
+
+            TextBlock textAuthor = new TextBlock
+            {
+                Text = message.Sender.FirstName + " " + message.Sender.LastName,
+                FontSize = 10,
+                Foreground = Brushes.DimGray
+            };
+            stackPanel.Children.Add(textAuthor);
+
+            TextBlock textMessage = new TextBlock
+            {
+                Text = message.Content
+            };
+            stackPanel.Children.Add(textMessage);
+
+            //if(message.FromMe)
+            //{
+            //    DockPanel.SetDock(stackPanel, Dock.Right);
+            //    textAuthor.FlowDirection = FlowDirection.RightToLeft;    
+            //}
+
+            SP.Children.Add(dockPanel);
+        }
+
+        void ClearChat() {
+            SP.Children.RemoveRange(0, SP.Children.Count);
         }
 
         private void NewGroupBtn_Click(object sender, RoutedEventArgs e)

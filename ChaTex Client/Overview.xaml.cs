@@ -41,59 +41,13 @@ namespace ChaTex_Client {
             messagesApi = new MessagesApi(); 
             TViewGroups.ItemsSource = groups;
 
-            AddMessage(new GetMessageDTO
-            {
-                Content = "Test1",
-                Sender = new UserDTO
-                {
-                    FirstName = "FName1",
-                    LastName = "LName1"
-                }
-            });
-
-            AddMessage(new GetMessageDTO
-            {
-                Content = "Test2",
-                Sender = new UserDTO
-                {
-                    FirstName = "FName2",
-                    LastName = "LName2"
-                }
-            });
-
-            AddMessage(new GetMessageDTO
-            {
-                Content = "Test3",
-                Sender = new UserDTO
-                {
-                    FirstName = "FName1",
-                    LastName = "LName1"
-                }
-            });
         }
 
         private void PopulateChat() {
             Console.WriteLine("Populating chat");
             ClearChat();
-            List<GetMessageDTO> messages = new List<GetMessageDTO>();//messagesApi.GetMessages(CurrentChannelId);
-            messages.Add(new GetMessageDTO
-            {
-                Content = "Test3",
-                Sender = new UserDTO
-                {
-                    FirstName = "FName1",
-                    LastName = "LName1"
-                }
-            });
-            messages.Add(new GetMessageDTO
-            {
-                Content = "Test2",
-                Sender = new UserDTO
-                {
-                    FirstName = "FName2",
-                    LastName = "LName2"
-                }
-            });
+            List<GetMessageDTO> messages = messagesApi.GetMessages(CurrentChannelId, 0, 25);
+
             foreach (GetMessageDTO message in messages)
             {
                 AddMessage(message);
@@ -136,11 +90,12 @@ namespace ChaTex_Client {
             };
             stackPanel.Children.Add(textMessage);
 
-            //if(message.Sender.Me)
-            //{
-            //    DockPanel.SetDock(stackPanel, Dock.Right);
-            //    textAuthor.FlowDirection = FlowDirection.RightToLeft;    
-            //}
+            if((bool) message.Sender.Me)
+            {
+                Console.WriteLine("AAA");
+                DockPanel.SetDock(stackPanel, Dock.Right);
+                textAuthor.FlowDirection = FlowDirection.RightToLeft;    
+            }
 
             SP.Children.Add(dockPanel);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using RestSharp;
 using IO.Swagger.Client;
+using IO.Swagger.Model;
 
 namespace IO.Swagger.Api
 {
@@ -13,26 +14,21 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Add access rights for roles to a group This will add access rights for a list of roles to a specific group
         /// </summary>
-        /// <param name="groupId">The Id of the group</param>
-        /// <param name="roleIds">The Ids of all the roles</param>
+        /// <param name="addRolesToGroupDTO">A list of roles, and a group</param>
         /// <returns></returns>
-        void AddRolesToGroup (int? groupId, List<int?> roleIds);
+        void AddRolesToGroup (AddRolesToGroupDTO addRolesToGroupDTO);
         /// <summary>
         /// Add users to a group This will add a list of users to a specific group
         /// </summary>
-        /// <param name="groupId">The Id of the group</param>
-        /// <param name="userIds">The Ids of all the users</param>
+        /// <param name="addUsersToGroupDTO">A list of users, and a group</param>
         /// <returns></returns>
-        void AddUsersToGroup (int? groupId, List<int?> userIds);
+        void AddUsersToGroup (AddUsersToGroupDTO addUsersToGroupDTO);
         /// <summary>
         /// Create a new group Creates a new group with the caller as the group administrator
         /// </summary>
-        /// <param name="groupName">The name of the group</param>
-        /// <param name="allowEmployeeSticky">Whether employees are allowed to make sticky messages</param>
-        /// <param name="allowEmployeeAcknowledgeable">Whether employees are allowed to make acknowledgeable messages</param>
-        /// <param name="allowEmployeeBookmark">Whether employees are allowed to make bookmarks</param>
+        /// <param name="createGroupDTO">The object containing group information.</param>
         /// <returns></returns>
-        void CreateGroup (string groupName, bool? allowEmployeeSticky, bool? allowEmployeeAcknowledgeable, bool? allowEmployeeBookmark);
+        void CreateGroup (CreateGroupDTO createGroupDTO);
         /// <summary>
         /// Delete a group Deletes the group with the specified id
         /// </summary>
@@ -119,17 +115,10 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Add access rights for roles to a group This will add access rights for a list of roles to a specific group
         /// </summary>
-        /// <param name="groupId">The Id of the group</param> 
-        /// <param name="roleIds">The Ids of all the roles</param> 
+        /// <param name="addRolesToGroupDTO">A list of roles, and a group</param> 
         /// <returns></returns>            
-        public void AddRolesToGroup (int? groupId, List<int?> roleIds)
+        public void AddRolesToGroup (AddRolesToGroupDTO addRolesToGroupDTO)
         {
-            
-            // verify the required parameter 'groupId' is set
-            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling AddRolesToGroup");
-            
-            // verify the required parameter 'roleIds' is set
-            if (roleIds == null) throw new ApiException(400, "Missing required parameter 'roleIds' when calling AddRolesToGroup");
             
     
             var path = "/groups/roles";
@@ -141,8 +130,7 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (groupId != null) queryParams.Add("groupId", ApiClient.ParameterToString(groupId)); // query parameter
-                                    postBody = ApiClient.Serialize(roleIds); // http body (model) parameter
+                                                postBody = ApiClient.Serialize(addRolesToGroupDTO); // http body (model) parameter
     
             // authentication setting, if any
             String[] authSettings = new String[] {  };
@@ -161,17 +149,10 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Add users to a group This will add a list of users to a specific group
         /// </summary>
-        /// <param name="groupId">The Id of the group</param> 
-        /// <param name="userIds">The Ids of all the users</param> 
+        /// <param name="addUsersToGroupDTO">A list of users, and a group</param> 
         /// <returns></returns>            
-        public void AddUsersToGroup (int? groupId, List<int?> userIds)
+        public void AddUsersToGroup (AddUsersToGroupDTO addUsersToGroupDTO)
         {
-            
-            // verify the required parameter 'groupId' is set
-            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling AddUsersToGroup");
-            
-            // verify the required parameter 'userIds' is set
-            if (userIds == null) throw new ApiException(400, "Missing required parameter 'userIds' when calling AddUsersToGroup");
             
     
             var path = "/groups/users";
@@ -183,8 +164,7 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (groupId != null) queryParams.Add("groupId", ApiClient.ParameterToString(groupId)); // query parameter
-                                    postBody = ApiClient.Serialize(userIds); // http body (model) parameter
+                                                postBody = ApiClient.Serialize(addUsersToGroupDTO); // http body (model) parameter
     
             // authentication setting, if any
             String[] authSettings = new String[] {  };
@@ -203,25 +183,10 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Create a new group Creates a new group with the caller as the group administrator
         /// </summary>
-        /// <param name="groupName">The name of the group</param> 
-        /// <param name="allowEmployeeSticky">Whether employees are allowed to make sticky messages</param> 
-        /// <param name="allowEmployeeAcknowledgeable">Whether employees are allowed to make acknowledgeable messages</param> 
-        /// <param name="allowEmployeeBookmark">Whether employees are allowed to make bookmarks</param> 
+        /// <param name="createGroupDTO">The object containing group information.</param> 
         /// <returns></returns>            
-        public void CreateGroup (string groupName, bool? allowEmployeeSticky, bool? allowEmployeeAcknowledgeable, bool? allowEmployeeBookmark)
+        public void CreateGroup (CreateGroupDTO createGroupDTO)
         {
-            
-            // verify the required parameter 'groupName' is set
-            if (groupName == null) throw new ApiException(400, "Missing required parameter 'groupName' when calling CreateGroup");
-            
-            // verify the required parameter 'allowEmployeeSticky' is set
-            if (allowEmployeeSticky == null) throw new ApiException(400, "Missing required parameter 'allowEmployeeSticky' when calling CreateGroup");
-            
-            // verify the required parameter 'allowEmployeeAcknowledgeable' is set
-            if (allowEmployeeAcknowledgeable == null) throw new ApiException(400, "Missing required parameter 'allowEmployeeAcknowledgeable' when calling CreateGroup");
-            
-            // verify the required parameter 'allowEmployeeBookmark' is set
-            if (allowEmployeeBookmark == null) throw new ApiException(400, "Missing required parameter 'allowEmployeeBookmark' when calling CreateGroup");
             
     
             var path = "/groups";
@@ -233,11 +198,8 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (groupName != null) queryParams.Add("groupName", ApiClient.ParameterToString(groupName)); // query parameter
- if (allowEmployeeSticky != null) queryParams.Add("allowEmployeeSticky", ApiClient.ParameterToString(allowEmployeeSticky)); // query parameter
- if (allowEmployeeAcknowledgeable != null) queryParams.Add("allowEmployeeAcknowledgeable", ApiClient.ParameterToString(allowEmployeeAcknowledgeable)); // query parameter
- if (allowEmployeeBookmark != null) queryParams.Add("allowEmployeeBookmark", ApiClient.ParameterToString(allowEmployeeBookmark)); // query parameter
-                                        
+                                                postBody = ApiClient.Serialize(createGroupDTO); // http body (model) parameter
+    
             // authentication setting, if any
             String[] authSettings = new String[] {  };
     

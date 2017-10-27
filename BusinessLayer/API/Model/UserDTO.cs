@@ -47,6 +47,13 @@ namespace IO.Swagger.Model {
     [JsonProperty(PropertyName = "Email")]
     public string Email { get; set; }
 
+    /// <summary>
+    /// Gets or Sets Me
+    /// </summary>
+    [DataMember(Name="Me", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Me")]
+    public bool? Me { get; set; }
+
 
     /// <summary>
     /// Get the string presentation of the object
@@ -60,6 +67,7 @@ namespace IO.Swagger.Model {
       sb.Append("  MiddleInitial: ").Append(MiddleInitial).Append("\n");
       sb.Append("  LastName: ").Append(LastName).Append("\n");
       sb.Append("  Email: ").Append(Email).Append("\n");
+      sb.Append("  Me: ").Append(Me).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

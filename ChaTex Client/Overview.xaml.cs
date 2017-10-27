@@ -22,11 +22,12 @@ namespace ChaTex_Client {
     /// </summary>
     public partial class Overview : Window {
 
+        private ObservableCollection<GroupDTO> groups;
         int CurrentChannelId;
         MessagesApi messagesApi;
         UsersApi usersApi;
 		MainWindow parent;
-        ObservableCollection<GroupDTO> groups;
+
         public Overview(MainWindow parent) {
 
             InitializeComponent();
@@ -153,6 +154,7 @@ namespace ChaTex_Client {
         {
             parent.beginEditchannel();
         }
+
         private void NewGroupBtn_Click(object sender, RoutedEventArgs e)
         {
 
@@ -166,7 +168,8 @@ namespace ChaTex_Client {
             //groups.Add(newGroup);
 
              CreateNewGroup createNewGroup = new CreateNewGroup();
-            createNewGroup.Show();
+             createNewGroup.Show();
         }
+
     }
 }

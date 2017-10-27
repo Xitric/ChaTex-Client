@@ -19,6 +19,12 @@ namespace IO.Swagger.Api
         /// <returns></returns>
         void CreateMessage (int? channelId, string messageContent);
         /// <summary>
+        /// Delete a message Delete the message with the specified id
+        /// </summary>
+        /// <param name="messageId">The id of the message to delete</param>
+        /// <returns></returns>
+        void DeleteMessage (int? messageId);
+        /// <summary>
         /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
         /// <param name="channelId">The id of the channel to delete</param>
@@ -114,8 +120,8 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (messageContent != null) queryParams.Add("messageContent", ApiClient.ParameterToString(messageContent)); // query parameter
-                                        
+                                                postBody = ApiClient.Serialize(messageContent); // http body (model) parameter
+    
             // authentication setting, if any
             String[] authSettings = new String[] {  };
     
@@ -126,6 +132,43 @@ namespace IO.Swagger.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling CreateMessage: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CreateMessage: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return;
+        }
+    
+        /// <summary>
+        /// Delete a message Delete the message with the specified id
+        /// </summary>
+        /// <param name="messageId">The id of the message to delete</param> 
+        /// <returns></returns>            
+        public void DeleteMessage (int? messageId)
+        {
+            
+            // verify the required parameter 'messageId' is set
+            if (messageId == null) throw new ApiException(400, "Missing required parameter 'messageId' when calling DeleteMessage");
+            
+    
+            var path = "/messages/{messageId}";
+            path = path.Replace("{format}", "json");
+            path = path.Replace("{" + "messageId" + "}", ApiClient.ParameterToString(messageId));
+    
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+    
+                                                    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling DeleteMessage: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling DeleteMessage: " + response.ErrorMessage, response.ErrorMessage);
     
             return;
         }

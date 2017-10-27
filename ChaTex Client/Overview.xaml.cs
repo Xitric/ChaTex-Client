@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace ChaTex_Client {
     /// <summary>
@@ -21,24 +22,22 @@ namespace ChaTex_Client {
     /// </summary>
     public partial class Overview : Window {
 
-        MainWindow parent;
+        int CurrentChannelId;
+        MessagesApi messagesApi;
+        UsersApi usersApi;
+		MainWindow parent;
         public Overview(MainWindow parent) {
+
             InitializeComponent();
             this.parent = parent;
 
-            List<GroupDTO> groups = new List<GroupDTO>();
-            // Dummy data
-            //Group g = new Group();
-            //g.Name = "ABC";
-            //g.Channels = new List<Channel>();
-            //Channel c1 = new Channel();
-            //c1.Name = "TC1";
+            CurrentChannelId = -1;
 
-            //g.Channels.Add(c1);
-            //groups.Add(g);
-            // End of dummy data
+            List<GroupDTO> groups = new List<GroupDTO>();
+           
             UsersApi usersApi = new UsersApi();       
-            groups = usersApi.GetGroupsForUser();
+            groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
+            messagesApi = new MessagesApi(); 
             TViewGroups.ItemsSource = groups;
 
             AddMessage(new GetMessageDTO
@@ -72,7 +71,44 @@ namespace ChaTex_Client {
             });
         }
 
-        //TODO: TView change listener to clear SP
+        private void PopulateChat() {
+            Console.WriteLine("Populating chat");
+            ClearChat();
+            List<GetMessageDTO> messages = new List<GetMessageDTO>();//messagesApi.GetMessages(CurrentChannelId);
+            messages.Add(new GetMessageDTO
+            {
+                Content = "Test3",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName1",
+                    LastName = "LName1"
+                }
+            });
+            messages.Add(new GetMessageDTO
+            {
+                Content = "Test2",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName2",
+                    LastName = "LName2"
+                }
+            });
+            foreach (GetMessageDTO message in messages)
+            {
+                AddMessage(message);
+            }
+        }
+
+        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e) {
+            Console.WriteLine("Selection change!");
+            
+            if (e.NewValue is ChannelDTO channel)
+            {
+                CurrentChannelId = (int)channel.Id;
+                PopulateChat();
+
+            }
+        }
 
         void AddMessage(GetMessageDTO message) {
             DockPanel dockPanel = new DockPanel
@@ -99,7 +135,7 @@ namespace ChaTex_Client {
             };
             stackPanel.Children.Add(textMessage);
 
-            //if(message.FromMe)
+            //if(message.Sender.Me)
             //{
             //    DockPanel.SetDock(stackPanel, Dock.Right);
             //    textAuthor.FlowDirection = FlowDirection.RightToLeft;    
@@ -112,9 +148,28 @@ namespace ChaTex_Client {
             SP.Children.RemoveRange(0, SP.Children.Count);
         }
 
+<<<<<<< HEAD
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
             parent.beginEditchannel();
         }
+=======
+        private void NewGroupBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            //GroupDTO newGroup = new GroupDTO();
+            //newGroup.Id = 112312321;
+            //newGroup.Name = "TestGroup123";
+            //newGroup.Channels = new List<ChannelDTO>();
+            //ChannelDTO c1 = new ChannelDTO();
+            //c1.Name = "Channel 123";
+            //newGroup.Channels.Add(c1);
+            //groups.Add(newGroup);
+
+              CreateNewGroup = new CreateNewGroup();
+             CreateNewGroup.Show();
+        }
+
+>>>>>>> 6ee19b88f756218d0aeff8b95548798b2c1453ba
     }
 }

@@ -36,6 +36,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- main menu -->
+
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="5">
             <Grid Height="454" Margin="0,0,0.333,0">
                 <Grid.RowDefinitions>
@@ -50,19 +51,23 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Height="65" Grid.Row="0"   Source="pictures/person/person-icon.png"  />
+                
+				<Image Height="65" Grid.Row="0"   Source="pictures/person/person-icon.png"  />
 
                 <Button Content="Chats"  Grid.Row="1" d:LayoutOverrides="Height" BorderBrush="{x:Null}"  BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864"/>
                 <Button Content="Group" Grid.Row="2" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864"/>
+				<Button x:Name="newGroupBtn"  grid.row="3" Content="New&#10;Group" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Style="{DynamicResource MaterialDesignFloatingActionButton}" Click="NewGroupBtn_Click"/>
 
             </Grid>
         </StackPanel>
 
-        <!-- group, channel and chat view-->
-        <TreeView Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" x:Name="TViewGroups" HorizontalAlignment="Left" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864">
+
+        <!-- group, channel and chat view  -->
+        <TreeView SelectedItemChanged="ChannelSelectionChanged" x:Name="TViewGroups" HorizontalAlignment="Left" Margin="90,0,0,0.5" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type BLayer:GroupDTO}"   ItemsSource="{Binding Channels}">
                     <StackPanel Orientation="Horizontal">
+                        
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>

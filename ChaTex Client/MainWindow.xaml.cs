@@ -31,9 +31,10 @@ namespace ChaTex_Client
         {
             InitializeComponent();
             this.Hide();
-            PromptLogin();// - c for test
-            //Window ov = new overview();
-            //ov.Show();
+
+            //PromptLogin();// - c for test
+            Window ov = new CreateNewGroup();
+            ov.Show();
         }
         private void PromptLogin() {
             Login = new Login(this);

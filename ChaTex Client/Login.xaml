@@ -9,7 +9,9 @@
         Title="Login" Height="132.911" Width="300">
     <Grid >
         <Label Foreground="#FF002864" FontWeight="Bold"  Content="E-mail:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="EmailText" HorizontalAlignment="Left" Height="23" Margin="58,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227"/>
+        <!--textbox for email-->
+        <TextBox x:Name="EmailText" HorizontalAlignment="Left" Height="23" Margin="58,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227" BorderBrush="#FF002864" />
+        <!--sign in button-->
         <Button x:Name="SignInBtn" Content="Sign In" HorizontalAlignment="Left" Margin="100,54,0,0" VerticalAlignment="Top" Width="80" Click="SignInBtn_Click" BorderBrush="#FF002864" Background=" #FF002864"/>
     </Grid>
 </Window>

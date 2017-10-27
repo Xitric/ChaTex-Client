@@ -26,12 +26,13 @@ namespace ChaTex_Client
         MessagesApi messageApi = new MessagesApi();
         Window Login;
         Window Overview;
+        Window EditChannel;
         public MainWindow()
         {
             InitializeComponent();
             this.Hide();
             PromptLogin();// - c for test
-            //Window ov = new Overview();
+            //Window ov = new overview();
             //ov.Show();
         }
         private void PromptLogin() {
@@ -41,10 +42,15 @@ namespace ChaTex_Client
 
         public void CompletedLogin() {
             Login.Close();
-            Overview = new Overview();
+            Overview = new Overview(this);
             Overview.Show();
         }
 
+        public void beginEditchannel(){
+            EditChannel = new EditChannel();
+            EditChannel.Show();
+        }
+        
         private void btnSendRequest_Click(object sender, RoutedEventArgs e)
         {
 

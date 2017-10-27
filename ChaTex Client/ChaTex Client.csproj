@@ -81,6 +81,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EditChannel.xaml.cs">
+      <DependentUpon>EditChannel.xaml</DependentUpon>
+    </Compile>
+    <Page Include="EditChannel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -154,16 +161,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="res\placeholder_profile_photo.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="ChaTexIcon.ico" />
     <Resource Include="pictures\button\emojiIcon.png" />
     <Resource Include="pictures\button\gifIcon.png" />
-    <Resource Include="pictures\button\paperclipIcon.png" />
     <Resource Include="pictures\person\person-icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ChaTexIcon.ico" />
+    <Resource Include="pictures\button\settingsIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pictures\button\fileicon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

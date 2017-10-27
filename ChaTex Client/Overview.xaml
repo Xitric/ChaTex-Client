@@ -19,22 +19,54 @@
     <!-- main background -->
     <Grid>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".7*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height=".7*" />
+            <RowDefinition Height=".2*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.8*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width=".4*" />
+            <ColumnDefinition Width=".1*" />
+        </Grid.ColumnDefinitions>
+
         <!-- main menu -->
-        <StackPanel HorizontalAlignment="Left" Margin="10,10,0,9.5" Width="80">
-            <Image Height="65" Margin="0,0,0,15"  Source="pictures/person/person-icon.png"  />
-            <Button Content="Chats" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Margin="10,0" Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864"/>
-            <Button Content="Group" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Margin="10,5,10,0" Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864"/>
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="5">
+            <Grid Height="454" Margin="0,0,0.333,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Height="65" Grid.Row="0"   Source="pictures/person/person-icon.png"  />
+
+                <Button Content="Chats"  Grid.Row="1" d:LayoutOverrides="Height" BorderBrush="{x:Null}"  BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864"/>
+                <Button Content="Group" Grid.Row="2" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864"/>
+
+            </Grid>
         </StackPanel>
 
-        <!-- group, channel and chat view  -->
-        <TreeView x:Name="TViewGroups" HorizontalAlignment="Left" Margin="90,0,0,0.5" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864">
+        <!-- group, channel and chat view-->
+        <TreeView Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" x:Name="TViewGroups" HorizontalAlignment="Left" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864">
             <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type BLayer:GroupDTO}" ItemsSource="{Binding Channels}">
+                <HierarchicalDataTemplate DataType="{x:Type BLayer:GroupDTO}"   ItemsSource="{Binding Channels}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type BLayer:ChannelDTO}">
+                <DataTemplate  DataType="{x:Type BLayer:ChannelDTO}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
@@ -43,7 +75,7 @@
         </TreeView>
 
         <!-- message display -->
-        <ScrollViewer Margin="239,51,10.333,87.333" >
+        <ScrollViewer Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2" >
             <StackPanel x:Name="SP" Background="White"  >
                 <DockPanel Height="Auto" LastChildFill="False" Width="Auto">
                     <TextBlock Text="Hej Lars! Du er seeeeej" Background="#FFE4E4E4" />
@@ -56,18 +88,17 @@
                 </DockPanel>
             </StackPanel>
         </ScrollViewer>
-        <DockPanel Margin="239,0,10.5,18.5" Height="32" VerticalAlignment="Bottom" LastChildFill="False">
 
+        <!-- write message textbox -->
+        <DockPanel  Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="3" Height="50" VerticalAlignment="Bottom" LastChildFill="False">
 
-
-            <!-- write message textbox -->
-            <Grid Width="290">
+            <Grid Width="253">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="230*"/>
                     <ColumnDefinition Width="23*"/>
                 </Grid.ColumnDefinitions>
-                <TextBox HorizontalContentAlignment="Stretch" Height="Auto" x:Name="MessageField" TextWrapping="Wrap" Width="Auto" Grid.ColumnSpan="2"/>
-                <TextBlock IsHitTestVisible="False" Text="Type something here..." VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,8,0,7" Foreground="DarkGray" Height="17" Width="144">
+                <TextBox HorizontalContentAlignment="Stretch" Height="Auto" x:Name="MessageField" TextWrapping="Wrap" Width="Auto" BorderBrush="#FF002864"/>
+                <TextBlock IsHitTestVisible="False" Text="Type something here..." VerticalAlignment="Center" HorizontalAlignment="Left"  Foreground="DarkGray" Height="17" Width="144">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -81,19 +112,38 @@
                 </TextBlock>
             </Grid>
 
-            <!-- send button -->
 
-            <Button Content="Send" Height="Auto" Width="64" Background="#FF002864" BorderBrush="#FF002864" DockPanel.Dock="Right"/>
+
+            <Grid Width="122">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1.2*"/>
+                </Grid.ColumnDefinitions>
+            
+
 
             <!-- ad file button-->
-            <Button Height="Auto" Width="53" Margin="0,0,0,0" Background="Transparent" BorderBrush="Transparent">
-                <StackPanel Width="23" >
-                    <Image Source="pictures/button/paperclipIcon.png" Height="29" Margin="-12,0,-5.333,0"  />
-                </StackPanel>
-            </Button>
+                <Button Height="30" Grid.Column="0"  VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent"/>
 
 
+                <!-- send button -->
+                <Button Content="Send" Grid.Column="1" HorizontalAlignment="Right"  VerticalAlignment="Stretch" Background="#FF002864" BorderBrush="#FF002864" />
 
+                
+            </Grid>
         </DockPanel>
+
+       
+
+        <!--lable for chat or channel name-->
+        <Label Name="MessageName" Grid.Column="2" Grid.ColumnSpan="2"  HorizontalAlignment="Center"  VerticalAlignment="Center"/>
+
+        <!--channel edit button-->
+
+        <Button Name="editButton" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center"  VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent" Click="editButton_Click">
+            <StackPanel Width="23" >
+                <Image Source="pictures/button/settingsIcon.png" Height="19" />
+            </StackPanel>
+        </Button>
     </Grid>
 </Window>

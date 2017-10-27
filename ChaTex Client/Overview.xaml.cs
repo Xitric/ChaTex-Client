@@ -21,8 +21,10 @@ namespace ChaTex_Client {
     /// </summary>
     public partial class Overview : Window {
 
-        public Overview() {
+        MainWindow parent;
+        public Overview(MainWindow parent) {
             InitializeComponent();
+            this.parent = parent;
 
             List<GroupDTO> groups = new List<GroupDTO>();
             // Dummy data
@@ -108,6 +110,11 @@ namespace ChaTex_Client {
 
         void ClearChat() {
             SP.Children.RemoveRange(0, SP.Children.Count);
+        }
+
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            parent.beginEditchannel();
         }
     }
 }

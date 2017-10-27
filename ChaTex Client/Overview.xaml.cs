@@ -27,12 +27,14 @@ namespace ChaTex_Client {
         MessagesApi messagesApi;
         UsersApi usersApi;
 		MainWindow parent;
+
         public Overview(MainWindow parent) {
 
             InitializeComponent();
             this.parent = parent;
 
             CurrentChannelId = -1;
+
            
             UsersApi usersApi = new UsersApi();       
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
@@ -168,6 +170,6 @@ namespace ChaTex_Client {
              CreateNewGroup createNewGroup = new CreateNewGroup();
              createNewGroup.Show();
         }
-        
+
     }
 }

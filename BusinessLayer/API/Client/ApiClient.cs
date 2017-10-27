@@ -79,11 +79,11 @@ namespace IO.Swagger.Client
             foreach (var param in headerParams)
                 request.AddHeader(param.Key, param.Value);
 
-            //if (Configuration.ApiKey.ContainsKey("token"))
-            //{
-            //    String str = Configuration.ApiKey["token"];
-                request.AddHeader("token", "ZyEU4788No3dBd8/Z1W4SbeT8e5wpvMZ"); // 
-            //}
+            if (Configuration.ApiKey.ContainsKey("token"))
+            {
+                String str = Configuration.ApiKey["token"];
+                request.AddHeader("token", Configuration.ApiKey["token"]);
+            }
             // add query parameter, if any
             foreach (var param in queryParams)
                 request.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);

@@ -14,20 +14,25 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Create a new message Create a new message in a specific channel
         /// </summary>
-        /// <param name="groupId">The id of the group the messeage will be posted in</param>
-        /// <param name="channelId">The id of the channel to delete</param>
-        /// <param name="messageContentDTO">A DTO containing the message content</param>
+        /// <param name="channelId">The id of the channel to post the message to</param>
+        /// <param name="messageContent">Content of the message</param>
         /// <returns></returns>
-        void CreateMessage (int? groupId, int? channelId, MessageContentDTO messageContentDTO);
+        void CreateMessage (int? channelId, string messageContent);
         /// <summary>
         /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
-        /// <param name="groupId">The id of the group to delete the channel from</param>
         /// <param name="channelId">The id of the channel to delete</param>
         /// <param name="fromIndex">The index of the first message to get, beginning from the most recently posted message. This defaults to 0, meaning the most recent message</param>
         /// <param name="count">The amount of messages to get. This defaults to 25</param>
-        /// <returns>GetMessageDTO</returns>
-        GetMessageDTO GetMessages (int? groupId, int? channelId, int? fromIndex, int? count);
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>
+        List<GetMessageDTO> GetMessages (int? channelId, int? fromIndex, int? count);
+        /// <summary>
+        /// Wait for and get new messages sent to a channel This request will not return from the service until at least one new message has been posted
+        /// </summary>
+        /// <param name="channelId">The id of the channel to delete</param>
+        /// <param name="since">The time to get messages since. This defaults to the current time</param>
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>
+        List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since);
     }
   
     /// <summary>
@@ -86,24 +91,22 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Create a new message Create a new message in a specific channel
         /// </summary>
-        /// <param name="groupId">The id of the group the messeage will be posted in</param> 
-        /// <param name="channelId">The id of the channel to delete</param> 
-        /// <param name="messageContentDTO">A DTO containing the message content</param> 
+        /// <param name="channelId">The id of the channel to post the message to</param> 
+        /// <param name="messageContent">Content of the message</param> 
         /// <returns></returns>            
-        public void CreateMessage (int? groupId, int? channelId, MessageContentDTO messageContentDTO)
+        public void CreateMessage (int? channelId, string messageContent)
         {
-            
-            // verify the required parameter 'groupId' is set
-            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling CreateMessage");
             
             // verify the required parameter 'channelId' is set
             if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling CreateMessage");
             
+            // verify the required parameter 'messageContent' is set
+            if (messageContent == null) throw new ApiException(400, "Missing required parameter 'messageContent' when calling CreateMessage");
+            
     
-            var path = "/groups/{groupId}/channels/{channelId}/messages";
+            var path = "/channels/{channelId}/messages";
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "groupId" + "}", ApiClient.ParameterToString(groupId));
-path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
     
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
@@ -111,8 +114,8 @@ path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channel
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-                                                postBody = ApiClient.Serialize(messageContentDTO); // http body (model) parameter
-    
+             if (messageContent != null) queryParams.Add("messageContent", ApiClient.ParameterToString(messageContent)); // query parameter
+                                        
             // authentication setting, if any
             String[] authSettings = new String[] {  };
     
@@ -130,25 +133,20 @@ path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channel
         /// <summary>
         /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
-        /// <param name="groupId">The id of the group to delete the channel from</param> 
         /// <param name="channelId">The id of the channel to delete</param> 
         /// <param name="fromIndex">The index of the first message to get, beginning from the most recently posted message. This defaults to 0, meaning the most recent message</param> 
         /// <param name="count">The amount of messages to get. This defaults to 25</param> 
-        /// <returns>GetMessageDTO</returns>            
-        public GetMessageDTO GetMessages (int? groupId, int? channelId, int? fromIndex, int? count)
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
+        public List<GetMessageDTO> GetMessages (int? channelId, int? fromIndex, int? count)
         {
-            
-            // verify the required parameter 'groupId' is set
-            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling GetMessages");
             
             // verify the required parameter 'channelId' is set
             if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling GetMessages");
             
     
-            var path = "/groups/{groupId}/channels/{channelId}/messages";
+            var path = "/channels/{channelId}/messages";
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "groupId" + "}", ApiClient.ParameterToString(groupId));
-path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
     
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
@@ -170,7 +168,46 @@ path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channel
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetMessages: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (GetMessageDTO) ApiClient.Deserialize(response.Content, typeof(GetMessageDTO), response.Headers);
+            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
+        }
+    
+        /// <summary>
+        /// Wait for and get new messages sent to a channel This request will not return from the service until at least one new message has been posted
+        /// </summary>
+        /// <param name="channelId">The id of the channel to delete</param> 
+        /// <param name="since">The time to get messages since. This defaults to the current time</param> 
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
+        public List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since)
+        {
+            
+            // verify the required parameter 'channelId' is set
+            if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling GetMessagesSince");
+            
+    
+            var path = "/channels/{channelId}/messages/live";
+            path = path.Replace("{format}", "json");
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
+    
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+    
+             if (since != null) queryParams.Add("since", ApiClient.ParameterToString(since)); // query parameter
+                                        
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling GetMessagesSince: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling GetMessagesSince: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
         }
     
     }

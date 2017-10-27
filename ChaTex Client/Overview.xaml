@@ -63,7 +63,7 @@
 
 
         <!-- group, channel and chat view  -->
-        <TreeView SelectedItemChanged="ChannelSelectionChanged" x:Name="TViewGroups" HorizontalAlignment="Left" Margin="90,0,0,0.5" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864">
+        <TreeView Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" SelectedItemChanged="ChannelSelectionChanged" x:Name="TViewGroups" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type BLayer:GroupDTO}"   ItemsSource="{Binding Channels}">
                     <StackPanel Orientation="Horizontal">

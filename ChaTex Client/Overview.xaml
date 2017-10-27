@@ -81,7 +81,12 @@
 
         <!-- message display -->
         <ScrollViewer Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2" >
-            <StackPanel x:Name="SP" Background="White"  >
+            <StackPanel x:Name="SP" Background="White" >
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type DockPanel}">
+                        <Setter Property="Margin" Value="0,0,0,10"/>
+                    </Style>
+                </StackPanel.Resources>
                 <DockPanel Height="Auto" LastChildFill="False" Width="Auto">
                     <TextBlock Text="Hej Lars! Du er seeeeej" Background="#FFE4E4E4" />
                 </DockPanel>
@@ -132,7 +137,7 @@
 
 
                 <!-- send button -->
-                <Button Content="Send" Grid.Column="1" HorizontalAlignment="Right"  VerticalAlignment="Stretch" Background="#FF002864" BorderBrush="#FF002864" />
+                <Button Content="Send" Grid.Column="1" HorizontalAlignment="Right"  VerticalAlignment="Stretch" Background="#FF002864" BorderBrush="#FF002864" Click="sendButton_Click"/>
 
                 
             </Grid>

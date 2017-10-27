@@ -27,7 +27,7 @@
         </StackPanel>
 
         <!-- group, channel and chat view  -->
-        <TreeView x:Name="TViewGroups" HorizontalAlignment="Left" Margin="90,0,0,0.5" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864">
+        <TreeView SelectedItemChanged="ChannelSelectionChanged" x:Name="TViewGroups" HorizontalAlignment="Left" Margin="90,0,0,0.5" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type BLayer:GroupDTO}" ItemsSource="{Binding Channels}">
                     <StackPanel Orientation="Horizontal">

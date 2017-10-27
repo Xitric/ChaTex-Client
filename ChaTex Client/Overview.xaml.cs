@@ -20,22 +20,18 @@ namespace ChaTex_Client {
     /// Interaction logic for Overview.xaml
     /// </summary>
     public partial class Overview : Window {
-
+        int CurrentChannelId;
+        MessagesApi messagesApi;
+        UsersApi usersApi;
         public Overview() {
             InitializeComponent();
 
-            List<GroupDTO> groups = new List<GroupDTO>();
-            // Dummy data
-            //Group g = new Group();
-            //g.Name = "ABC";
-            //g.Channels = new List<Channel>();
-            //Channel c1 = new Channel();
-            //c1.Name = "TC1";
+            CurrentChannelId = -1;
 
-            //g.Channels.Add(c1);
-            //groups.Add(g);
-            // End of dummy data
-            UsersApi usersApi = new UsersApi();       
+            List<GroupDTO> groups = new List<GroupDTO>();
+           
+            usersApi = new UsersApi();
+            messagesApi = new MessagesApi(); 
             groups = usersApi.GetGroupsForUser();
             TViewGroups.ItemsSource = groups;
 
@@ -70,7 +66,44 @@ namespace ChaTex_Client {
             });
         }
 
-        //TODO: TView change listener to clear SP
+        private void PopulateChat() {
+            Console.WriteLine("Populating chat");
+            ClearChat();
+            List<GetMessageDTO> messages = new List<GetMessageDTO>();//messagesApi.GetMessages(CurrentChannelId);
+            messages.Add(new GetMessageDTO
+            {
+                Content = "Test3",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName1",
+                    LastName = "LName1"
+                }
+            });
+            messages.Add(new GetMessageDTO
+            {
+                Content = "Test2",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName2",
+                    LastName = "LName2"
+                }
+            });
+            foreach (GetMessageDTO message in messages)
+            {
+                AddMessage(message);
+            }
+        }
+
+        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e) {
+            Console.WriteLine("Selection change!");
+            
+            if (e.NewValue is ChannelDTO channel)
+            {
+                CurrentChannelId = (int)channel.Id;
+                PopulateChat();
+
+            }
+        }
 
         void AddMessage(GetMessageDTO message) {
             DockPanel dockPanel = new DockPanel
@@ -97,7 +130,7 @@ namespace ChaTex_Client {
             };
             stackPanel.Children.Add(textMessage);
 
-            //if(message.FromMe)
+            //if(message.Sender.Me)
             //{
             //    DockPanel.SetDock(stackPanel, Dock.Right);
             //    textAuthor.FlowDirection = FlowDirection.RightToLeft;    

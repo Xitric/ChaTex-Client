@@ -22,6 +22,7 @@ namespace ChaTex_Client {
     /// </summary>
     public partial class Overview : Window {
 
+        private ObservableCollection<GroupDTO> groups;
         int CurrentChannelId;
         MessagesApi messagesApi;
         UsersApi usersApi;
@@ -32,8 +33,6 @@ namespace ChaTex_Client {
             this.parent = parent;
 
             CurrentChannelId = -1;
-
-            List<GroupDTO> groups = new List<GroupDTO>();
            
             UsersApi usersApi = new UsersApi();       
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
@@ -148,12 +147,12 @@ namespace ChaTex_Client {
             SP.Children.RemoveRange(0, SP.Children.Count);
         }
 
-<<<<<<< HEAD
+
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
             parent.beginEditchannel();
         }
-=======
+
         private void NewGroupBtn_Click(object sender, RoutedEventArgs e)
         {
 
@@ -166,10 +165,9 @@ namespace ChaTex_Client {
             //newGroup.Channels.Add(c1);
             //groups.Add(newGroup);
 
-              CreateNewGroup = new CreateNewGroup();
-             CreateNewGroup.Show();
+             CreateNewGroup createNewGroup = new CreateNewGroup();
+             createNewGroup.Show();
         }
-
->>>>>>> 6ee19b88f756218d0aeff8b95548798b2c1453ba
+        
     }
 }

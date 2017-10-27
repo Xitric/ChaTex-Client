@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using RestSharp;
 using IO.Swagger.Client;
+using IO.Swagger.Model;
 
 namespace IO.Swagger.Api
 {
@@ -14,9 +15,9 @@ namespace IO.Swagger.Api
         /// Create a channel in a group Creates a new channel in the specified group
         /// </summary>
         /// <param name="groupId">The id of the group to make the channel in</param>
-        /// <param name="name">The name of the new channel</param>
+        /// <param name="createChannelDTO">A DTO containing groupId and a group name</param>
         /// <returns></returns>
-        void CreateChannel (int? groupId, string name);
+        void CreateChannel (int? groupId, CreateChannelDTO createChannelDTO);
         /// <summary>
         /// Delete a channel from a group Deletes the channel from the specified group
         /// </summary>
@@ -91,16 +92,13 @@ namespace IO.Swagger.Api
         /// Create a channel in a group Creates a new channel in the specified group
         /// </summary>
         /// <param name="groupId">The id of the group to make the channel in</param> 
-        /// <param name="name">The name of the new channel</param> 
+        /// <param name="createChannelDTO">A DTO containing groupId and a group name</param> 
         /// <returns></returns>            
-        public void CreateChannel (int? groupId, string name)
+        public void CreateChannel (int? groupId, CreateChannelDTO createChannelDTO)
         {
             
             // verify the required parameter 'groupId' is set
             if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling CreateChannel");
-            
-            // verify the required parameter 'name' is set
-            if (name == null) throw new ApiException(400, "Missing required parameter 'name' when calling CreateChannel");
             
     
             var path = "/groups/{groupId}/channels";
@@ -113,8 +111,8 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (name != null) queryParams.Add("name", ApiClient.ParameterToString(name)); // query parameter
-                                        
+                                                postBody = ApiClient.Serialize(createChannelDTO); // http body (model) parameter
+    
             // authentication setting, if any
             String[] authSettings = new String[] {  };
     

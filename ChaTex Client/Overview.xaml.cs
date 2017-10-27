@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace ChaTex_Client {
     /// <summary>
@@ -30,9 +31,9 @@ namespace ChaTex_Client {
 
             List<GroupDTO> groups = new List<GroupDTO>();
            
-            usersApi = new UsersApi();
+            UsersApi usersApi = new UsersApi();       
+            groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
             messagesApi = new MessagesApi(); 
-            groups = usersApi.GetGroupsForUser();
             TViewGroups.ItemsSource = groups;
 
             AddMessage(new GetMessageDTO
@@ -142,5 +143,22 @@ namespace ChaTex_Client {
         void ClearChat() {
             SP.Children.RemoveRange(0, SP.Children.Count);
         }
+
+        private void NewGroupBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            //GroupDTO newGroup = new GroupDTO();
+            //newGroup.Id = 112312321;
+            //newGroup.Name = "TestGroup123";
+            //newGroup.Channels = new List<ChannelDTO>();
+            //ChannelDTO c1 = new ChannelDTO();
+            //c1.Name = "Channel 123";
+            //newGroup.Channels.Add(c1);
+            //groups.Add(newGroup);
+
+              CreateNewGroup = new CreateNewGroup();
+             CreateNewGroup.Show();
+        }
+
     }
 }

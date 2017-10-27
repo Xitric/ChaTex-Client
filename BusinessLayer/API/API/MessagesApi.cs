@@ -12,28 +12,14 @@ namespace IO.Swagger.Api
     public interface IMessagesApi
     {
         /// <summary>
-        /// Send a message Send a message to the server
+        /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
-        /// <param name="message">The message object</param>
-        /// <returns></returns>
-        void CreateMessage (PostMessageDTO message);
-        /// <summary>
-        /// Find message by ID Returns a message with the specified ID
-        /// </summary>
-        /// <param name="messageID">ID of the message to fetch</param>
+        /// <param name="groupId">The id of the group to delete the channel from</param>
+        /// <param name="channelId">The id of the channel to delete</param>
+        /// <param name="fromIndex">The index of the first message to get, beginning from the most recently posted message. This defaults to 0, meaning the most recent message</param>
+        /// <param name="count">The amount of messages to get. This defaults to 25</param>
         /// <returns>GetMessageDTO</returns>
-        GetMessageDTO GetMessageByID (int? messageID);
-        /// <summary>
-        /// Get all messages Returns all messages in the database
-        /// </summary>
-        /// <returns>List&lt;GetMessageDTO&gt;</returns>
-        List<GetMessageDTO> GetMessages ();
-        /// <summary>
-        /// Wait for and get the next message Blocking call that will wait for the next message to be sent to the server. Once a message arrives, it will be returned.
-        /// </summary>
-        /// <param name="since"></param>
-        /// <returns>List&lt;GetMessageDTO&gt;</returns>
-        List<GetMessageDTO> WaitMessage (DateTime? since);
+        GetMessageDTO GetMessages (int? groupId, int? channelId, int? fromIndex, int? count);
     }
   
     /// <summary>
@@ -90,57 +76,27 @@ namespace IO.Swagger.Api
         public ApiClient ApiClient {get; set;}
     
         /// <summary>
-        /// Send a message Send a message to the server
+        /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
-        /// <param name="message">The message object</param> 
-        /// <returns></returns>            
-        public void CreateMessage (PostMessageDTO message)
-        {
-            
-            // verify the required parameter 'message' is set
-            if (message == null) throw new ApiException(400, "Missing required parameter 'message' when calling CreateMessage");
-            
-    
-            var path = "/messages";
-            path = path.Replace("{format}", "json");
-                
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-    
-                                                postBody = ApiClient.Serialize(message); // http body (model) parameter
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CreateMessage: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling CreateMessage: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return;
-        }
-    
-        /// <summary>
-        /// Find message by ID Returns a message with the specified ID
-        /// </summary>
-        /// <param name="messageID">ID of the message to fetch</param> 
+        /// <param name="groupId">The id of the group to delete the channel from</param> 
+        /// <param name="channelId">The id of the channel to delete</param> 
+        /// <param name="fromIndex">The index of the first message to get, beginning from the most recently posted message. This defaults to 0, meaning the most recent message</param> 
+        /// <param name="count">The amount of messages to get. This defaults to 25</param> 
         /// <returns>GetMessageDTO</returns>            
-        public GetMessageDTO GetMessageByID (int? messageID)
+        public GetMessageDTO GetMessages (int? groupId, int? channelId, int? fromIndex, int? count)
         {
             
-            // verify the required parameter 'messageID' is set
-            if (messageID == null) throw new ApiException(400, "Missing required parameter 'messageID' when calling GetMessageByID");
+            // verify the required parameter 'groupId' is set
+            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling GetMessages");
+            
+            // verify the required parameter 'channelId' is set
+            if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling GetMessages");
             
     
-            var path = "/messages/{messageID}";
+            var path = "/groups/{groupId}/channels/{channelId}/messages";
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "messageID" + "}", ApiClient.ParameterToString(messageID));
+            path = path.Replace("{" + "groupId" + "}", ApiClient.ParameterToString(groupId));
+path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
     
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
@@ -148,39 +104,9 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-                                                    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling GetMessageByID: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling GetMessageByID: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (GetMessageDTO) ApiClient.Deserialize(response.Content, typeof(GetMessageDTO), response.Headers);
-        }
-    
-        /// <summary>
-        /// Get all messages Returns all messages in the database
-        /// </summary>
-        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
-        public List<GetMessageDTO> GetMessages ()
-        {
-            
-    
-            var path = "/messages";
-            path = path.Replace("{format}", "json");
-                
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-    
-                                                    
+             if (fromIndex != null) queryParams.Add("fromIndex", ApiClient.ParameterToString(fromIndex)); // query parameter
+ if (count != null) queryParams.Add("count", ApiClient.ParameterToString(count)); // query parameter
+                                        
             // authentication setting, if any
             String[] authSettings = new String[] {  };
     
@@ -192,44 +118,7 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetMessages: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
-        }
-    
-        /// <summary>
-        /// Wait for and get the next message Blocking call that will wait for the next message to be sent to the server. Once a message arrives, it will be returned.
-        /// </summary>
-        /// <param name="since"></param> 
-        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
-        public List<GetMessageDTO> WaitMessage (DateTime? since)
-        {
-            
-            // verify the required parameter 'since' is set
-            if (since == null) throw new ApiException(400, "Missing required parameter 'since' when calling WaitMessage");
-            
-    
-            var path = "/messages/wait";
-            path = path.Replace("{format}", "json");
-                
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-    
-             if (since != null) queryParams.Add("since", ApiClient.ParameterToString(since)); // query parameter
-                                        
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling WaitMessage: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling WaitMessage: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
+            return (GetMessageDTO) ApiClient.Deserialize(response.Content, typeof(GetMessageDTO), response.Headers);
         }
     
     }

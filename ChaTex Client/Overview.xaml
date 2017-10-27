@@ -21,9 +21,12 @@
 
         <!-- main menu -->
         <StackPanel HorizontalAlignment="Left" Margin="10,10,0,9.5" Width="80">
+    
+           
             <Image Height="65" Margin="0,0,0,15"  Source="pictures/person/person-icon.png"  />
             <Button Content="Chats" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Margin="10,0" Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864"/>
             <Button Content="Group" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Margin="10,5,10,0" Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864"/>
+            <Button x:Name="newGroupBtn"  Content="New&#10;Group" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Margin="10,5,10,0" Style="{DynamicResource MaterialDesignFloatingActionButton}" Click="NewGroupBtn_Click"/>
         </StackPanel>
 
         <!-- group, channel and chat view  -->
@@ -31,6 +34,7 @@
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type BLayer:GroupDTO}" ItemsSource="{Binding Channels}">
                     <StackPanel Orientation="Horizontal">
+                        
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>

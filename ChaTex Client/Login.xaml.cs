@@ -22,6 +22,7 @@ namespace ChaTex_Client {
         
         public Login() {
             InitializeComponent();
+            txtEmail.Text = Properties.Settings.Default.Username;
         }
 
         private void btnSignIn_Click(object sender, RoutedEventArgs e) {
@@ -29,6 +30,9 @@ namespace ChaTex_Client {
             try
             {
                 var token = usersapi.Login(txtEmail.Text);
+                Properties.Settings.Default.Username = txtEmail.Text;
+                Properties.Settings.Default.Save();
+
                 Configuration.ApiKey.Add("token", token);
             }
             catch (ApiException er)

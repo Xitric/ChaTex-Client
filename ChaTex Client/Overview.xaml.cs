@@ -31,13 +31,11 @@ namespace ChaTex_Client
         DateTime latestMessage;
         MessagesApi messagesApi;
         UsersApi usersApi;
-        MainWindow parent;
 
-        public Overview(MainWindow parent)
+        public Overview()
         {
 
             InitializeComponent();
-            this.parent = parent;
 
             CurrentChannelId = -1;
 
@@ -132,6 +130,7 @@ namespace ChaTex_Client
             }
 
             SP.Children.Add(dockPanel);
+            sViewMessages.ScrollToBottom();
         }
 
         void ClearChat()
@@ -143,6 +142,7 @@ namespace ChaTex_Client
         {
             MessagesApi messagesApi = new MessagesApi();
             messagesApi.CreateMessage(CurrentChannelId, MessageField.Text);
+            MessageField.Clear();
         }
 
         private void FetchNewMessages()
@@ -163,28 +163,24 @@ namespace ChaTex_Client
             {
                 AddMessage(msg);
             }
+
         }
 
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
-            parent.beginEditchannel();
+            var wEditChannel = new EditChannel();
+            wEditChannel.ShowDialog();
         }
-
+        
         private void NewGroupBtn_Click(object sender, RoutedEventArgs e)
         {
-
-            //GroupDTO newGroup = new GroupDTO();
-            //newGroup.Id = 112312321;
-            //newGroup.Name = "TestGroup123";
-            //newGroup.Channels = new List<ChannelDTO>();
-            //ChannelDTO c1 = new ChannelDTO();
-            //c1.Name = "Channel 123";
-            //newGroup.Channels.Add(c1);
-            //groups.Add(newGroup);
-
             CreateNewGroup createNewGroup = new CreateNewGroup();
-            createNewGroup.Show();
+            createNewGroup.ShowDialog();
         }
 
+        private void MessageField_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            btnSendMessage.IsEnabled = MessageField.Text.Length > 0;
+        }
     }
 }

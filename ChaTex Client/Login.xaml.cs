@@ -19,11 +19,9 @@ namespace ChaTex_Client {
     /// Interaction logic for Login.xaml
     /// </summary>
     public partial class Login : Window {
-
-        MainWindow parent;
-        public Login(MainWindow parent) {
+        
+        public Login() {
             InitializeComponent();
-            this.parent = parent;
         }
 
         private void SignInBtn_Click(object sender, RoutedEventArgs e) {
@@ -40,8 +38,14 @@ namespace ChaTex_Client {
                 else
                     throw er;
             }
+            new Overview().Show();
+            Close();
+           
+        }
 
-            parent.CompletedLogin();
+        private void EmailText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+                SignInBtn.IsEnabled = EmailText.Text.Length > 0;
         }
     }
 }

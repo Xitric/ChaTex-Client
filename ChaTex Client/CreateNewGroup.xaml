@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChaTex_Client"
         mc:Ignorable="d"
-        Title="Create new group" Height="500" Width="500">
+        Title="Create new group" Height="500" Width="500" ResizeMode="CanMinimize">
     <StackPanel>
         <Label Content="Create Group" HorizontalAlignment="Center" FontSize="20" Margin="8,8,8,8"/>
         <Grid>

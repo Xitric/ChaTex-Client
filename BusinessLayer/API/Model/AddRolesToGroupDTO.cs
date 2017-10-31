@@ -11,20 +11,20 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class UserToken {
+  public class AddRolesToGroupDTO {
     /// <summary>
-    /// Gets or Sets UserId
+    /// Gets or Sets GroupId
     /// </summary>
-    [DataMember(Name="UserId", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "UserId")]
-    public long? UserId { get; set; }
+    [DataMember(Name="groupId", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "groupId")]
+    public int? GroupId { get; set; }
 
     /// <summary>
-    /// Gets or Sets Token
+    /// Gets or Sets RoleIds
     /// </summary>
-    [DataMember(Name="Token", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "Token")]
-    public string Token { get; set; }
+    [DataMember(Name="roleIds", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "roleIds")]
+    public List<int?> RoleIds { get; set; }
 
 
     /// <summary>
@@ -33,9 +33,9 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class UserToken {\n");
-      sb.Append("  UserId: ").Append(UserId).Append("\n");
-      sb.Append("  Token: ").Append(Token).Append("\n");
+      sb.Append("class AddRolesToGroupDTO {\n");
+      sb.Append("  GroupId: ").Append(GroupId).Append("\n");
+      sb.Append("  RoleIds: ").Append(RoleIds).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

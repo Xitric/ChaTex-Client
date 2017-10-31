@@ -12,28 +12,33 @@ namespace IO.Swagger.Api
     public interface IMessagesApi
     {
         /// <summary>
-        /// Send a message Send a message to the server
+        /// Create a new message Create a new message in a specific channel
         /// </summary>
-        /// <param name="message">The message object</param>
-        /// <returns>GetMessage</returns>
-        GetMessage CreateMessage (PostMessage message);
+        /// <param name="channelId">The id of the channel to post the message to</param>
+        /// <param name="messageContent">Content of the message</param>
+        /// <returns></returns>
+        void CreateMessage (int? channelId, string messageContent);
         /// <summary>
-        /// Find message by ID Returns a message with the specified ID
+        /// Delete a message Delete the message with the specified id
         /// </summary>
-        /// <param name="messageID">ID of the message to fetch</param>
-        /// <returns>GetMessage</returns>
-        GetMessage GetMessageByID (long? messageID);
+        /// <param name="messageId">The id of the message to delete</param>
+        /// <returns></returns>
+        void DeleteMessage (int? messageId);
         /// <summary>
-        /// Get all messages Returns all messages in the database
+        /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
-        /// <returns>List&lt;GetMessage&gt;</returns>
-        List<GetMessage> GetMessages ();
+        /// <param name="channelId">The id of the channel to delete</param>
+        /// <param name="fromIndex">The index of the first message to get, beginning from the most recently posted message. This defaults to 0, meaning the most recent message</param>
+        /// <param name="count">The amount of messages to get. This defaults to 25</param>
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>
+        List<GetMessageDTO> GetMessages (int? channelId, int? fromIndex, int? count);
         /// <summary>
-        /// Wait for and get the next message Blocking call that will wait for the next message to be sent to the server. Once a message arrives, it will be returned.
+        /// Wait for and get new messages sent to a channel This request will not return from the service until at least one new message has been posted
         /// </summary>
-        /// <param name="since"></param>
-        /// <returns>List&lt;GetMessage&gt;</returns>
-        List<GetMessage> WaitMessage (DateTime? since);
+        /// <param name="channelId">The id of the channel to delete</param>
+        /// <param name="since">The time to get messages since. This defaults to the current time</param>
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>
+        List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since);
     }
   
     /// <summary>
@@ -90,27 +95,32 @@ namespace IO.Swagger.Api
         public ApiClient ApiClient {get; set;}
     
         /// <summary>
-        /// Send a message Send a message to the server
+        /// Create a new message Create a new message in a specific channel
         /// </summary>
-        /// <param name="message">The message object</param> 
-        /// <returns>GetMessage</returns>            
-        public GetMessage CreateMessage (PostMessage message)
+        /// <param name="channelId">The id of the channel to post the message to</param> 
+        /// <param name="messageContent">Content of the message</param> 
+        /// <returns></returns>            
+        public void CreateMessage (int? channelId, string messageContent)
         {
             
-            // verify the required parameter 'message' is set
-            if (message == null) throw new ApiException(400, "Missing required parameter 'message' when calling CreateMessage");
+            // verify the required parameter 'channelId' is set
+            if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling CreateMessage");
+            
+            // verify the required parameter 'messageContent' is set
+            if (messageContent == null) throw new ApiException(400, "Missing required parameter 'messageContent' when calling CreateMessage");
             
     
-            var path = "/messages";
+            var path = "/channels/{channelId}/messages";
             path = path.Replace("{format}", "json");
-                
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
+    
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-                                                postBody = ApiClient.Serialize(message); // http body (model) parameter
+                                                postBody = ApiClient.Serialize(messageContent); // http body (model) parameter
     
             // authentication setting, if any
             String[] authSettings = new String[] {  };
@@ -123,24 +133,24 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CreateMessage: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (GetMessage) ApiClient.Deserialize(response.Content, typeof(GetMessage), response.Headers);
+            return;
         }
     
         /// <summary>
-        /// Find message by ID Returns a message with the specified ID
+        /// Delete a message Delete the message with the specified id
         /// </summary>
-        /// <param name="messageID">ID of the message to fetch</param> 
-        /// <returns>GetMessage</returns>            
-        public GetMessage GetMessageByID (long? messageID)
+        /// <param name="messageId">The id of the message to delete</param> 
+        /// <returns></returns>            
+        public void DeleteMessage (int? messageId)
         {
             
-            // verify the required parameter 'messageID' is set
-            if (messageID == null) throw new ApiException(400, "Missing required parameter 'messageID' when calling GetMessageByID");
+            // verify the required parameter 'messageId' is set
+            if (messageId == null) throw new ApiException(400, "Missing required parameter 'messageId' when calling DeleteMessage");
             
     
-            var path = "/messages/{messageID}";
+            var path = "/messages/{messageId}";
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "messageID" + "}", ApiClient.ParameterToString(messageID));
+            path = path.Replace("{" + "messageId" + "}", ApiClient.ParameterToString(messageId));
     
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
@@ -153,34 +163,43 @@ namespace IO.Swagger.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling GetMessageByID: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling DeleteMessage: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling GetMessageByID: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling DeleteMessage: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (GetMessage) ApiClient.Deserialize(response.Content, typeof(GetMessage), response.Headers);
+            return;
         }
     
         /// <summary>
-        /// Get all messages Returns all messages in the database
+        /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
-        /// <returns>List&lt;GetMessage&gt;</returns>            
-        public List<GetMessage> GetMessages ()
+        /// <param name="channelId">The id of the channel to delete</param> 
+        /// <param name="fromIndex">The index of the first message to get, beginning from the most recently posted message. This defaults to 0, meaning the most recent message</param> 
+        /// <param name="count">The amount of messages to get. This defaults to 25</param> 
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
+        public List<GetMessageDTO> GetMessages (int? channelId, int? fromIndex, int? count)
         {
             
+            // verify the required parameter 'channelId' is set
+            if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling GetMessages");
+            
     
-            var path = "/messages";
+            var path = "/channels/{channelId}/messages";
             path = path.Replace("{format}", "json");
-                
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
+    
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-                                                    
+             if (fromIndex != null) queryParams.Add("fromIndex", ApiClient.ParameterToString(fromIndex)); // query parameter
+ if (count != null) queryParams.Add("count", ApiClient.ParameterToString(count)); // query parameter
+                                        
             // authentication setting, if any
             String[] authSettings = new String[] {  };
     
@@ -192,24 +211,26 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetMessages: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<GetMessage>) ApiClient.Deserialize(response.Content, typeof(List<GetMessage>), response.Headers);
+            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
         }
     
         /// <summary>
-        /// Wait for and get the next message Blocking call that will wait for the next message to be sent to the server. Once a message arrives, it will be returned.
+        /// Wait for and get new messages sent to a channel This request will not return from the service until at least one new message has been posted
         /// </summary>
-        /// <param name="since"></param> 
-        /// <returns>List&lt;GetMessage&gt;</returns>            
-        public List<GetMessage> WaitMessage (DateTime? since)
+        /// <param name="channelId">The id of the channel to delete</param> 
+        /// <param name="since">The time to get messages since. This defaults to the current time</param> 
+        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
+        public List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since)
         {
             
-            // verify the required parameter 'since' is set
-            if (since == null) throw new ApiException(400, "Missing required parameter 'since' when calling WaitMessage");
+            // verify the required parameter 'channelId' is set
+            if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling GetMessagesSince");
             
     
-            var path = "/messages/wait";
+            var path = "/channels/{channelId}/messages/live";
             path = path.Replace("{format}", "json");
-                
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
+    
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
             var formParams = new Dictionary<String, String>();
@@ -225,11 +246,11 @@ namespace IO.Swagger.Api
             IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling WaitMessage: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling GetMessagesSince: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling WaitMessage: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling GetMessagesSince: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<GetMessage>) ApiClient.Deserialize(response.Content, typeof(List<GetMessage>), response.Headers);
+            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
         }
     
     }

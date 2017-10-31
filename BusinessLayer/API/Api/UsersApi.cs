@@ -14,8 +14,8 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Get the available groups to a user. Get the available groups to the user with the specified ID.
         /// </summary>
-        /// <returns>List&lt;Group&gt;</returns>
-        List<Group> GetGroupsForUser ();
+        /// <returns>List&lt;GroupDTO&gt;</returns>
+        List<GroupDTO> GetGroupsForUser ();
         /// <summary>
         /// Login a user Login the user with the specified e-mail
         /// </summary>
@@ -80,8 +80,8 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Get the available groups to a user. Get the available groups to the user with the specified ID.
         /// </summary>
-        /// <returns>List&lt;Group&gt;</returns>            
-        public List<Group> GetGroupsForUser ()
+        /// <returns>List&lt;GroupDTO&gt;</returns>            
+        public List<GroupDTO> GetGroupsForUser ()
         {
             
     
@@ -106,7 +106,7 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetGroupsForUser: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (List<Group>) ApiClient.Deserialize(response.Content, typeof(List<Group>), response.Headers);
+            return (List<GroupDTO>) ApiClient.Deserialize(response.Content, typeof(List<GroupDTO>), response.Headers);
         }
     
         /// <summary>

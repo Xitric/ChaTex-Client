@@ -15,83 +15,103 @@ using IO.Swagger.Api;
 using IO.Swagger.Model;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
-using System.Threading;
 
-namespace ChaTex_Client
-{
+namespace ChaTex_Client {
     /// <summary>
     /// Interaction logic for Overview.xaml
     /// </summary>
-    public partial class Overview : Window
-    {
+    public partial class Overview : Window {
 
         private ObservableCollection<GroupDTO> groups;
         int CurrentChannelId;
-        DateTime latestMessage;
         MessagesApi messagesApi;
         UsersApi usersApi;
+		MainWindow parent;
 
-        public Overview()
-        {
+        public Overview(MainWindow parent) {
 
             InitializeComponent();
+            this.parent = parent;
 
             CurrentChannelId = -1;
 
            
             UsersApi usersApi = new UsersApi();   //new instans of UserApi    
-
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-            messagesApi = new MessagesApi();
+            messagesApi = new MessagesApi(); 
             TViewGroups.ItemsSource = groups;
 
+            AddMessage(new GetMessageDTO
+            {
+                Content = "Test1",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName1",
+                    LastName = "LName1"
+                }
+            });
+
+            AddMessage(new GetMessageDTO
+            {
+                Content = "Test2",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName2",
+                    LastName = "LName2"
+                }
+            });
+
+            AddMessage(new GetMessageDTO
+            {
+                Content = "Test3",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName1",
+                    LastName = "LName1"
+                }
+            });
         }
 
-        private void PopulateChat()
-        {
+        private void PopulateChat() {
             Console.WriteLine("Populating chat");
             ClearChat();
-            List<GetMessageDTO> messages = messagesApi.GetMessages(CurrentChannelId, 0, 25);
-
+            List<GetMessageDTO> messages = new List<GetMessageDTO>();//messagesApi.GetMessages(CurrentChannelId);
+            messages.Add(new GetMessageDTO
+            {
+                Content = "Test3",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName1",
+                    LastName = "LName1"
+                }
+            });
+            messages.Add(new GetMessageDTO
+            {
+                Content = "Test2",
+                Sender = new UserDTO
+                {
+                    FirstName = "FName2",
+                    LastName = "LName2"
+                }
+            });
             foreach (GetMessageDTO message in messages)
             {
                 AddMessage(message);
             }
         }
 
-        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
-        {
+        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e) {
             Console.WriteLine("Selection change!");
-
+            
             if (e.NewValue is ChannelDTO channel)
             {
                 CurrentChannelId = (int)channel.Id;
                 PopulateChat();
 
-                //Start fetching new messages
-                new Thread(new ThreadStart(() =>
-                {
-                    while(true)
-                    {
-                        FetchNewMessages();
-                    }
-                })).Start();
-
-                //Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate ()
-                //{
-                    
-                //});
             }
         }
 
-        void AddMessage(GetMessageDTO message)
-        {
-            if (message.CreationTime != null)
-            {
-                latestMessage = (DateTime)message.CreationTime;
-            }
-
+        void AddMessage(GetMessageDTO message) {
             DockPanel dockPanel = new DockPanel
             {
                 Height = Double.NaN,
@@ -99,15 +119,8 @@ namespace ChaTex_Client
                 Width = Double.NaN
             };
 
-            Border border = new Border()
-            {
-                Padding = new Thickness(10),
-                Background = Brushes.WhiteSmoke
-            };
-
             StackPanel stackPanel = new StackPanel();
-            border.Child = stackPanel;
-            dockPanel.Children.Add(border);
+            dockPanel.Children.Add(stackPanel);
 
             TextBlock textAuthor = new TextBlock
             {
@@ -123,65 +136,41 @@ namespace ChaTex_Client
             };
             stackPanel.Children.Add(textMessage);
 
-            if ((bool)message.Sender.Me)
-            {
-                Console.WriteLine("AAA");
-                DockPanel.SetDock(border, Dock.Right);
-                textAuthor.FlowDirection = FlowDirection.RightToLeft;
-            }
+            //if(message.Sender.Me)
+            //{
+            //    DockPanel.SetDock(stackPanel, Dock.Right);
+            //    textAuthor.FlowDirection = FlowDirection.RightToLeft;    
+            //}
 
             SP.Children.Add(dockPanel);
-            sViewMessages.ScrollToBottom();
         }
 
-        void ClearChat()
-        {
+        void ClearChat() {
             SP.Children.RemoveRange(0, SP.Children.Count);
         }
 
-        private void sendButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessagesApi messagesApi = new MessagesApi();
-            messagesApi.CreateMessage(CurrentChannelId, MessageField.Text);
-            MessageField.Clear();
-        }
-
-        private void FetchNewMessages()
-        {
-            MessagesApi messagesApi = new MessagesApi();
-            IEnumerable<GetMessageDTO> messages = messagesApi.GetMessagesSince(CurrentChannelId, latestMessage);
-
-            //Add to ui when the ui thread is ready
-            Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
-            {
-                AddNewMessages(messages);
-            });
-        }
-
-        private void AddNewMessages(IEnumerable<GetMessageDTO> messages)
-        {
-            foreach (GetMessageDTO msg in messages)
-            {
-                AddMessage(msg);
-            }
-
-        }
 
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
-            var wEditChannel = new EditChannel();
-            wEditChannel.ShowDialog();
-        }
-        
-        private void NewGroupBtn_Click(object sender, RoutedEventArgs e)
-        {
-            CreateNewGroup createNewGroup = new CreateNewGroup();
-            createNewGroup.ShowDialog();
+            parent.beginEditchannel();
+
         }
 
-        private void MessageField_TextChanged(object sender, TextChangedEventArgs e)
+        private void NewGroupBtn_Click(object sender, RoutedEventArgs e)
         {
-            btnSendMessage.IsEnabled = MessageField.Text.Length > 0;
+
+            //GroupDTO newGroup = new GroupDTO();
+            //newGroup.Id = 112312321;
+            //newGroup.Name = "TestGroup123";
+            //newGroup.Channels = new List<ChannelDTO>();
+            //ChannelDTO c1 = new ChannelDTO();
+            //c1.Name = "Channel 123";
+            //newGroup.Channels.Add(c1);
+            //groups.Add(newGroup);
+
+             CreateNewGroup createNewGroup = new CreateNewGroup();
+             createNewGroup.Show();
         }
+
     }
 }

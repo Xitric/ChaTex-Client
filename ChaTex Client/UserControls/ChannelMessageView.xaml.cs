@@ -28,6 +28,7 @@ namespace ChaTex_Client.UserControls
         private DateTime latestMessage;
         private MessagesApi messagesApi;
         private Thread messageFetcherThread;
+        private CancellationTokenSource cancellation;
 
         public ChannelMessageView()
         {
@@ -37,21 +38,62 @@ namespace ChaTex_Client.UserControls
 
         public void SetChannel(int channelId)
         {
+            //Stop fetching messages in previous channel
+            StopFetchingMessages();
+
+            //Repopulate window with new messages
             CurrentChannelId = channelId;
             ClearChat();
             PopulateChat();
 
-            //TODO: Interrupt
+            //Begin listening for messages in the new channel
+            BeginFetchingMessages();
+        }
 
+        /// <summary>
+        /// Stop listening for new messages from the server.
+        /// </summary>
+        private void StopFetchingMessages()
+        {
+            cancellation?.Cancel();
+        }
+
+        /// <summary>
+        /// Begin listening for new messages from the server.
+        /// </summary>
+        private void BeginFetchingMessages()
+        {
+            cancellation = new CancellationTokenSource();
             messageFetcherThread = new Thread(new ThreadStart(() =>
             {
-                while (true)
+                try
                 {
-                    FetchNewMessages();
+                    while (true)
+                    {
+                        FetchNewMessages();
+                    }
                 }
+                catch (TaskCanceledException) { }
             }));
 
             messageFetcherThread.Start();
+        }
+
+        /// <summary>
+        /// Get and display new messages from the web service. This operation will block until it receives a result, and should therefore be called from a separate thread.
+        /// </summary>
+        private void FetchNewMessages()
+        {
+            IEnumerable<GetMessageDTO> messages = messagesApi.GetMessagesSince(CurrentChannelId, latestMessage, cancellation.Token);
+
+            //Add to ui when ready
+            Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
+            {
+                foreach (GetMessageDTO msg in messages)
+                {
+                    AddMessage(msg);
+                }
+            });
         }
 
         /// <summary>
@@ -124,24 +166,6 @@ namespace ChaTex_Client.UserControls
             svMessages.ScrollToBottom();
         }
 
-        /// <summary>
-        /// Get and display new messages from the web service. This operation will block until it receives a result, and should therefore be called from a separate thread.
-        /// </summary>
-        private void FetchNewMessages()
-        {
-            MessagesApi messagesApi = new MessagesApi();
-            IEnumerable<GetMessageDTO> messages = messagesApi.GetMessagesSince(CurrentChannelId, latestMessage);
-
-            //Add to ui when the ui thread is ready
-            Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
-            {
-                foreach (GetMessageDTO msg in messages)
-                {
-                    AddMessage(msg);
-                }
-            });
-        }
-
         private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
         {
             btnSendMessage.IsEnabled = txtMessage.Text.Length > 0;
@@ -149,7 +173,6 @@ namespace ChaTex_Client.UserControls
 
         private void btnSendMessage_Click(object sender, RoutedEventArgs e)
         {
-            MessagesApi messagesApi = new MessagesApi();
             messagesApi.CreateMessage(CurrentChannelId, txtMessage.Text);
             txtMessage.Clear();
         }

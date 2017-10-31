@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         
         <!-- message display -->
-        <ScrollViewer Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Name="svMessages" MinHeight="300">
+        <ScrollViewer Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Name="svMessages" Height="300">
             <StackPanel x:Name="spnlMessages" Background="White" >
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type DockPanel}">

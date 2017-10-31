@@ -15,46 +15,39 @@ using IO.Swagger.Api;
 using IO.Swagger.Model;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
-using System.Threading;
 
-namespace ChaTex_Client
-{
+namespace ChaTex_Client {
     /// <summary>
     /// Interaction logic for Overview.xaml
     /// </summary>
-    public partial class Overview : Window
-    {
+    public partial class Overview : Window {
 
         private ObservableCollection<GroupDTO> groups;
 
-        public Overview()
-        {
+        public Overview() {
 
             InitializeComponent();
 
             UsersApi usersApi = new UsersApi();   //new instans of UserApi    
-
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-            tvGroups.ItemsSource = groups;
 
+            tvGroups.ItemsSource = groups;
         }
 
-        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
-        {
+        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e) {
             Console.WriteLine("Selection change!");
-
+            
             if (e.NewValue is ChannelDTO channel)
             {
-                ucChannelMessageView.CurrentChannelId = (int)channel.Id;
-                ucChannelMessageView.PopulateChat();
+                ucChannelMessageView.SetChannel((int) channel.Id);
             }
         }
 
         private void btnEditChannel_Click(object sender, RoutedEventArgs e)
         {
-            var wEditChannel = new EditChannel();
-            wEditChannel.ShowDialog();
+            //TODO
+            //var wEditChannel = new EditChannel();
+            //wEditChannel.ShowDialog();
         }
         
         private void btnNewGroup_Click(object sender, RoutedEventArgs e)

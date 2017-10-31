@@ -98,10 +98,12 @@
                         <Setter Property="Margin" Value="0,0,0,10"/>
                     </Style>
                 </StackPanel.Resources>
+                <DockPanel Height="Auto" LastChildFill="False" Width="Auto"/>
+                <DockPanel Height="Auto" LastChildFill="False" Width="Auto"/>
+                <DockPanel Height="Auto" LastChildFill="False" Width="Auto"/>
             </StackPanel>
-        </ScrollViewer>
+        </ScrollViewer>-->
 
-        -->
         <!-- write message textbox -->
         <!--
         <DockPanel  Grid.Column="2" Grid.ColumnSpan="5" Grid.Row="3" Height="50" VerticalAlignment="Bottom" LastChildFill="False">
@@ -111,13 +113,13 @@
                     <ColumnDefinition Width="230*"/>
                     <ColumnDefinition Width="23*"/>
                 </Grid.ColumnDefinitions>
-                <TextBox HorizontalContentAlignment="Stretch" Height="Auto" x:Name="txtMessage" TextWrapping="Wrap" Width="Auto" BorderBrush="#FF002864" TextChanged="txtMessage_TextChanged"/>
+                <TextBox HorizontalContentAlignment="Stretch" Height="Auto" x:Name="MessageField" TextWrapping="Wrap" Width="Auto" BorderBrush="#FF002864" TextChanged="MessageField_TextChanged"/>
                 <TextBlock IsHitTestVisible="False" Text="Type something here..." VerticalAlignment="Center" HorizontalAlignment="Left"  Foreground="DarkGray" Height="17" Width="144">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Text, ElementName=txtMessage}" Value="">
+                                <DataTrigger Binding="{Binding Text, ElementName=MessageField}" Value="">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -133,10 +135,7 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1.2*"/>
                 </Grid.ColumnDefinitions>
-
-                -->
-        <!-- send button -->
-        <!--
+        
                 <Button Name="btnSendMessage" Content="Send" Grid.Column="1" HorizontalAlignment="Right"  VerticalAlignment="Stretch" Background="#FF002864" BorderBrush="#FF002864" Click="btnSendMessage_Click" IsDefault="True"/>
 
 
@@ -149,7 +148,6 @@
         <Label Name="MessageName" Grid.Column="3" Grid.ColumnSpan="2"  HorizontalAlignment="Center"  VerticalAlignment="Center" Margin="146,24,145,23"/>
 
         <!--channel edit button-->
-
         <Button Name="btnEditChannel" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center"  VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent" Click="btnEditChannel_Click" Grid.ColumnSpan="2" Margin="3,12,3,13">
             <StackPanel Width="23" >
                 <Image Source="pictures/button/settingsIcon.png" Height="19" RenderTransformOrigin="0.587,0.5" />

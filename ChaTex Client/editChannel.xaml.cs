@@ -12,11 +12,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using IO.Swagger.Api;
+using IO.Swagger.Model;
+
+
 
 namespace ChaTex_Client
 {
     /// <summary>
-    /// Interaction logic for editChannel.xaml
+    /// Interaction logic for EditChannel.xaml
     /// </summary>
     public partial class EditChannel : Window
     {
@@ -25,16 +29,21 @@ namespace ChaTex_Client
         public EditChannel()
         {
             InitializeComponent();
-        }
+        }   
+        ChannelsApi chApi = new ChannelsApi();
 
 
         //MessageBox for deleting a channel
         private void deleteButton_Click(object sender, RoutedEventArgs e)
         {
+            
+
+ //           chApi.DeleteChannel();
+
             MessageBoxResult deleteChannel = MessageBox.Show("All files will be lost if Channel is deleted. Are you sure you want to delete this Channel? ", "Delete Channel", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if(deleteChannel == MessageBoxResult.Yes){
                 //er skal insættes funktion til at slette en channel hvis der bliver trykket yes!
-
+                
 
 
                 //a message box to display that a channel have been deleted 
@@ -52,7 +61,9 @@ namespace ChaTex_Client
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            //save to database
+
+  //          chApi.UpdateChannel();
+
 
             this.Close();
         }

@@ -30,7 +30,6 @@ namespace ChaTex_Client
         int CurrentChannelId;
         DateTime latestMessage;
         MessagesApi messagesApi;
-        UsersApi usersApi;
 
         public Overview()
         {
@@ -43,7 +42,7 @@ namespace ChaTex_Client
             UsersApi usersApi = new UsersApi();
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
             messagesApi = new MessagesApi();
-            TViewGroups.ItemsSource = groups;
+            tvGroups.ItemsSource = groups;
 
         }
 
@@ -76,11 +75,6 @@ namespace ChaTex_Client
                         FetchNewMessages();
                     }
                 })).Start();
-
-                //Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate ()
-                //{
-                    
-                //});
             }
         }
 
@@ -91,58 +85,57 @@ namespace ChaTex_Client
                 latestMessage = (DateTime)message.CreationTime;
             }
 
-            DockPanel dockPanel = new DockPanel
+            DockPanel dpnlMessage = new DockPanel
             {
                 Height = Double.NaN,
                 LastChildFill = false,
                 Width = Double.NaN
             };
 
-            Border border = new Border()
+            Border bMessageBorder = new Border()
             {
                 Padding = new Thickness(10),
                 Background = Brushes.WhiteSmoke
             };
 
-            StackPanel stackPanel = new StackPanel();
-            border.Child = stackPanel;
-            dockPanel.Children.Add(border);
+            StackPanel spnlMessageText = new StackPanel();
+            bMessageBorder.Child = spnlMessageText;
+            dpnlMessage.Children.Add(bMessageBorder);
 
-            TextBlock textAuthor = new TextBlock
+            TextBlock txtbMessageAuthor = new TextBlock
             {
-                Text = message.Sender.FirstName + " " + message.Sender.LastName,
+                Text = message.Sender.FirstName + " " + (message.Sender.MiddleInitial == null ? "" : message.Sender.MiddleInitial + ". ") + message.Sender.LastName,
                 FontSize = 10,
                 Foreground = Brushes.DimGray
             };
-            stackPanel.Children.Add(textAuthor);
+            spnlMessageText.Children.Add(txtbMessageAuthor);
 
-            TextBlock textMessage = new TextBlock
+            TextBlock txtbMessageContent = new TextBlock
             {
                 Text = message.Content
             };
-            stackPanel.Children.Add(textMessage);
+            spnlMessageText.Children.Add(txtbMessageContent);
 
             if ((bool)message.Sender.Me)
             {
-                Console.WriteLine("AAA");
-                DockPanel.SetDock(border, Dock.Right);
-                textAuthor.FlowDirection = FlowDirection.RightToLeft;
+                DockPanel.SetDock(bMessageBorder, Dock.Right);
+                txtbMessageAuthor.FlowDirection = FlowDirection.RightToLeft;
             }
 
-            SP.Children.Add(dockPanel);
-            sViewMessages.ScrollToBottom();
+            spnlMessages.Children.Add(dpnlMessage);
+            svMessages.ScrollToBottom();
         }
 
         void ClearChat()
         {
-            SP.Children.RemoveRange(0, SP.Children.Count);
+            spnlMessages.Children.RemoveRange(0, spnlMessages.Children.Count);
         }
 
-        private void sendButton_Click(object sender, RoutedEventArgs e)
+        private void btnSendMessage_Click(object sender, RoutedEventArgs e)
         {
             MessagesApi messagesApi = new MessagesApi();
-            messagesApi.CreateMessage(CurrentChannelId, MessageField.Text);
-            MessageField.Clear();
+            messagesApi.CreateMessage(CurrentChannelId, txtMessage.Text);
+            txtMessage.Clear();
         }
 
         private void FetchNewMessages()
@@ -166,21 +159,21 @@ namespace ChaTex_Client
 
         }
 
-        private void editButton_Click(object sender, RoutedEventArgs e)
+        private void btnEditChannel_Click(object sender, RoutedEventArgs e)
         {
             var wEditChannel = new EditChannel();
             wEditChannel.ShowDialog();
         }
         
-        private void NewGroupBtn_Click(object sender, RoutedEventArgs e)
+        private void btnNewGroup_Click(object sender, RoutedEventArgs e)
         {
             CreateNewGroup createNewGroup = new CreateNewGroup();
             createNewGroup.ShowDialog();
         }
 
-        private void MessageField_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
         {
-            btnSendMessage.IsEnabled = MessageField.Text.Length > 0;
+            btnSendMessage.IsEnabled = txtMessage.Text.Length > 0;
         }
     }
 }

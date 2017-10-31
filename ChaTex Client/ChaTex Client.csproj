@@ -84,6 +84,9 @@
     <Compile Include="EditChannel.xaml.cs">
       <DependentUpon>EditChannel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ChannelMessageView.xaml.cs">
+      <DependentUpon>ChannelMessageView.xaml</DependentUpon>
+    </Compile>
     <Page Include="EditChannel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,6 +110,10 @@
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Page Include="Overview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ChannelMessageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

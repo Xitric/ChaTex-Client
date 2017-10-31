@@ -5,7 +5,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChaTex_Client"
-        xmlns:BLayer="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"  
+        xmlns:BLayer="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"
+        xmlns:usercontrols="clr-namespace:ChaTex_Client.UserControls"
         mc:Ignorable="d"
          TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -27,7 +28,8 @@
             <RowDefinition Height=".2*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="121*" />
+            <ColumnDefinition Width="107*" />
+            <ColumnDefinition Width="14*"/>
             <ColumnDefinition Width="151*" />
             <ColumnDefinition Width="151*" />
             <ColumnDefinition Width="150*" />
@@ -38,7 +40,7 @@
 
         <!-- main menu -->
 
-        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="5">
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="5" Grid.ColumnSpan="2">
             <Grid Height="454" Margin="0,0,0.333,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
@@ -64,7 +66,7 @@
 
 
         <!-- group, channel and chat view  -->
-        <TreeView Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" SelectedItemChanged="ChannelSelectionChanged" x:Name="tvGroups" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864" Margin="3,0,4,0">
+        <TreeView Grid.Column="2" Grid.Row="0" Grid.RowSpan="5" SelectedItemChanged="ChannelSelectionChanged" x:Name="tvGroups" Width="144" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Foreground="#FF002864" Margin="3,0,4,0">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type BLayer:GroupDTO}"   ItemsSource="{Binding Channels}">
                     <StackPanel Orientation="Horizontal">
@@ -86,8 +88,10 @@
             </TreeView.ContextMenu>-->
         </TreeView>
 
+        <usercontrols:ChannelMessageView Loaded="ChannelMessageView_Loaded" x:Name="ucChannelMessageView" Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="3"/>
+
         <!-- message display -->
-        <ScrollViewer Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="2" Name="svMessages" >
+        <!--<ScrollViewer Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="2" Name="svMessages" >
             <StackPanel x:Name="spnlMessages" Background="White" >
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type DockPanel}">
@@ -97,7 +101,9 @@
             </StackPanel>
         </ScrollViewer>
 
+        -->
         <!-- write message textbox -->
+        <!--
         <DockPanel  Grid.Column="2" Grid.ColumnSpan="5" Grid.Row="3" Height="50" VerticalAlignment="Bottom" LastChildFill="False">
 
             <Grid Width="253">
@@ -128,21 +134,23 @@
                     <ColumnDefinition Width="1.2*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- send button -->
+                -->
+        <!-- send button -->
+        <!--
                 <Button Name="btnSendMessage" Content="Send" Grid.Column="1" HorizontalAlignment="Right"  VerticalAlignment="Stretch" Background="#FF002864" BorderBrush="#FF002864" Click="btnSendMessage_Click" IsDefault="True"/>
 
 
             </Grid>
-        </DockPanel>
+        </DockPanel>-->
 
 
 
         <!--lable for chat or channel name-->
-        <Label Name="MessageName" Grid.Column="2" Grid.ColumnSpan="2"  HorizontalAlignment="Center"  VerticalAlignment="Center" Margin="146,24,145,23"/>
+        <Label Name="MessageName" Grid.Column="3" Grid.ColumnSpan="2"  HorizontalAlignment="Center"  VerticalAlignment="Center" Margin="146,24,145,23"/>
 
         <!--channel edit button-->
 
-        <Button Name="btnEditChannel" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center"  VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent" Click="btnEditChannel_Click" Grid.ColumnSpan="2" Margin="3,12,3,13">
+        <Button Name="btnEditChannel" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center"  VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent" Click="btnEditChannel_Click" Grid.ColumnSpan="2" Margin="3,12,3,13">
             <StackPanel Width="23" >
                 <Image Source="pictures/button/settingsIcon.png" Height="19" RenderTransformOrigin="0.587,0.5" />
             </StackPanel>

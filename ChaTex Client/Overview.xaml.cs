@@ -38,8 +38,9 @@ namespace ChaTex_Client
 
             CurrentChannelId = -1;
 
+           
+            UsersApi usersApi = new UsersApi();   //new instans of UserApi    
 
-            UsersApi usersApi = new UsersApi();
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
             messagesApi = new MessagesApi();
             tvGroups.ItemsSource = groups;

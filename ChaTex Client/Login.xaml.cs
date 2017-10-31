@@ -24,11 +24,11 @@ namespace ChaTex_Client {
             InitializeComponent();
         }
 
-        private void SignInBtn_Click(object sender, RoutedEventArgs e) {
+        private void btnSignIn_Click(object sender, RoutedEventArgs e) {
             var usersapi = new UsersApi();
             try
             {
-                var token = usersapi.Login(EmailText.Text);
+                var token = usersapi.Login(txtEmail.Text);
                 Configuration.ApiKey.Add("token", token);
             }
             catch (ApiException er)
@@ -43,9 +43,9 @@ namespace ChaTex_Client {
            
         }
 
-        private void EmailText_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtEmail_TextChanged(object sender, TextChangedEventArgs e)
         {
-                SignInBtn.IsEnabled = EmailText.Text.Length > 0;
+            btnSignIn.IsEnabled = txtEmail.Text.Length > 0;
         }
     }
 }

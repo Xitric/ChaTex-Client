@@ -78,6 +78,12 @@
                     </StackPanel>
                 </DataTemplate>
             </TreeView.Resources>
+
+            <!--<TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="TestHerJegErSej"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>-->
         </TreeView>
 
         <!-- message display -->
@@ -88,15 +94,9 @@
                         <Setter Property="Margin" Value="0,0,0,10"/>
                     </Style>
                 </StackPanel.Resources>
-                <DockPanel Height="Auto" LastChildFill="False" Width="Auto">
-                    <TextBlock Text="Hej Lars! Du er seeeeej" Background="#FFE4E4E4" />
-                </DockPanel>
-                <DockPanel Height="Auto" LastChildFill="False" Width="Auto">
-                    <TextBlock Text="Thanks ;)" DockPanel.Dock="Right" />
-                </DockPanel>
-                <DockPanel Height="Auto" LastChildFill="False" Width="Auto">
-                    <TextBlock Text="Så lidt så lidt Lars!!!1!"  />
-                </DockPanel>
+                <DockPanel Height="Auto" LastChildFill="False" Width="Auto"/>
+                <DockPanel Height="Auto" LastChildFill="False" Width="Auto"/>
+                <DockPanel Height="Auto" LastChildFill="False" Width="Auto"/>
             </StackPanel>
         </ScrollViewer>
 
@@ -130,12 +130,6 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1.2*"/>
                 </Grid.ColumnDefinitions>
-
-
-
-                <!-- ad file button-->
-                <Button Height="30" Grid.Column="0"  VerticalAlignment="Center" Background="Transparent" BorderBrush="Transparent"/>
-
 
                 <!-- send button -->
                 <Button Name="btnSendMessage" Content="Send" Grid.Column="1" HorizontalAlignment="Right"  VerticalAlignment="Stretch" Background="#FF002864" BorderBrush="#FF002864" Click="sendButton_Click" IsDefault="True"/>

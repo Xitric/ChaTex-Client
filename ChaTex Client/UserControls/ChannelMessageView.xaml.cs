@@ -132,11 +132,7 @@ namespace ChaTex_Client.UserControls
                 Width = Double.NaN
             };
 
-            Border bMessageBorder = new Border()
-            {
-                Padding = new Thickness(10),
-                Background = Brushes.WhiteSmoke
-            };
+            Border bMessageBorder = new Border();
 
             StackPanel spnlMessageText = new StackPanel();
             bMessageBorder.Child = spnlMessageText;

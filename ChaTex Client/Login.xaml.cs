@@ -19,18 +19,16 @@ namespace ChaTex_Client {
     /// Interaction logic for Login.xaml
     /// </summary>
     public partial class Login : Window {
-
-        MainWindow parent;
-        public Login(MainWindow parent) {
+        
+        public Login() {
             InitializeComponent();
-            this.parent = parent;
         }
 
-        private void SignInBtn_Click(object sender, RoutedEventArgs e) {
+        private void btnSignIn_Click(object sender, RoutedEventArgs e) {
             var usersapi = new UsersApi();
             try
             {
-                var token = usersapi.Login(EmailText.Text);
+                var token = usersapi.Login(txtEmail.Text);
                 Configuration.ApiKey.Add("token", token);
             }
             catch (ApiException er)
@@ -40,8 +38,14 @@ namespace ChaTex_Client {
                 else
                     throw er;
             }
+            new Overview().Show();
+            Close();
+           
+        }
 
-            parent.CompletedLogin();
+        private void txtEmail_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            btnSignIn.IsEnabled = txtEmail.Text.Length > 0;
         }
     }
 }

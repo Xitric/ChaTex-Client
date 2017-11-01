@@ -2,6 +2,7 @@
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -29,11 +30,13 @@ namespace ChaTex_Client.UserControls
         private MessagesApi messagesApi;
         private Thread messageFetcherThread;
         private CancellationTokenSource cancellation;
+        ObservableCollection<GetMessageDTO> messages = new ObservableCollection<GetMessageDTO>();
 
         public ChannelMessageView()
         {
             messagesApi = new MessagesApi();
             InitializeComponent();
+            icMessages.ItemsSource = messages;
         }
 
         public void SetChannel(int channelId)
@@ -101,7 +104,7 @@ namespace ChaTex_Client.UserControls
         /// </summary>
         private void ClearChat()
         {
-            spnlMessages.Children.RemoveRange(0, spnlMessages.Children.Count);
+            messages.Clear();
         }
 
         private void PopulateChat()
@@ -120,45 +123,12 @@ namespace ChaTex_Client.UserControls
         /// <param name="message">The message to add</param>
         private void AddMessage(GetMessageDTO message)
         {
+            messages.Add(message);
             if (message.CreationTime != null)
             {
                 latestMessage = (DateTime)message.CreationTime;
             }
 
-            DockPanel dpnlMessage = new DockPanel
-            {
-                Height = Double.NaN,
-                LastChildFill = false,
-                Width = Double.NaN
-            };
-
-            Border bMessageBorder = new Border();
-
-            StackPanel spnlMessageText = new StackPanel();
-            bMessageBorder.Child = spnlMessageText;
-            dpnlMessage.Children.Add(bMessageBorder);
-
-            TextBlock txtbMessageAuthor = new TextBlock
-            {
-                Text = message.Sender.FirstName + " " + (message.Sender.MiddleInitial == null ? "" : message.Sender.MiddleInitial + ". ") + message.Sender.LastName,
-                FontSize = 10,
-                Foreground = Brushes.DimGray
-            };
-            spnlMessageText.Children.Add(txtbMessageAuthor);
-
-            TextBlock txtbMessageContent = new TextBlock
-            {
-                Text = message.Content
-            };
-            spnlMessageText.Children.Add(txtbMessageContent);
-
-            if ((bool)message.Sender.Me)
-            {
-                DockPanel.SetDock(bMessageBorder, Dock.Right);
-                txtbMessageAuthor.FlowDirection = FlowDirection.RightToLeft;
-            }
-
-            spnlMessages.Children.Add(dpnlMessage);
             svMessages.ScrollToBottom();
         }
 

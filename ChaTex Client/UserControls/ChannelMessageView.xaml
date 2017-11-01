@@ -8,6 +8,16 @@
              xmlns:local="clr-namespace:ChaTex_Client.UserControls"
              mc:Ignorable="d">
 
+    <!--<UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Sender.MiddleInitial}" Value="S">
+                    <Setter TargetName="txtMiddleInitial" Property="TextBlock.Background" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>-->
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -22,7 +32,69 @@
         <!-- message display -->
         <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1"
                       Name="svMessages">
-            <StackPanel x:Name="spnlMessages" Background="White" >
+
+            <ItemsControl Name="icMessages">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type business:GetMessageDTO}">
+                        <DockPanel>
+                            <Border Margin="0,0,0,10" Padding="10" Background="WhiteSmoke">
+                                
+                                <!-- Position border element -->
+                                <Border.Resources>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Sender.Me}" Value="True">
+                                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Sender.Me}" Value="False">
+                                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Resources>
+                                
+                                <StackPanel>
+                                    
+                                    <!-- Position text blocks -->
+                                    <!--<StackPanel.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Sender.Me}" Value="True">
+                                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                    <Setter Property="TextAlignment" Value="Right"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Sender.Me}" Value="False">
+                                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                    <Setter Property="TextAlignment" Value="Left"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Resources>-->
+                                    
+                                    <!-- Author line -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="FontSize" Value="10"/>
+                                                <Setter Property="Foreground" Value="DimGray"/>
+                                            </Style>
+                                        </StackPanel.Resources>
+
+                                        <TextBlock Text="{Binding Sender.FirstName,
+                                                                  StringFormat='\{0\} '}"/>
+                                        <TextBlock Text="{Binding Sender.LastName}"/>
+                                    </StackPanel>
+                                    
+                                    <!-- Content line -->
+                                    <TextBlock Text="{Binding Content}"/>
+
+                                </StackPanel>
+                            </Border>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!--<StackPanel x:Name="spnlMessages" Background="White" >
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="Margin" Value="0,0,0,10"/>
@@ -30,7 +102,7 @@
                         <Setter Property="Background" Value="WhiteSmoke"/>
                     </Style>
                 </StackPanel.Resources>
-            </StackPanel>
+            </StackPanel>-->
         </ScrollViewer>
 
         <!-- write message textbox -->

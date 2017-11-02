@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChaTex_Client"
+         xmlns:BLayer="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"  
         mc:Ignorable="d"
+<<<<<<< HEAD
         Title="Create new group" Height="500" Width="500" ResizeMode="CanMinimize">
+=======
+        Title="Create new group" Height="630" Width="500">
+>>>>>>> tempbranch
     <StackPanel>
         <Label Content="Create Group" HorizontalAlignment="Center" FontSize="20" Margin="8,8,8,8"/>
         <Grid>
@@ -16,16 +21,17 @@
         <Label Content="Selecet roles to add:" HorizontalAlignment="Left" Margin="0,20,0,0" />
         <Grid>
             <ListBox 
-                    Height="100" 
+                    Height="110" 
                     x:Name="LBroles" 
-                    ItemsSource="{Binding Groups}"
                     SelectionMode="Multiple"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.CanContentScroll="False">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Content="{Binding FirstName}" />
+                        <CheckBox 
+                            Content="{Binding Name}"  
+                            IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate> 
             </ListBox>
@@ -34,22 +40,43 @@
         <Label Content="Select members to add:" HorizontalAlignment="Left" Margin="0,20,0,0" />
         <Grid>
             <ListBox 
-                    Height="100"
+                    Height="110"
                     x:Name="LBusers" 
-                    ItemsSource="{Binding Groups}"
-             
+                    SelectionMode="Multiple"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.CanContentScroll="False">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Content="{Binding FirstName}"  IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"/>
+                        <CheckBox 
+                            Content="{Binding FirstName}"  
+                            IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             
             </ListBox>
         </Grid>
-        
+
+        <Label Content="Select allowables for the group:" HorizontalAlignment="Left" Margin="0,20,0,0" />
+        <Grid>
+            <ListBox 
+                    Height="110"
+                    x:Name="LBallowable" 
+                    SelectionMode="Multiple"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.CanContentScroll="False">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox 
+                            Content="{Binding}"  
+                            IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+            </ListBox>
+        </Grid>
+
         <Button Content="Create new group" Width="150" Click="Button_Click" Margin="71,0"/>
 
     </StackPanel>

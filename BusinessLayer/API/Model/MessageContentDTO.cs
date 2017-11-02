@@ -13,11 +13,11 @@ namespace IO.Swagger.Model {
   [DataContract]
   public class MessageContentDTO {
     /// <summary>
-    /// Gets or Sets MessageContent
+    /// Gets or Sets Message
     /// </summary>
-    [DataMember(Name="messageContent", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "messageContent")]
-    public string MessageContent { get; set; }
+    [DataMember(Name="message", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "message")]
+    public string Message { get; set; }
 
 
     /// <summary>
@@ -27,7 +27,7 @@ namespace IO.Swagger.Model {
     public override string ToString()  {
       var sb = new StringBuilder();
       sb.Append("class MessageContentDTO {\n");
-      sb.Append("  MessageContent: ").Append(MessageContent).Append("\n");
+      sb.Append("  Message: ").Append(Message).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

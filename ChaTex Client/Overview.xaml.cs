@@ -18,16 +18,12 @@ namespace ChaTex_Client
             dpnlMainUI.Children.Add(GroupView.GetInstance());
         }
         
-        private void btnNewGroup_Click(object sender, RoutedEventArgs e)
+        private void btnAddGroup_Click(object sender, RoutedEventArgs e)
         {
             CreateNewGroup createNewGroup = new CreateNewGroup();
             createNewGroup.ShowDialog();
         }
 
-        private void ucGroupViewView_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void btnChat_Click(object sender, RoutedEventArgs e)
         {

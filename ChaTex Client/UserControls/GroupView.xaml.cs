@@ -25,6 +25,7 @@ namespace ChaTex_Client.UserControls
     {
         private ObservableCollection<GroupDTO> groups;
         private readonly UsersApi usersApi;
+        ChannelDTO selectedChannel;
 
         public static GroupView m_Instance;
 
@@ -52,20 +53,18 @@ namespace ChaTex_Client.UserControls
         }
 
         private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
-        {
-            Console.WriteLine("Selection change!");
-
+        {            
             if (e.NewValue is ChannelDTO channel)
             {
                 ucChannelMessageView.SetChannel((int)channel.Id);
+                selectedChannel = channel;
             }
         }
 
         private void btnEditChannel_Click(object sender, RoutedEventArgs e)
         {
-            //TODO
-            //var wEditChannel = new EditChannel();
-            //wEditChannel.ShowDialog();
+            var wEditChannel = new EditChannel(selectedChannel);
+            wEditChannel.ShowDialog();
         }
 
         private void ucChannelMessageView_Loaded(object sender, RoutedEventArgs e)

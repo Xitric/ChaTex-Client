@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ChaTex_Client.UserControls"
              mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              Background="Transparent">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,11 +24,14 @@
                     <RowDefinition Height="50" />
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal">
-                    <Label Grid.Column="0" Grid.Row="0" x:Name="lblSearchUsers" Content="Search:" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.563,0.084"/>
-                    <TextBox x:Name="txtSearchUsers" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" TextChanged="txtSearchUsers_TextChanged"/>
+                    <Label Foreground="#FFCED2D8" Grid.Column="0" Grid.Row="0" x:Name="lblSearchUsers" Content="Search:" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.563,0.084"/>
+                    <TextBox x:Name="txtSearchUsers" 
+                              BorderBrush="#FF002864" Foreground="White"
+                             materialDesign:HintAssist.Hint="Type a message"
+                             HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" TextChanged="txtSearchUsers_TextChanged" CaretBrush="#FF002864"/>
                 </StackPanel>
                 <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
-                    <ListBox  Name="lstBoxUsers">
+                    <ListBox Name="lstBoxUsers" Foreground="#FFB1B1B1">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">

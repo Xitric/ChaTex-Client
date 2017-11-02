@@ -6,18 +6,18 @@
         xmlns:local="clr-namespace:ChaTex_Client"
          xmlns:BLayer="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"  
         mc:Ignorable="d"
-        Title="Create new group" Height="630" Width="500" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="Create new group" Height="630" Width="500" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Background="#FF36393E">
 
     <StackPanel>
-        <Label Content="Create Group" HorizontalAlignment="Center" FontSize="20" Margin="8,8,8,8"/>
+        <Label Content="Create Group" HorizontalAlignment="Center" FontSize="20" Margin="8,8,8,8" Foreground="#FFCED2D8"/>
         <Grid>
-            <Label Content="Enter group name:" HorizontalAlignment="Left" />
+            <Label Content="Enter group name:" HorizontalAlignment="Left" Foreground="#FFCED2D8" />
             <TextBox x:Name="TBgroupName" HorizontalAlignment="Left" Margin="110,0,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="330"/>
         </Grid>
 
-        <Label Content="Selecet roles to add:" HorizontalAlignment="Left" Margin="0,20,0,0" />
+        <Label Content="Select roles to add:" HorizontalAlignment="Left" Margin="0,20,0,0" Foreground="#FFCED2D8" />
         <Grid>
-            <ListBox 
+            <ListBox Foreground="#FFB1B1B1"
                     Height="110" 
                     x:Name="LBroles" 
                     SelectionMode="Multiple"
@@ -34,9 +34,9 @@
             </ListBox>
         </Grid>
         
-        <Label Content="Select members to add:" HorizontalAlignment="Left" Margin="0,20,0,0" />
+        <Label Content="Select members to add:" HorizontalAlignment="Left" Margin="0,20,0,0" Foreground="#FFCED2D8" />
         <Grid>
-            <ListBox 
+            <ListBox Foreground="#FFB1B1B1"
                     Height="110"
                     x:Name="LBusers" 
                     SelectionMode="Multiple"
@@ -54,9 +54,9 @@
             </ListBox>
         </Grid>
 
-        <Label Content="Select allowables for the group:" HorizontalAlignment="Left" Margin="0,20,0,0" />
+        <Label Content="Select allowables for the group:" HorizontalAlignment="Left" Margin="0,20,0,0" Foreground="#FFCED2D8" />
         <Grid>
-            <ListBox 
+            <ListBox Foreground="#FFB1B1B1"
                     Height="110"
                     x:Name="LBallowable" 
                     SelectionMode="Multiple"
@@ -74,7 +74,7 @@
             </ListBox>
         </Grid>
 
-        <Button Content="Create new group" Width="150" Click="Button_Click" Margin="71,0"/>
+        <Button Content="Create new group" Width="150" Click="Button_Click" Margin="71,0" Background="#FF002864" BorderBrush="#FF002864"/>
 
     </StackPanel>
 </Window>

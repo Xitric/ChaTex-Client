@@ -27,6 +27,13 @@ namespace IO.Swagger.Api
         /// <param name="userEmail">The user&#39;s email</param>
         /// <returns>string</returns>
         string Login (string userEmail);
+        /// <summary>
+        /// Update a user Update an existing user in the database
+        /// </summary>
+        /// <param name="userId">User id of user to update</param>
+        /// <param name="updateUserDTO">The name of the user</param>
+        /// <returns></returns>
+        void UpdateUser (int? userId, UpdateUserDTO updateUserDTO);
     }
   
     /// <summary>
@@ -181,6 +188,45 @@ namespace IO.Swagger.Api
                 throw new ApiException ((int)response.StatusCode, "Error calling Login: " + response.ErrorMessage, response.ErrorMessage);
     
             return (string) ApiClient.Deserialize(response.Content, typeof(string), response.Headers);
+        }
+    
+        /// <summary>
+        /// Update a user Update an existing user in the database
+        /// </summary>
+        /// <param name="userId">User id of user to update</param> 
+        /// <param name="updateUserDTO">The name of the user</param> 
+        /// <returns></returns>            
+        public void UpdateUser (int? userId, UpdateUserDTO updateUserDTO)
+        {
+            
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling UpdateUser");
+            
+    
+            var path = "/users/{userId}";
+            path = path.Replace("{format}", "json");
+            path = path.Replace("{" + "userId" + "}", ApiClient.ParameterToString(userId));
+    
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+    
+                                                postBody = ApiClient.Serialize(updateUserDTO); // http body (model) parameter
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling UpdateUser: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling UpdateUser: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return;
         }
     
     }

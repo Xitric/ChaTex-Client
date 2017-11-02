@@ -91,7 +91,7 @@
     </Compile>
     <Compile Include="UserControls\ChatView.xaml.cs">
       <DependentUpon>ChatView.xaml</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UserControls\GroupView.xaml.cs">
       <DependentUpon>GroupView.xaml</DependentUpon>
     </Compile>
@@ -196,6 +196,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="pictures\button\friends.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pictures\button\friends2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pictures\button\friends3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pictures\button\chat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pictures\button\AddGroup.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -54,6 +54,13 @@ namespace IO.Swagger.Model {
     [JsonProperty(PropertyName = "Me")]
     public bool? Me { get; set; }
 
+    /// <summary>
+    /// Gets or Sets IsDeleted
+    /// </summary>
+    [DataMember(Name="IsDeleted", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "IsDeleted")]
+    public bool? IsDeleted { get; set; }
+
 
     /// <summary>
     /// Get the string presentation of the object
@@ -68,6 +75,7 @@ namespace IO.Swagger.Model {
       sb.Append("  LastName: ").Append(LastName).Append("\n");
       sb.Append("  Email: ").Append(Email).Append("\n");
       sb.Append("  Me: ").Append(Me).Append("\n");
+      sb.Append("  IsDeleted: ").Append(IsDeleted).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

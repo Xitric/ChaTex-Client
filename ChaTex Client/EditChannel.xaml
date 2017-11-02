@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ChaTex_Client"
         mc:Ignorable="d"
         Icon="ChaTexIcon.ico"
-        Title="Edit Channel" Height="190.788" Width="497.301" ResizeMode="CanMinimize">
+        Title="Edit Channel" Height="190.788" Width="497.301" ResizeMode="CanMinimize" Background="#FF36393E">
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height=".4*" />
@@ -22,14 +22,14 @@
         </Grid.ColumnDefinitions>
 
         <!--delete button-->
-        <Button Name="deleteButton" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Content="Delete channel" BorderBrush="#FF002864" HorizontalAlignment="Right" VerticalAlignment="Center" Width="138" Background="#FF002864" Foreground="#DDFFFFFF" Click="deleteButton_Click"/>
+        <Button x:Name="btnDeleteChannel" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Content="Delete channel" BorderBrush="#FF002864" HorizontalAlignment="Right" VerticalAlignment="Center" Width="138" Background="#FF002864" Foreground="#DDFFFFFF" Click="btnDeleteChannel_Click"/>
 
         <!--save button-->
-        <Button Name="saveButton" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Content="Save changes" BorderBrush="#FF002864" HorizontalAlignment="Left" VerticalAlignment="Center" Width="138" Background="#FF002864" Foreground="#DDFFFFFF"/>
+        <Button x:Name="btnSaveChannel" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Content="Save changes" BorderBrush="#FF002864" HorizontalAlignment="Left" VerticalAlignment="Center" Width="138" Background="#FF002864" Foreground="#DDFFFFFF" Click="btnSaveChannel_Click"/>
 
         <!--change name-->
-        <Label Grid.Column="1" Grid.Row="1" Content="Edit name:"  HorizontalAlignment="Center"  VerticalAlignment="Bottom"/>
-        <TextBox Name="channelName" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Left" Height="23"  TextWrapping="Wrap" VerticalAlignment="Bottom" Width="229" BorderBrush="#FF002864"/>
+        <Label x:Name="lblEditName" Grid.Column="1" Grid.Row="1" Content="Edit name:"  HorizontalAlignment="Center"  VerticalAlignment="Bottom" Foreground="#FFCED2D8"/>
+        <TextBox x:Name="txtChannelName" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Left" Height="23"  TextWrapping="Wrap" VerticalAlignment="Bottom" Width="229" BorderBrush="#FF002864" CaretBrush="#FF002864" Foreground="White"/>
 
         <!--add image-->
 

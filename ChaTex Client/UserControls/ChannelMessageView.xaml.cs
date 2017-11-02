@@ -139,7 +139,6 @@ namespace ChaTex_Client.UserControls
 
         private void btnSendMessage_Click(object sender, RoutedEventArgs e)
         {
-            MessagesApi messagesApi = new MessagesApi();
             var messageContentDTO = new MessageContentDTO()
             {
                 Message = txtMessage.Text
@@ -147,6 +146,29 @@ namespace ChaTex_Client.UserControls
             messagesApi.CreateMessage(CurrentChannelId, messageContentDTO);
 
             txtMessage.Clear();
+        }
+
+        private void miEditMessage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void miDeleteMessage_Click(object sender, EventArgs e)
+        {
+            //MenuItem button = (MenuItem)sender;
+            //int id = (int)((GetMessageDTO)button.DataContext).Id;
+
+            //messagesApi.DeleteMessage(id);
+        }
+
+        private void miEditMessage_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

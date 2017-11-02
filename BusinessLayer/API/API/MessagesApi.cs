@@ -15,17 +15,6 @@ namespace IO.Swagger.Api
         /// Create a new message Create a new message in a specific channel
         /// </summary>
         /// <param name="channelId">The id of the channel to post the message to</param>
-<<<<<<< HEAD
-        /// <param name="messageContent">Content of the message</param>
-        /// <returns></returns>
-        void CreateMessage (int? channelId, string messageContent);
-        /// <summary>
-        /// Delete a message Delete the message with the specified id
-        /// </summary>
-        /// <param name="messageId">The id of the message to delete</param>
-        /// <returns></returns>
-        void DeleteMessage (int? messageId);
-=======
         /// <param name="messageContentDTO">Content of the message</param>
         /// <returns></returns>
         void CreateMessage (int? channelId, MessageContentDTO messageContentDTO);
@@ -41,7 +30,7 @@ namespace IO.Swagger.Api
         /// <param name="messageId">The id of the message to get</param>
         /// <returns>GetMessageDTO</returns>
         GetMessageDTO GetMessage (int? messageId);
->>>>>>> tempbranch
+
         /// <summary>
         /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
@@ -116,29 +105,17 @@ namespace IO.Swagger.Api
         /// Create a new message Create a new message in a specific channel
         /// </summary>
         /// <param name="channelId">The id of the channel to post the message to</param> 
-<<<<<<< HEAD
-        /// <param name="messageContent">Content of the message</param> 
-        /// <returns></returns>            
-        public void CreateMessage (int? channelId, string messageContent)
-=======
         /// <param name="messageContentDTO">Content of the message</param> 
         /// <returns></returns>            
         public void CreateMessage (int? channelId, MessageContentDTO messageContentDTO)
->>>>>>> tempbranch
         {
             
             // verify the required parameter 'channelId' is set
             if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling CreateMessage");
             
-<<<<<<< HEAD
-            // verify the required parameter 'messageContent' is set
-            if (messageContent == null) throw new ApiException(400, "Missing required parameter 'messageContent' when calling CreateMessage");
-=======
             // verify the required parameter 'messageContentDTO' is set
             if (messageContentDTO == null) throw new ApiException(400, "Missing required parameter 'messageContentDTO' when calling CreateMessage");
->>>>>>> tempbranch
             
-    
             var path = "/channels/{channelId}/messages";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
@@ -149,7 +126,7 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-                                                postBody = ApiClient.Serialize(messageContent); // http body (model) parameter
+                                                postBody = ApiClient.Serialize(messageContentDTO); // http body (model) parameter
     
             // authentication setting, if any
             String[] authSettings = new String[] {  };
@@ -203,8 +180,6 @@ namespace IO.Swagger.Api
         }
     
         /// <summary>
-<<<<<<< HEAD
-=======
         /// Get a message Get a message with the specified id
         /// </summary>
         /// <param name="messageId">The id of the message to get</param> 
@@ -242,7 +217,6 @@ namespace IO.Swagger.Api
         }
     
         /// <summary>
->>>>>>> tempbranch
         /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
         /// <param name="channelId">The id of the channel to delete</param> 

@@ -150,7 +150,11 @@ namespace ChaTex_Client.UserControls
         private void btnSendMessage_Click(object sender, RoutedEventArgs e)
         {
             MessagesApi messagesApi = new MessagesApi();
-            messagesApi.CreateMessage(CurrentChannelId, new MessageContentDTO() { Message = txtMessage.Text });
+            var messageContentDTO = new MessageContentDTO()
+            {
+                Message = txtMessage.Text
+            };
+            messagesApi.CreateMessage(CurrentChannelId, messageContentDTO);
             txtMessage.Clear();
         }
     }

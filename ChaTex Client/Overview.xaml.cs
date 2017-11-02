@@ -15,6 +15,7 @@ using IO.Swagger.Api;
 using IO.Swagger.Model;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using ChaTex_Client.UserControls;
 
 namespace ChaTex_Client {
     /// <summary>
@@ -30,8 +31,7 @@ namespace ChaTex_Client {
 
             UsersApi usersApi = new UsersApi();   //new instans of UserApi    
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-
-            tvGroups.ItemsSource = groups;
+            //tvGroups.ItemsSource = groups;
         }
 
         private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e) {
@@ -59,6 +59,18 @@ namespace ChaTex_Client {
         private void ChannelMessageView_Loaded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void btnChat_Click(object sender, RoutedEventArgs e)
+        {
+            spnlMainUI.Children.Clear();
+            spnlMainUI.Children.Add(new ChatView());
+        }
+
+        private void btnGroups_Click(object sender, RoutedEventArgs e)
+        {
+            spnlMainUI.Children.Clear();
+            spnlMainUI.Children.Add(new ChannelMessageView());
         }
     }
 }

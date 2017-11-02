@@ -90,7 +90,8 @@
 
                             <!-- Message element -->
                             <Border Margin="0,0,0,10" Padding="10" Background="WhiteSmoke"
-                                        Grid.RowSpan="4">
+                                    Grid.RowSpan="4"
+                                    CornerRadius="10">
                                 <StackPanel>
 
                                     <!-- Author line -->

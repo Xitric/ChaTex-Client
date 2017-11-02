@@ -56,7 +56,7 @@
                                 </Style>
 
                                 <!-- Position edit button element -->
-                                <Style TargetType="Button" x:Key="DotButtonBase">
+                                <Style TargetType="Button">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Sender.Me}" Value="True">
                                             <Setter Property="Grid.Column" Value="3"/>
@@ -69,40 +69,23 @@
                             </Grid.Resources>
 
                             <!-- Button for making changes to a message -->
-                            <Button Background="Transparent" BorderThickness="0"
+                            <Button Name="btnManageMessage"
+                                    Background="Transparent" BorderThickness="0"
                                     Grid.Row="0"
                                     MinHeight="0"
-                                    Margin="5, 0, 5, 0">
+                                    Margin="5, 0, 5, 0"
+                                    Click="btnManageMessage_Click"
+                                    ContextMenuService.IsEnabled="false">
                                 <Image Source="/pictures/button/dotsIcon.png"
                                        RenderOptions.BitmapScalingMode="HighQuality"
                                        Height="4"/>
 
-                                <!-- From: https://stackoverflow.com/questions/4305565/wpf-context-menu-on-left-click -->
-                                <Button.Style>
-                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource DotButtonBase}">
-                                        <Style.Triggers>
-                                            <EventTrigger RoutedEvent="Click">
-                                                <EventTrigger.Actions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="ContextMenu.IsOpen">
-                                                                <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="True"/>
-                                                            </BooleanAnimationUsingKeyFrames>
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </EventTrigger.Actions>
-                                            </EventTrigger>
-                                        </Style.Triggers>
-                                        <Setter Property="ContextMenu">
-                                            <Setter.Value>
-                                                <ContextMenu>
-                                                    <MenuItem Header="Edit" Click="MenuItem_Click"/>
-                                                    <MenuItem Name="miDeleteMessage" Header="Delete" Click="miDeleteMessage_Click"/>
-                                                </ContextMenu>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </Button.Style>
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Name="miEditMessage" Header="Edit" Click="miEditMessage_Click"/>
+                                        <MenuItem Name="miDeleteMessage" Header="Delete" Click="miDeleteMessage_Click"/>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
                             </Button>
 
                             <!-- Message element -->

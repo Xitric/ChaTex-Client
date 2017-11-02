@@ -30,7 +30,8 @@ namespace ChaTex_Client.UserControls
         private MessagesApi messagesApi;
         private Thread messageFetcherThread;
         private CancellationTokenSource cancellation;
-        ObservableCollection<GetMessageDTO> messages = new ObservableCollection<GetMessageDTO>();
+        private ObservableCollection<GetMessageDTO> messages = new ObservableCollection<GetMessageDTO>();
+        private GetMessageDTO selectedMessage;
 
         public ChannelMessageView()
         {
@@ -124,6 +125,7 @@ namespace ChaTex_Client.UserControls
         private void AddMessage(GetMessageDTO message)
         {
             messages.Add(message);
+            Console.WriteLine(message.Sender.Me);
             if (message.CreationTime != null)
             {
                 latestMessage = (DateTime)message.CreationTime;
@@ -155,10 +157,8 @@ namespace ChaTex_Client.UserControls
 
         private void miDeleteMessage_Click(object sender, EventArgs e)
         {
-            //MenuItem button = (MenuItem)sender;
-            //int id = (int)((GetMessageDTO)button.DataContext).Id;
-
-            //messagesApi.DeleteMessage(id);
+            int id = (int)selectedMessage.Id;
+            messagesApi.DeleteMessage(id);
         }
 
         private void miEditMessage_Click_1(object sender, RoutedEventArgs e)
@@ -166,9 +166,14 @@ namespace ChaTex_Client.UserControls
 
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void btnManageMessage_Click(object sender, RoutedEventArgs e)
         {
+            Button btn = (Button)sender;
 
+            btn.ContextMenu.Visibility = Visibility.Visible;
+            btn.ContextMenu.IsOpen = true;
+
+            selectedMessage = (GetMessageDTO)btn.DataContext;
         }
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ChaTex_Client"
         mc:Ignorable="d"
         Icon="ChaTexIcon.ico"
-        Title="Login" Height="132.911" Width="300" ResizeMode="CanMinimize">
+        Title="Login" Height="132.911" Width="300" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Grid >
         <Label Foreground="#FF002864" FontWeight="Bold"  Content="E-mail:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <!--textbox for email-->

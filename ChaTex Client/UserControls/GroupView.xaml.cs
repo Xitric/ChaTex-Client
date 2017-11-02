@@ -26,14 +26,29 @@ namespace ChaTex_Client.UserControls
         private ObservableCollection<GroupDTO> groups;
         private readonly UsersApi usersApi;
 
-        public GroupView()
+        public static GroupView m_Instance;
+
+        private GroupView()
         {
             InitializeComponent();
+            usersApi = new UsersApi();           
+        }
 
-            usersApi = new UsersApi();   //new instans of UserApi    
+        private void populateUI()
+        {
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-
             tvGroups.ItemsSource = groups;
+        }
+
+        public static GroupView GetInstance()
+        {
+            if (m_Instance == null)
+            {
+                m_Instance = new GroupView();
+            }
+
+            m_Instance.populateUI();
+            return m_Instance;
         }
 
         private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ChaTex_Client"
          xmlns:BLayer="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"  
         mc:Ignorable="d"
-        Title="Create new group" Height="630" Width="500" ResizeMode="CanMinimize">
+        Title="Create new group" Height="630" Width="500" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
 
     <StackPanel>
         <Label Content="Create Group" HorizontalAlignment="Center" FontSize="20" Margin="8,8,8,8"/>

@@ -24,15 +24,31 @@ namespace ChaTex_Client.UserControls
     public partial class ChatView : UserControl
     {
         ObservableCollection<UserDTO> users;
-        public ChatView()
+        UsersApi usersApi = null;
+
+        public static ChatView m_Instance = null;
+       
+
+        public static ChatView GetInstance()
+        {
+            if (m_Instance == null)
+            {
+                m_Instance = new ChatView();
+            }
+            m_Instance.populateUI();
+            return m_Instance;
+        }
+        private ChatView()
         {
             InitializeComponent();
 
-            UsersApi usersApi = new UsersApi();
+            usersApi = new UsersApi();
+        }
+
+        private void populateUI()
+        {
             users = new ObservableCollection<UserDTO>(usersApi.GetAllUsers());
             lstBoxUsers.ItemsSource = users;
-
-            //tvGroups.ItemsSource = groups;
         }
 
         private void txtSearchUsers_TextChanged(object sender, TextChangedEventArgs e)

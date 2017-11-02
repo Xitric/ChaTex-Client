@@ -137,6 +137,7 @@ namespace ChaTex_Client.UserControls
             btnSendMessage.IsEnabled = txtMessage.Text.Length > 0;
         }
 
+        ///
         private void btnSendMessage_Click(object sender, RoutedEventArgs e)
         {
             MessagesApi messagesApi = new MessagesApi();
@@ -147,6 +148,7 @@ namespace ChaTex_Client.UserControls
             messagesApi.CreateMessage(CurrentChannelId, messageContentDTO);
 
             txtMessage.Clear();
+            txtMessage.Focus();
         }
     }
 }

@@ -11,13 +11,27 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class CreateChannelDTO {
+  public class RoleDTO {
+    /// <summary>
+    /// Gets or Sets Id
+    /// </summary>
+    [DataMember(Name="Id", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Id")]
+    public int? Id { get; set; }
+
     /// <summary>
     /// Gets or Sets Name
     /// </summary>
-    [DataMember(Name="name", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "name")]
+    [DataMember(Name="Name", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Name")]
     public string Name { get; set; }
+
+    /// <summary>
+    /// Gets or Sets IsDeleted
+    /// </summary>
+    [DataMember(Name="IsDeleted", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "IsDeleted")]
+    public bool? IsDeleted { get; set; }
 
 
     /// <summary>
@@ -26,8 +40,10 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class CreateChannelDTO {\n");
+      sb.Append("class RoleDTO {\n");
+      sb.Append("  Id: ").Append(Id).Append("\n");
       sb.Append("  Name: ").Append(Name).Append("\n");
+      sb.Append("  IsDeleted: ").Append(IsDeleted).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

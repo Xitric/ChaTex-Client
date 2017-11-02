@@ -48,8 +48,8 @@ namespace ChaTex_Client
         }
 
         public void beginEditchannel(){
-            EditChannel = new EditChannel();
-            EditChannel.Show();
+         //   EditChannel = new EditChannel();
+          //  EditChannel.Show();
         }
         
         private void btnSendRequest_Click(object sender, RoutedEventArgs e)

@@ -14,21 +14,21 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Add access rights for roles to a group This will add access rights for a list of roles to a specific group
         /// </summary>
-        /// <param name="addRolesToGroupDTO">A list of roles, and a group</param>
+        /// <param name="addRolesToGroupDTO">Roles to be added to group</param>
         /// <returns></returns>
         void AddRolesToGroup (AddRolesToGroupDTO addRolesToGroupDTO);
         /// <summary>
         /// Add users to a group This will add a list of users to a specific group
         /// </summary>
-        /// <param name="addUsersToGroupDTO">A list of users, and a group</param>
+        /// <param name="addUsersToGroupDTO">Users to be added to group</param>
         /// <returns></returns>
         void AddUsersToGroup (AddUsersToGroupDTO addUsersToGroupDTO);
         /// <summary>
         /// Create a new group Creates a new group with the caller as the group administrator
         /// </summary>
-        /// <param name="createGroupDTO">The object containing group information.</param>
-        /// <returns></returns>
-        void CreateGroup (CreateGroupDTO createGroupDTO);
+        /// <param name="createGroupDTO">The name of the group</param>
+        /// <returns>GroupDTO</returns>
+        GroupDTO CreateGroup (CreateGroupDTO createGroupDTO);
         /// <summary>
         /// Delete a group Deletes the group with the specified id
         /// </summary>
@@ -115,7 +115,7 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Add access rights for roles to a group This will add access rights for a list of roles to a specific group
         /// </summary>
-        /// <param name="addRolesToGroupDTO">A list of roles, and a group</param> 
+        /// <param name="addRolesToGroupDTO">Roles to be added to group</param> 
         /// <returns></returns>            
         public void AddRolesToGroup (AddRolesToGroupDTO addRolesToGroupDTO)
         {
@@ -149,7 +149,7 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Add users to a group This will add a list of users to a specific group
         /// </summary>
-        /// <param name="addUsersToGroupDTO">A list of users, and a group</param> 
+        /// <param name="addUsersToGroupDTO">Users to be added to group</param> 
         /// <returns></returns>            
         public void AddUsersToGroup (AddUsersToGroupDTO addUsersToGroupDTO)
         {
@@ -183,9 +183,9 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Create a new group Creates a new group with the caller as the group administrator
         /// </summary>
-        /// <param name="createGroupDTO">The object containing group information.</param> 
-        /// <returns></returns>            
-        public void CreateGroup (CreateGroupDTO createGroupDTO)
+        /// <param name="createGroupDTO">The name of the group</param> 
+        /// <returns>GroupDTO</returns>            
+        public GroupDTO CreateGroup (CreateGroupDTO createGroupDTO)
         {
             
     
@@ -211,7 +211,7 @@ namespace IO.Swagger.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CreateGroup: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (GroupDTO) ApiClient.Deserialize(response.Content, typeof(GroupDTO), response.Headers);
         }
     
         /// <summary>

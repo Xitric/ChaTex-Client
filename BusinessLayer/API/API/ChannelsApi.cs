@@ -14,25 +14,23 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Create a channel in a group Creates a new channel in the specified group
         /// </summary>
-        /// <param name="groupId">The id of the group to make the channel in</param>
-        /// <param name="createChannelDTO">A DTO containing groupId and a group name</param>
+        /// <param name="groupId"></param>
+        /// <param name="createChannelDTO">The name of the channel</param>
         /// <returns></returns>
         void CreateChannel (int? groupId, CreateChannelDTO createChannelDTO);
         /// <summary>
         /// Delete a channel from a group Deletes the channel from the specified group
         /// </summary>
-        /// <param name="groupId">The id of the group to delete the channel from</param>
         /// <param name="channelId">The id of the channel to delete</param>
         /// <returns></returns>
-        void DeleteChannel (int? groupId, int? channelId);
+        void DeleteChannel (int? channelId);
         /// <summary>
         /// Modify a channel in a group Modify a channel in a group
         /// </summary>
-        /// <param name="groupId">The id of the group</param>
         /// <param name="channelId">The id of the channel to update</param>
         /// <param name="channelName">The new name of the channel</param>
         /// <returns></returns>
-        void UpdateChannel (int? groupId, int? channelId, string channelName);
+        void UpdateChannel (int? channelId, string channelName);
     }
   
     /// <summary>
@@ -91,8 +89,8 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Create a channel in a group Creates a new channel in the specified group
         /// </summary>
-        /// <param name="groupId">The id of the group to make the channel in</param> 
-        /// <param name="createChannelDTO">A DTO containing groupId and a group name</param> 
+        /// <param name="groupId"></param> 
+        /// <param name="createChannelDTO">The name of the channel</param> 
         /// <returns></returns>            
         public void CreateChannel (int? groupId, CreateChannelDTO createChannelDTO)
         {
@@ -130,23 +128,18 @@ namespace IO.Swagger.Api
         /// <summary>
         /// Delete a channel from a group Deletes the channel from the specified group
         /// </summary>
-        /// <param name="groupId">The id of the group to delete the channel from</param> 
         /// <param name="channelId">The id of the channel to delete</param> 
         /// <returns></returns>            
-        public void DeleteChannel (int? groupId, int? channelId)
+        public void DeleteChannel (int? channelId)
         {
-            
-            // verify the required parameter 'groupId' is set
-            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling DeleteChannel");
             
             // verify the required parameter 'channelId' is set
             if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling DeleteChannel");
             
     
-            var path = "/groups/{groupId}/channels/{channelId}";
+            var path = "/channels/{channelId}";
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "groupId" + "}", ApiClient.ParameterToString(groupId));
-path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
     
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
@@ -172,15 +165,11 @@ path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channel
         /// <summary>
         /// Modify a channel in a group Modify a channel in a group
         /// </summary>
-        /// <param name="groupId">The id of the group</param> 
         /// <param name="channelId">The id of the channel to update</param> 
         /// <param name="channelName">The new name of the channel</param> 
         /// <returns></returns>            
-        public void UpdateChannel (int? groupId, int? channelId, string channelName)
+        public void UpdateChannel (int? channelId, string channelName)
         {
-            
-            // verify the required parameter 'groupId' is set
-            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling UpdateChannel");
             
             // verify the required parameter 'channelId' is set
             if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling UpdateChannel");
@@ -189,10 +178,9 @@ path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channel
             if (channelName == null) throw new ApiException(400, "Missing required parameter 'channelName' when calling UpdateChannel");
             
     
-            var path = "/groups/{groupId}/channels/{channelId}";
+            var path = "/channels/{channelId}";
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "groupId" + "}", ApiClient.ParameterToString(groupId));
-path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
     
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();

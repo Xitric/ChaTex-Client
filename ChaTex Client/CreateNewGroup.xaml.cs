@@ -22,100 +22,103 @@ namespace ChaTex_Client
     /// </summary>
     public partial class CreateNewGroup : Window
     {
-       
+        private String EA = "EmployeeAcknowledgeable";
+        private String EB = "EmployeeBookmark";
+        private String ES = "EmployeeSticky";
         public CreateNewGroup()
         {
             InitializeComponent();
-            //  List<GroupDTO> Groups = new List<GroupDTO>();
-            // UsersApi usersApi = new UsersApi();
-            // Groups = usersApi.GetGroupsForUser();
-            //LBroles.ItemsSource = Groups;
-            //LBmembers.ItemsSource = Groups;
-            List<UserDTO> DummyList = new List<UserDTO>();
-            int ulenght = 20;
-            UserDTO[] users = new UserDTO[ulenght];
 
-            for (int i = 0; i < ulenght; i++)
-            {
-                users[i] = new UserDTO();
-                users[i].Id = i;
-                users[i].FirstName = "User " + i;
-                DummyList.Add(users[i]);
-            }
+            IUsersApi usersApi = new UsersApi();
+            IRolesApi rolesApi = new RolesApi();
+            LBusers.ItemsSource = usersApi.GetAllUsers();
+            LBroles.ItemsSource = rolesApi.GetAllRoles();
 
-            LBroles.ItemsSource = DummyList;
-            LBusers.ItemsSource = DummyList;
-
+            List<String> AllowableList = new List<string>();
+            AllowableList.Add(EA);
+            AllowableList.Add(EB);
+            AllowableList.Add(ES);
+            LBallowable.ItemsSource = AllowableList;
         }
-
-        List<UserDTO> usersToAdd = new List<UserDTO>();
        
             private void Button_Click(object sender, RoutedEventArgs e)
               {
-            IGroupsApi groupsApi = new GroupsApi();
+                List<int?> rolesToAdd = new List<int?>();
+                List<int?> usersToAdd = new List<int?>();
+                bool AllowEA = false;
+                bool AllowEB = false;
+                bool AllowES = false;
+            try
 
-           
-            //IChannelsApi channelApi = new ChannelsApi();
-             try
-             {
+            {
+                GroupsApi groupsApi = new GroupsApi();
 
-               // groupsApi.CreateGroup(new CreateGroupDTO()
-                //{
-                  //  AllowEmployeeAcknowledgeable = false, AllowEmployeeBookmark = false, AllowEmployeeSticky = false, GroupName = TBgroupName.Text
-                //});
+                foreach (String item in LBallowable.Items)
+                {
+                    if ((LBallowable.SelectedItems.Contains(item) == true) & (item.Equals(EA)))
+                    {
+                        AllowEA = true;
+                    }
+                    if ((LBallowable.SelectedItems.Contains(item) == true) & (item.Equals(EB)))
+                    {
+                        AllowEB = true;
+                    }
+                    if ((LBallowable.SelectedItems.Contains(item) == true) & (item.Equals(ES)))
+                    {
+                        AllowES = true;
+                    }
+                }
+                
+                GroupDTO group = groupsApi.CreateGroup(new CreateGroupDTO()
+                {
+                    AllowEmployeeAcknowledgeable = AllowEA,
+                    AllowEmployeeBookmark = AllowEB,
+                    AllowEmployeeSticky = AllowES,
+                    GroupName = TBgroupName.Text
+                });
+                
+                foreach (RoleDTO item in LBroles.Items)
+                {
+                    if (LBroles.SelectedItems.Contains(item) == true)
+                    {
+                        rolesToAdd.Add(item.Id);
+                    }
+                }
+            
+                foreach (UserDTO item in LBusers.Items)
+                {
+                    if (LBusers.SelectedItems.Contains(item) == true)
+                    {
+                        usersToAdd.Add(item.Id);
+                    }
+                }
+
+
+                groupsApi.AddRolesToGroup(new AddRolesToGroupDTO()
+                {
+                     GroupId = group.Id,
+                     RoleIds = rolesToAdd
+                   } );
+
+                groupsApi.AddUsersToGroup(new AddUsersToGroupDTO()
+                {
+                   GroupId = group.Id,
+                   UserIds = usersToAdd
+                });
+
+
 
                 /*
-                 foreach (UserDTO item in LBusers.Items)
-                 { 
-                     usersToAdd.Add(item);
-                     Console.WriteLine(item.FirstName);
-                   //  Console.WriteLine(item);
-                 }
+                 groupsApi.AddUsersToGroup(new AddUsersToGroupDTO()
+                 {
+                     UserIds = usersToAdd
+                 } );
                  */
-                
 
-
-
-      
-
-                
-                // Console.WriteLine(LBusers.SelectedItems.Count);
-                //Console.WriteLine(LBroles.SelectedItems.Count);
-
-                /*  foreach(UserDTO user in LBusers.SelectedItems)
-                   {
-                       if (LBusers.IsEnabled)
-                       {
-                           Console.WriteLine("uwporeje");
-                       }
-                   }*/
-               // Console.WriteLine(LBusers.SelectedItems.Count());
-               
-               /* foreach (UserDTO user in LBusers.SelectedItems)
-                {
-                    usersToAdd.Add(user);
-                    Console.WriteLine(usersToAdd.Count());
-                    Console.WriteLine(user.FirstName);
-                }*/
-                /*
-                foreach(UserDTO user in usersToAdd)
-                {
-                    Console.WriteLine(user.FirstName);
-                }*/
-
-                //if some boxes are checked for roles
-                //make a new list roles for roleIDs
-                //groupApi.AddRolesToGroup(thenewgroup.Id, newListRoles)
-
-                //checkboxes should be members not in checked roles
-                //if some boxes are checked for members
-                //make a new list users for userIDs
-                //groupApi.AddUsersToGroup (thenewgroup.ID, newListUsers)
-             //   usersToAdd.Clear();
-              //  LBusers.SelectedIndex = -1;
             }
             catch (ApiException er)
             {
+                //lav message boks med fejlen
                     throw er;
             }
         }

@@ -12,6 +12,11 @@ namespace IO.Swagger.Api
     public interface IUsersApi
     {
         /// <summary>
+        /// Get all users Get the available users in the system
+        /// </summary>
+        /// <returns>List&lt;UserDTO&gt;</returns>
+        List<UserDTO> GetAllUsers ();
+        /// <summary>
         /// Get the available groups to a user. Get the available groups to the user with the specified ID.
         /// </summary>
         /// <returns>List&lt;GroupDTO&gt;</returns>
@@ -76,6 +81,38 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <value>An instance of the ApiClient</value>
         public ApiClient ApiClient {get; set;}
+    
+        /// <summary>
+        /// Get all users Get the available users in the system
+        /// </summary>
+        /// <returns>List&lt;UserDTO&gt;</returns>            
+        public List<UserDTO> GetAllUsers ()
+        {
+            
+    
+            var path = "/users";
+            path = path.Replace("{format}", "json");
+                
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+    
+                                                    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling GetAllUsers: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling GetAllUsers: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (List<UserDTO>) ApiClient.Deserialize(response.Content, typeof(List<UserDTO>), response.Headers);
+        }
     
         /// <summary>
         /// Get the available groups to a user. Get the available groups to the user with the specified ID.

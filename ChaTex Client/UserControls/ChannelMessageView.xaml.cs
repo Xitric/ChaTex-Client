@@ -2,6 +2,7 @@
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,30 +29,74 @@ namespace ChaTex_Client.UserControls
         private DateTime latestMessage;
         private MessagesApi messagesApi;
         private Thread messageFetcherThread;
+        private CancellationTokenSource cancellation;
+        ObservableCollection<GetMessageDTO> messages = new ObservableCollection<GetMessageDTO>();
 
         public ChannelMessageView()
         {
             messagesApi = new MessagesApi();
             InitializeComponent();
+            icMessages.ItemsSource = messages;
         }
 
         public void SetChannel(int channelId)
         {
+            //Stop fetching messages in previous channel
+            StopFetchingMessages();
+
+            //Repopulate window with new messages
             CurrentChannelId = channelId;
             ClearChat();
             PopulateChat();
 
-            //TODO: Interrupt
+            //Begin listening for messages in the new channel
+            BeginFetchingMessages();
+        }
 
+        /// <summary>
+        /// Stop listening for new messages from the server.
+        /// </summary>
+        private void StopFetchingMessages()
+        {
+            cancellation?.Cancel();
+        }
+
+        /// <summary>
+        /// Begin listening for new messages from the server.
+        /// </summary>
+        private void BeginFetchingMessages()
+        {
+            cancellation = new CancellationTokenSource();
             messageFetcherThread = new Thread(new ThreadStart(() =>
             {
-                while (true)
+                try
                 {
-                    FetchNewMessages();
+                    while (true)
+                    {
+                        FetchNewMessages();
+                    }
                 }
+                catch (TaskCanceledException) { }
             }));
 
             messageFetcherThread.Start();
+        }
+
+        /// <summary>
+        /// Get and display new messages from the web service. This operation will block until it receives a result, and should therefore be called from a separate thread.
+        /// </summary>
+        private void FetchNewMessages()
+        {
+            IEnumerable<GetMessageDTO> messages = messagesApi.GetMessagesSince(CurrentChannelId, latestMessage, cancellation.Token);
+
+            //Add to ui when ready
+            Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
+            {
+                foreach (GetMessageDTO msg in messages)
+                {
+                    AddMessage(msg);
+                }
+            });
         }
 
         /// <summary>
@@ -59,7 +104,7 @@ namespace ChaTex_Client.UserControls
         /// </summary>
         private void ClearChat()
         {
-            spnlMessages.Children.RemoveRange(0, spnlMessages.Children.Count);
+            messages.Clear();
         }
 
         private void PopulateChat()
@@ -78,68 +123,13 @@ namespace ChaTex_Client.UserControls
         /// <param name="message">The message to add</param>
         private void AddMessage(GetMessageDTO message)
         {
+            messages.Add(message);
             if (message.CreationTime != null)
             {
                 latestMessage = (DateTime)message.CreationTime;
             }
 
-            DockPanel dpnlMessage = new DockPanel
-            {
-                Height = Double.NaN,
-                LastChildFill = false,
-                Width = Double.NaN
-            };
-
-            Border bMessageBorder = new Border()
-            {
-                Padding = new Thickness(10),
-                Background = Brushes.WhiteSmoke
-            };
-
-            StackPanel spnlMessageText = new StackPanel();
-            bMessageBorder.Child = spnlMessageText;
-            dpnlMessage.Children.Add(bMessageBorder);
-
-            TextBlock txtbMessageAuthor = new TextBlock
-            {
-                Text = message.Sender.FirstName + " " + (message.Sender.MiddleInitial == null ? "" : message.Sender.MiddleInitial + ". ") + message.Sender.LastName,
-                FontSize = 10,
-                Foreground = Brushes.DimGray
-            };
-            spnlMessageText.Children.Add(txtbMessageAuthor);
-
-            TextBlock txtbMessageContent = new TextBlock
-            {
-                Text = message.Content
-            };
-            spnlMessageText.Children.Add(txtbMessageContent);
-
-            if ((bool)message.Sender.Me)
-            {
-                DockPanel.SetDock(bMessageBorder, Dock.Right);
-                txtbMessageAuthor.FlowDirection = FlowDirection.RightToLeft;
-            }
-
-            spnlMessages.Children.Add(dpnlMessage);
             svMessages.ScrollToBottom();
-        }
-
-        /// <summary>
-        /// Get and display new messages from the web service. This operation will block until it receives a result, and should therefore be called from a separate thread.
-        /// </summary>
-        private void FetchNewMessages()
-        {
-            MessagesApi messagesApi = new MessagesApi();
-            IEnumerable<GetMessageDTO> messages = messagesApi.GetMessagesSince(CurrentChannelId, latestMessage);
-
-            //Add to ui when the ui thread is ready
-            Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
-            {
-                foreach (GetMessageDTO msg in messages)
-                {
-                    AddMessage(msg);
-                }
-            });
         }
 
         private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
@@ -155,6 +145,7 @@ namespace ChaTex_Client.UserControls
                 Message = txtMessage.Text
             };
             messagesApi.CreateMessage(CurrentChannelId, messageContentDTO);
+
             txtMessage.Clear();
         }
     }

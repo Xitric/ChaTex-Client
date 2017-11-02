@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using RestSharp;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace IO.Swagger.Api
 {
@@ -45,7 +47,7 @@ namespace IO.Swagger.Api
         /// <param name="channelId">The id of the channel to delete</param>
         /// <param name="since">The time to get messages since. This defaults to the current time</param>
         /// <returns>List&lt;GetMessageDTO&gt;</returns>
-        List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since);
+        List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since, CancellationToken cancellation);
     }
   
     /// <summary>
@@ -240,8 +242,8 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (fromIndex != null) queryParams.Add("fromIndex", ApiClient.ParameterToString(fromIndex)); // query parameter
- if (count != null) queryParams.Add("count", ApiClient.ParameterToString(count)); // query parameter
+            if (fromIndex != null) queryParams.Add("fromIndex", ApiClient.ParameterToString(fromIndex)); // query parameter
+            if (count != null) queryParams.Add("count", ApiClient.ParameterToString(count)); // query parameter
                                         
             // authentication setting, if any
             String[] authSettings = new String[] {  };
@@ -263,7 +265,7 @@ namespace IO.Swagger.Api
         /// <param name="channelId">The id of the channel to delete</param> 
         /// <param name="since">The time to get messages since. This defaults to the current time</param> 
         /// <returns>List&lt;GetMessageDTO&gt;</returns>            
-        public List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since)
+        public List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since, CancellationToken cancellation)
         {
             
             // verify the required parameter 'channelId' is set
@@ -280,20 +282,20 @@ namespace IO.Swagger.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (since != null) queryParams.Add("since", ApiClient.ParameterToString(since)); // query parameter
+            if (since != null) queryParams.Add("since", ApiClient.ParameterToString(since)); // query parameter
                                         
             // authentication setting, if any
             String[] authSettings = new String[] {  };
-    
+
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
+            IRestResponse response = (IRestResponse)ApiClient.CallApiCancellable(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings, cancellation);
+
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling GetMessagesSince: " + response.Content, response.Content);
+                throw new ApiException((int)response.StatusCode, "Error calling GetMessagesSince: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling GetMessagesSince: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
+                throw new ApiException((int)response.StatusCode, "Error calling GetMessagesSince: " + response.ErrorMessage, response.ErrorMessage);
+
+            return (List<GetMessageDTO>)ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
         }
     
     }

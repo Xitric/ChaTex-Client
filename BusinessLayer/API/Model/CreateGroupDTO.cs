@@ -13,6 +13,13 @@ namespace IO.Swagger.Model {
   [DataContract]
   public class CreateGroupDTO {
     /// <summary>
+    /// Gets or Sets GroupName
+    /// </summary>
+    [DataMember(Name="groupName", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "groupName")]
+    public string GroupName { get; set; }
+
+    /// <summary>
     /// Gets or Sets AllowEmployeeSticky
     /// </summary>
     [DataMember(Name="allowEmployeeSticky", EmitDefaultValue=false)]
@@ -41,6 +48,7 @@ namespace IO.Swagger.Model {
     public override string ToString()  {
       var sb = new StringBuilder();
       sb.Append("class CreateGroupDTO {\n");
+      sb.Append("  GroupName: ").Append(GroupName).Append("\n");
       sb.Append("  AllowEmployeeSticky: ").Append(AllowEmployeeSticky).Append("\n");
       sb.Append("  AllowEmployeeAcknowledgeable: ").Append(AllowEmployeeAcknowledgeable).Append("\n");
       sb.Append("  AllowEmployeeBookmark: ").Append(AllowEmployeeBookmark).Append("\n");

@@ -31,7 +31,6 @@ namespace ChaTex_Client {
 
             UsersApi usersApi = new UsersApi();   //new instans of UserApi    
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-
             //tvGroups.ItemsSource = groups;
         }
 

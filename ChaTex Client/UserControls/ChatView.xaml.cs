@@ -23,15 +23,28 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class ChatView : UserControl
     {
+        ObservableCollection<UserDTO> users;
         public ChatView()
         {
             InitializeComponent();
 
             UsersApi usersApi = new UsersApi();
-            var users = new ObservableCollection<UserDTO>(usersApi.GetAllUsers());
+            users = new ObservableCollection<UserDTO>(usersApi.GetAllUsers());
             lstBoxUsers.ItemsSource = users;
 
             //tvGroups.ItemsSource = groups;
+        }
+
+        private void txtSearchUsers_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtSearchUsers.Text.Length > 0)
+            {
+                lstBoxUsers.ItemsSource = users.Where(x => x.FirstName.ToLower().Contains(txtSearchUsers.Text.ToLower()) || x.LastName.ToLower().Contains(txtSearchUsers.Text.ToLower()));
+            }
+            else
+            {
+                lstBoxUsers.ItemsSource = users;
+            }
         }
     }
 }

@@ -22,6 +22,7 @@ namespace ChaTex_Client {
         
         public Login() {
             InitializeComponent();
+            txtEmail.Text = "kdavi16@student.sdu.dk";
         }
 
         private void btnSignIn_Click(object sender, RoutedEventArgs e) {

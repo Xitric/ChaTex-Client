@@ -4,18 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace ChaTex_Client.UserControls
@@ -63,7 +55,7 @@ namespace ChaTex_Client.UserControls
         }
 
         /// <summary>
-        /// Begin listening for new messages from the server.
+        /// Begin listening for message events from the server.
         /// </summary>
         private void BeginFetchingMessages()
         {
@@ -84,18 +76,29 @@ namespace ChaTex_Client.UserControls
         }
 
         /// <summary>
-        /// Get and display new messages from the web service. This operation will block until it receives a result, and should therefore be called from a separate thread.
+        /// Get message events from the web service and update the message view. This operation will block until it receives a result, and should therefore be called from a separate thread.
         /// </summary>
         private void FetchNewMessages()
         {
-            IEnumerable<GetMessageDTO> messages = messagesApi.GetMessagesSince(CurrentChannelId, latestMessage, cancellation.Token);
+            IEnumerable<MessageEventDTO> messageEvents = messagesApi.GetMessageEvents(CurrentChannelId, latestMessage, cancellation.Token);
 
             //Add to ui when ready
             Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
             {
-                foreach (GetMessageDTO msg in messages)
+                foreach (MessageEventDTO msgEvent in messageEvents)
                 {
-                    AddMessage(msg);
+                    switch(msgEvent.Type)
+                    {
+                        case "NewMessage":
+                            AddMessage(msgEvent.Message);
+                            break;
+                        case "DeleteMessage":
+                            DeleteMessage(msgEvent.Message);
+                            break;
+                        case "UpdateMessage":
+                            UpdateMessage(msgEvent.Message);
+                            break;
+                    }
                 }
             });
         }
@@ -125,13 +128,40 @@ namespace ChaTex_Client.UserControls
         private void AddMessage(GetMessageDTO message)
         {
             messages.Add(message);
-            Console.WriteLine(message.Sender.Me);
             if (message.CreationTime != null)
             {
                 latestMessage = (DateTime)message.CreationTime;
             }
 
             svMessages.ScrollToBottom();
+        }
+
+        private void DeleteMessage(GetMessageDTO message)
+        {
+            int replaceIndex = messages.IndexOf(messages.SingleOrDefault(m => m.Id == message.Id));
+            if (replaceIndex != -1)
+            {
+                messages[replaceIndex] = message;
+            }
+
+            if (message.CreationTime != null)
+            {
+                latestMessage = (DateTime)message.DeletionDate;
+            }
+        }
+
+        private void UpdateMessage(GetMessageDTO message)
+        {
+            int replaceIndex = messages.IndexOf(messages.SingleOrDefault(m => m.Id == message.Id));
+            if (replaceIndex != -1)
+            {
+                messages[replaceIndex] = message;
+            }
+
+            if (message.CreationTime != null)
+            {
+                latestMessage = (DateTime)message.LastEdited;
+            }
         }
 
         private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
@@ -159,11 +189,6 @@ namespace ChaTex_Client.UserControls
         {
             int id = (int)selectedMessage.Id;
             messagesApi.DeleteMessage(id);
-        }
-
-        private void miEditMessage_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void btnManageMessage_Click(object sender, RoutedEventArgs e)

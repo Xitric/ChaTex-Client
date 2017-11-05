@@ -32,7 +32,6 @@ namespace IO.Swagger.Api
         /// <param name="messageId">The id of the message to get</param>
         /// <returns>GetMessageDTO</returns>
         GetMessageDTO GetMessage (int? messageId);
-
         /// <summary>
         /// Get the messages from a specific channel Get a number of messages from the specified channel
         /// </summary>
@@ -42,12 +41,12 @@ namespace IO.Swagger.Api
         /// <returns>List&lt;GetMessageDTO&gt;</returns>
         List<GetMessageDTO> GetMessages (int? channelId, int? fromIndex, int? count);
         /// <summary>
-        /// Wait for and get new messages sent to a channel This request will not return from the service until at least one new message has been posted
+        /// Wait for and get new messages, message deletions, and message edits in a channel This request will not return from the service until at least one new message event has occurred
         /// </summary>
-        /// <param name="channelId">The id of the channel to delete</param>
-        /// <param name="since">The time to get messages since. This defaults to the current time</param>
-        /// <returns>List&lt;GetMessageDTO&gt;</returns>
-        List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since, CancellationToken cancellation);
+        /// <param name="channelId">The id of the channel to listen to</param>
+        /// <param name="since">The time to get message events since</param>
+        /// <returns>List&lt;MessageEventDTO&gt;</returns>
+        List<MessageEventDTO> GetMessageEvents (int? channelId, DateTime? since, CancellationToken cancellation);
     }
   
     /// <summary>
@@ -258,20 +257,23 @@ namespace IO.Swagger.Api
     
             return (List<GetMessageDTO>) ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
         }
-    
+
         /// <summary>
-        /// Wait for and get new messages sent to a channel This request will not return from the service until at least one new message has been posted
+        /// Wait for and get new messages, message deletions, and message edits in a channel This request will not return from the service until at least one new message event has occurred
         /// </summary>
-        /// <param name="channelId">The id of the channel to delete</param> 
-        /// <param name="since">The time to get messages since. This defaults to the current time</param> 
-        /// <returns>List&lt;GetMessageDTO&gt;</returns>            
-        public List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since, CancellationToken cancellation)
+        /// <param name="channelId">The id of the channel to listen to</param> 
+        /// <param name="since">The time to get message events since</param> 
+        /// <returns>List&lt;MessageEventDTO&gt;</returns>            
+        public List<MessageEventDTO> GetMessageEvents (int? channelId, DateTime? since, CancellationToken cancellation)
         {
-            
+
             // verify the required parameter 'channelId' is set
-            if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling GetMessagesSince");
-            
-    
+            if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling GetMessageEvents");
+
+            // verify the required parameter 'since' is set
+            if (since == null) throw new ApiException(400, "Missing required parameter 'since' when calling GetMessageEvents");
+
+
             var path = "/channels/{channelId}/messages/live";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
@@ -291,11 +293,11 @@ namespace IO.Swagger.Api
             IRestResponse response = (IRestResponse)ApiClient.CallApiCancellable(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings, cancellation);
 
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException((int)response.StatusCode, "Error calling GetMessagesSince: " + response.Content, response.Content);
+                throw new ApiException((int)response.StatusCode, "Error calling GetMessageEvents: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException((int)response.StatusCode, "Error calling GetMessagesSince: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException((int)response.StatusCode, "Error calling GetMessageEvents: " + response.ErrorMessage, response.ErrorMessage);
 
-            return (List<GetMessageDTO>)ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
+            return (List<MessageEventDTO>)ApiClient.Deserialize(response.Content, typeof(List<MessageEventDTO>), response.Headers);
         }
     
     }

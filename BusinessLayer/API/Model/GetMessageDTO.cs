@@ -34,6 +34,20 @@ namespace IO.Swagger.Model {
     public string Content { get; set; }
 
     /// <summary>
+    /// Gets or Sets DeletionDate
+    /// </summary>
+    [DataMember(Name="DeletionDate", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "DeletionDate")]
+    public DateTime? DeletionDate { get; set; }
+
+    /// <summary>
+    /// Gets or Sets LastEdited
+    /// </summary>
+    [DataMember(Name="LastEdited", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "LastEdited")]
+    public DateTime? LastEdited { get; set; }
+
+    /// <summary>
     /// Gets or Sets Sender
     /// </summary>
     [DataMember(Name="Sender", EmitDefaultValue=false)]
@@ -51,6 +65,8 @@ namespace IO.Swagger.Model {
       sb.Append("  Id: ").Append(Id).Append("\n");
       sb.Append("  CreationTime: ").Append(CreationTime).Append("\n");
       sb.Append("  Content: ").Append(Content).Append("\n");
+      sb.Append("  DeletionDate: ").Append(DeletionDate).Append("\n");
+      sb.Append("  LastEdited: ").Append(LastEdited).Append("\n");
       sb.Append("  Sender: ").Append(Sender).Append("\n");
       sb.Append("}\n");
       return sb.ToString();

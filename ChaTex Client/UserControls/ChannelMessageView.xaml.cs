@@ -1,4 +1,5 @@
-﻿using IO.Swagger.Api;
+﻿using BusinessLayer.Enum;
+using IO.Swagger.Api;
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,9 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class ChannelMessageView : UserControl
     {
-        private int? CurrentChannelId;
+        private MessageViewState state;
+        private int? currentChannelId;
+        private int? currentChatId;
         private DateTime latestMessage;
         private MessagesApi messagesApi;
         private Thread messageFetcherThread;
@@ -41,11 +44,31 @@ namespace ChaTex_Client.UserControls
 
         public void SetChannel(int channelId)
         {
+            currentChannelId = channelId;
+
+            //Sets our state, so the program knows if we're in a channel or chat
+            state = MessageViewState.Channel;
+
             //Stop fetching messages in previous channel
             StopFetchingMessages();
 
             //Repopulate window with new messages
-            CurrentChannelId = channelId;
+            ClearChat();
+            PopulateChat();
+
+            //Begin listening for messages in the new channel
+            BeginFetchingMessages();
+        }
+
+        public void SetChat(int chatId)
+        {
+            state = MessageViewState.Chat;
+            currentChatId = chatId;
+
+            //Stop fetching messages in previous channel
+            StopFetchingMessages();
+
+            //Repopulate window with new messages
             ClearChat();
             PopulateChat();
 
@@ -87,7 +110,16 @@ namespace ChaTex_Client.UserControls
         /// </summary>
         private void FetchNewMessages()
         {
-            IEnumerable<GetMessageDTO> messages = messagesApi.GetMessagesSince(CurrentChannelId, latestMessage, cancellation.Token);
+            IEnumerable<GetMessageDTO> messages = null;
+
+            if (state == MessageViewState.Channel)
+            {
+                messagesApi.GetMessagesSince(currentChannelId, state, latestMessage, cancellation.Token);
+            }
+            else
+            {
+
+            }
 
             //Add to ui when ready
             Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
@@ -109,7 +141,14 @@ namespace ChaTex_Client.UserControls
 
         private void PopulateChat()
         {
-            List<GetMessageDTO> messages = messagesApi.GetMessages(CurrentChannelId, 0, 25); //TODO: Rely on default
+            if (state == MessageViewState.Channel)
+            {
+                List<GetMessageDTO> messages = messagesApi.GetMessages(currentChannelId, 0, 25); //TODO: Rely on default
+            }
+            else
+            {
+
+            }
 
             foreach (GetMessageDTO message in messages)
             {
@@ -145,7 +184,7 @@ namespace ChaTex_Client.UserControls
             {
                 Message = txtMessage.Text
             };
-            messagesApi.CreateMessage(CurrentChannelId, messageContentDTO);
+            messagesApi.CreateMessage(currentChannelId, messageContentDTO);
 
             txtMessage.Clear();
             txtMessage.Focus();

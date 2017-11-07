@@ -23,8 +23,8 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class ChatView : UserControl
     {
-        ObservableCollection<UserDTO> users;
-        UsersApi usersApi = null;
+        ObservableCollection<ChatDTO> chats;
+        //ChatAPI _chatApi = null;
 
         public static ChatView m_Instance = null;
        
@@ -42,24 +42,34 @@ namespace ChaTex_Client.UserControls
         {
             InitializeComponent();
 
-            usersApi = new UsersApi();
+            //_chatApi = new ChatApi();
         }
 
         private void populateUI()
         {
-            users = new ObservableCollection<UserDTO>(usersApi.GetAllUsers());
-            lstBoxUsers.ItemsSource = users;
+            //chats = new ObservableCollection<ChatDTO>(_chatApi.GetAllChats());
+            lstBoxChats.ItemsSource = chats;
         }
 
         private void txtSearchUsers_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (txtSearchUsers.Text.Length > 0)
+            if (txtSearchChats.Text.Length > 0)
             {
-                lstBoxUsers.ItemsSource = users.Where(x => x.FirstName.ToLower().Contains(txtSearchUsers.Text.ToLower()) || x.LastName.ToLower().Contains(txtSearchUsers.Text.ToLower()));
+                lstBoxChats.ItemsSource = chats.Where(x => x.Name.ToLower().Contains(txtSearchChats.Text.ToLower()));
             }
             else
             {
-                lstBoxUsers.ItemsSource = users;
+                lstBoxChats.ItemsSource = chats;
+            }
+        }
+
+        private void lstBoxChats_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var chat = (ChatDTO)lstBoxChats.SelectedItem;
+            if (chat != null)
+            {
+                //_chatApi.GetMessagesBetweenUser((int)user.Id);
+                ucChannelMessageView.SetChat((int)chat.Id);
             }
         }
     }

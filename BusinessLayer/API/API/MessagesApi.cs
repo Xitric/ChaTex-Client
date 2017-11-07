@@ -4,6 +4,7 @@ using RestSharp;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System.Threading;
+using BusinessLayer.Enum;
 
 namespace IO.Swagger.Api
 {
@@ -45,7 +46,7 @@ namespace IO.Swagger.Api
         /// <param name="channelId">The id of the channel to delete</param>
         /// <param name="since">The time to get messages since. This defaults to the current time</param>
         /// <returns>List&lt;GetMessageDTO&gt;</returns>
-        List<GetMessageDTO> GetMessagesSince(int? channelId, DateTime? since, CancellationToken cancellationToken);
+        List<GetMessageDTO> GetMessagesSince(int? typeId, MessageViewState state, DateTime? since, CancellationToken cancellationToken);
     }
 
     /// <summary>
@@ -264,27 +265,35 @@ namespace IO.Swagger.Api
         /// <param name="channelId">The id of the channel to delete</param> 
         /// <param name="since">The time to get messages since. This defaults to the current time</param> 
         /// <returns>List&lt;GetMessageDTO&gt;</returns>            
-        public List<GetMessageDTO> GetMessagesSince (int? channelId, DateTime? since, CancellationToken cancellation)
+        public List<GetMessageDTO> GetMessagesSince(int? typeId, MessageViewState state, DateTime? since, CancellationToken cancellation)
         {
-            
+            var path = string.Empty;
             // verify the required parameter 'channelId' is set
-            if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling GetMessagesSince");
-            
-    
-            var path = "/channels/{channelId}/messages/live";
+            if (typeId == null) throw new ApiException(400, "Missing required parameter 'typeId' when calling GetMessagesSince");
+
+            if (state == MessageViewState.Channel)
+            {
+                path = "/channels/{channelId}/messages/live";
+                path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(typeId));
+            }
+            else
+            {
+                path = "/chat/{chatId}/messages/live";
+                path = path.Replace("{" + "chatId" + "}", ApiClient.ParameterToString(typeId));
+            }
+
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
-    
+
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
-    
+
             if (since != null) queryParams.Add("since", ApiClient.ParameterToString(since)); // query parameter
-                                        
+
             // authentication setting, if any
-            String[] authSettings = new String[] {  };
+            String[] authSettings = new String[] { };
 
             // make the HTTP request
             IRestResponse response = (IRestResponse)ApiClient.CallApiCancellable(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings, cancellation);
@@ -296,6 +305,6 @@ namespace IO.Swagger.Api
 
             return (List<GetMessageDTO>)ApiClient.Deserialize(response.Content, typeof(List<GetMessageDTO>), response.Headers);
         }
-    
+
     }
 }

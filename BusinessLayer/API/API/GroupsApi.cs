@@ -50,6 +50,12 @@ namespace IO.Swagger.Api
         /// <returns></returns>
         void DeleteUsersFromGroup (int? groupId, List<int?> userIds);
         /// <summary>
+        /// Get users for a group Get users, taking into account members and roles on the group
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns>List&lt;UserDTO&gt;</returns>
+        List<UserDTO> GetAllGroupUsers (int? groupId);
+        /// <summary>
         /// Mark or unmark a user as administrator Give a group member administrator rights or remove administrator rights from a group administrator
         /// </summary>
         /// <param name="groupId">The id of the group to affect</param>
@@ -57,6 +63,13 @@ namespace IO.Swagger.Api
         /// <param name="isAdministrator">true to mark the user as group administrator, false to unmark</param>
         /// <returns></returns>
         void MarkUserAsAdministrator (int? groupId, int? userId, bool? isAdministrator);
+        /// <summary>
+        /// Update group name update the group name with the specified id
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="groupName"></param>
+        /// <returns></returns>
+        void UpdateGroup (int? groupId, string groupName);
     }
   
     /// <summary>
@@ -336,6 +349,43 @@ namespace IO.Swagger.Api
         }
     
         /// <summary>
+        /// Get users for a group Get users, taking into account members and roles on the group
+        /// </summary>
+        /// <param name="groupId"></param> 
+        /// <returns>List&lt;UserDTO&gt;</returns>            
+        public List<UserDTO> GetAllGroupUsers (int? groupId)
+        {
+            
+            // verify the required parameter 'groupId' is set
+            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling GetAllGroupUsers");
+            
+    
+            var path = "/groups/{groupId}/users";
+            path = path.Replace("{format}", "json");
+            path = path.Replace("{" + "groupId" + "}", ApiClient.ParameterToString(groupId));
+    
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+    
+                                                    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling GetAllGroupUsers: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling GetAllGroupUsers: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (List<UserDTO>) ApiClient.Deserialize(response.Content, typeof(List<UserDTO>), response.Headers);
+        }
+    
+        /// <summary>
         /// Mark or unmark a user as administrator Give a group member administrator rights or remove administrator rights from a group administrator
         /// </summary>
         /// <param name="groupId">The id of the group to affect</param> 
@@ -378,6 +428,48 @@ path = path.Replace("{" + "userId" + "}", ApiClient.ParameterToString(userId));
                 throw new ApiException ((int)response.StatusCode, "Error calling MarkUserAsAdministrator: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling MarkUserAsAdministrator: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return;
+        }
+    
+        /// <summary>
+        /// Update group name update the group name with the specified id
+        /// </summary>
+        /// <param name="groupId"></param> 
+        /// <param name="groupName"></param> 
+        /// <returns></returns>            
+        public void UpdateGroup (int? groupId, string groupName)
+        {
+            
+            // verify the required parameter 'groupId' is set
+            if (groupId == null) throw new ApiException(400, "Missing required parameter 'groupId' when calling UpdateGroup");
+            
+            // verify the required parameter 'groupName' is set
+            if (groupName == null) throw new ApiException(400, "Missing required parameter 'groupName' when calling UpdateGroup");
+            
+    
+            var path = "/groups/{groupId}";
+            path = path.Replace("{format}", "json");
+            path = path.Replace("{" + "groupId" + "}", ApiClient.ParameterToString(groupId));
+    
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+    
+             if (groupName != null) queryParams.Add("groupName", ApiClient.ParameterToString(groupName)); // query parameter
+                                        
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling UpdateGroup: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling UpdateGroup: " + response.ErrorMessage, response.ErrorMessage);
     
             return;
         }

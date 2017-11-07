@@ -14,32 +14,47 @@ namespace ChaTex_Client.UserControls
     {
         private ObservableCollection<GroupDTO> groups;
         private readonly UsersApi usersApi;
+        ChannelDTO selectedChannel;
         private readonly ChannelsApi channelsApi;
 
-        public GroupView()
+        public static GroupView m_Instance;
+
+        private GroupView()
         {
             InitializeComponent();
+            usersApi = new UsersApi();           
+        }
 
-            usersApi = new UsersApi();
-            channelsApi = new ChannelsApi();
+        private void populateUI()
+        {
             groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-
             tvGroups.ItemsSource = groups;
         }
 
-        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
+        public static GroupView GetInstance()
         {
+            if (m_Instance == null)
+            {
+                m_Instance = new GroupView();
+            }
+
+            m_Instance.populateUI();
+            return m_Instance;
+        }
+
+        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
+        {            
             if (e.NewValue is ChannelDTO channel)
             {
                 ucChannelMessageView.SetChannel((int)channel.Id);
+                
             }
         }
 
         private void btnEditChannel_Click(object sender, RoutedEventArgs e)
         {
-            //TODO
-            //var wEditChannel = new EditChannel();
-            //wEditChannel.ShowDialog();
+            var wEditChannel = new EditChannel(selectedChannel);
+            wEditChannel.ShowDialog();
         }
 
         private void ucChannelMessageView_Loaded(object sender, RoutedEventArgs e)

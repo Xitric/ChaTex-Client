@@ -15,29 +15,26 @@ namespace ChaTex_Client
         public Overview() {
 
             InitializeComponent();
+            dpnlMainUI.Children.Add(GroupView.GetInstance());
         }
         
-        private void btnNewGroup_Click(object sender, RoutedEventArgs e)
+        private void btnAddGroup_Click(object sender, RoutedEventArgs e)
         {
             CreateNewGroup createNewGroup = new CreateNewGroup();
             createNewGroup.ShowDialog();
         }
 
-        private void ucGroupViewView_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void btnChat_Click(object sender, RoutedEventArgs e)
         {
             dpnlMainUI.Children.Clear();
-            dpnlMainUI.Children.Add(new ChatView());
+            dpnlMainUI.Children.Add(ChatView.GetInstance());
         }
 
         private void btnGroups_Click(object sender, RoutedEventArgs e)
         {
             dpnlMainUI.Children.Clear();
-            dpnlMainUI.Children.Add(new GroupView());
+            dpnlMainUI.Children.Add(GroupView.GetInstance());
         }
     }
 }

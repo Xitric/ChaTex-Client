@@ -9,12 +9,17 @@
         xmlns:usercontrols="clr-namespace:ChaTex_Client.UserControls"
         mc:Ignorable="d"
          TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         Icon="ChaTexIcon.ico"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-        Title="ChaTex" Height="484.81" Width="655.696" ResizeMode="CanResizeWithGrip" >
+        Title="ChaTex" Height="484.81" Width="655.696" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" >
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF36393E" Offset="0"/>
+            <GradientStop Color="#FF36393E" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
 
 
     <!-- main background -->
@@ -30,7 +35,7 @@
 
         <!-- main menu -->
 
-        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="1" Grid.ColumnSpan="1">
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="1" Grid.ColumnSpan="1" Background="#FF1E2124">
             <Grid Height="454" Margin="0,0,0.333,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
@@ -45,17 +50,36 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Height="65" Grid.Row="0"   Source="pictures/person/person-icon.png"  />
+                <Image Height="65" Grid.Row="0"   Source="pictures/person/person-icon.png" RenderOptions.BitmapScalingMode="HighQuality"  />
 
                 <Button x:Name="btnChat" Grid.Row="1" d:LayoutOverrides="Height" BorderBrush="{x:Null}"  BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnChat_Click">
                     <StackPanel>
-                        <Image Source="pictures/button/friends.png" />
+                        <Image Source="pictures/button/chat.png" RenderOptions.BitmapScalingMode="HighQuality">
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Source" Value="pictures/button/chat.png"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Source" Value="pictures/button/friends3.png"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="btnGroups"  Grid.Row="2" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnGroups_Click">
+                    <StackPanel>
+                        <Image Source="pictures/button/friends3.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="btnAddGroup" Grid.Row="3" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnAddGroup_Click">
+                    <StackPanel>
+                        <Image Source="pictures/button/AddGroup.png" RenderOptions.BitmapScalingMode="HighQuality" />
                         <TextBlock>Chat</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="btnGroups" Content="Group" Grid.Row="2" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="#FF002864" Click="btnGroups_Click"/>
-                <Button Content="New&#10;Group" Grid.Row="3" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1" Style="{DynamicResource MaterialDesignFloatingActionButton}"  x:Name="btnNewGroup" Click="btnNewGroup_Click"/>
-
+                
             </Grid>
         </StackPanel>
 
@@ -63,11 +87,7 @@
         <DockPanel Name="dpnlMainUI" Grid.Column="1"
                                   Grid.ColumnSpan="1"
                                   Grid.Row="1"
-                                  Grid.RowSpan="1">
-            
-            <usercontrols:GroupView x:Name="ucGroupViewView"
-                                  Loaded="ucGroupViewView_Loaded"/>
-        </DockPanel>
+                                  Grid.RowSpan="1"/>
     </Grid>
 
 </Window>

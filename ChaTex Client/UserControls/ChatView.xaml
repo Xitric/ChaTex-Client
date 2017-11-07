@@ -4,31 +4,59 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ChaTex_Client.UserControls"
-             mc:Ignorable="d" >
-    <Grid Background="White">
-        <ListBox Name="lstBoxUsers" Margin="0,33,202,0" Height="300" Width="300">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock>
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} {1}">
-                                        <Binding Path="FirstName"/>
-                                        <Binding Path="LastName"/>
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                               
-                            </TextBlock>
-                        </StackPanel>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            
-        </ListBox>
-        <Label x:Name="lblSearchUsers" Content="Search:" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.563,0.084"/>
-        <TextBox x:Name="txtSearchUsers" HorizontalAlignment="Left" Height="23" Margin="63,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="85" TextChanged="txtSearchUsers_TextChanged"/>
+             mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Background="Transparent">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200px" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--<Border Grid.Column="0" Grid.RowSpan="3" BorderBrush="Gray" 
+        BorderThickness="0.5,0,0.5,0" Background="{x:Null}" />-->
+
+        <Border Grid.Column="0" Grid.Row="0" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Margin="3,0,4,0" Grid.RowSpan="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Label Foreground="#FFCED2D8" Grid.Column="0" Grid.Row="0" x:Name="lblSearchChat" Content="Search:" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.563,0.084"/>
+                    <TextBox x:Name="txtSearchChats" 
+                              BorderBrush="#FF002864" Foreground="White"
+                             materialDesign:HintAssist.Hint="Type a message"
+                             HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" TextChanged="txtSearchUsers_TextChanged" CaretBrush="#FF002864"/>
+                </StackPanel>
+                <Button Name="btnCreateChat" Grid.Row="1" Width="100" Height="30" Content="Create chat" Background="#FF002864" BorderBrush="#FF002864" Click="btnCreateChat_Click" FontSize="12"></Button>
+                <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
+                    <ListBox Name="lstBoxChats" Foreground="#FFB1B1B1" SelectionChanged="lstBoxChats_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} {1}">
+                                                    <Binding Path="Name"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+        <!-- MessageView -->
+        <local:ChannelMessageView Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" x:Name="ucChannelMessageView"/>
     </Grid>
-    
-    <!-- Insert MessageView here -->
+
+
 </UserControl>

@@ -95,7 +95,7 @@
                                 <StackPanel>
 
                                     <!-- Author line -->
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel>
                                         <StackPanel.Resources>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="FontSize" Value="10"/>
@@ -121,6 +121,7 @@
 
         <!-- write message textbox -->
         <TextBox Name="txtMessage"
+                 Foreground="White"
                  Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="1"
                  materialDesign:HintAssist.Hint="Type a message here..."
                  VerticalAlignment="Center"
@@ -128,7 +129,7 @@
                  TextWrapping="Wrap"
                  BorderBrush="#FF002864"
                  TextChanged="txtMessage_TextChanged"
-                 Margin="0, 0, 10, 0"/>
+                 Margin="0, 0, 10, 0" CaretBrush="#FF002864"/>
 
         <!-- send button -->
         <Button Name="btnSendMessage"

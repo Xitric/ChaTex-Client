@@ -23,28 +23,60 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class ChatView : UserControl
     {
-        ObservableCollection<UserDTO> users;
-        public ChatView()
+        ObservableCollection<ChatDTO> chats;
+        //ChatAPI _chatApi = null;
+
+        public static ChatView m_Instance = null;
+       
+
+        public static ChatView GetInstance()
+        {
+            if (m_Instance == null)
+            {
+                m_Instance = new ChatView();
+            }
+            m_Instance.populateUI();
+            return m_Instance;
+        }
+        private ChatView()
         {
             InitializeComponent();
 
-            UsersApi usersApi = new UsersApi();
-            users = new ObservableCollection<UserDTO>(usersApi.GetAllUsers());
-            lstBoxUsers.ItemsSource = users;
+            //_chatApi = new ChatApi();
+        }
 
-            //tvGroups.ItemsSource = groups;
+        private void populateUI()
+        {
+            //chats = new ObservableCollection<ChatDTO>(_chatApi.GetAllChats());
+            lstBoxChats.ItemsSource = chats;
         }
 
         private void txtSearchUsers_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (txtSearchUsers.Text.Length > 0)
+            if (txtSearchChats.Text.Length > 0)
             {
-                lstBoxUsers.ItemsSource = users.Where(x => x.FirstName.ToLower().Contains(txtSearchUsers.Text.ToLower()) || x.LastName.ToLower().Contains(txtSearchUsers.Text.ToLower()));
+                lstBoxChats.ItemsSource = chats.Where(x => x.Name.ToLower().Contains(txtSearchChats.Text.ToLower()));
             }
             else
             {
-                lstBoxUsers.ItemsSource = users;
+                lstBoxChats.ItemsSource = chats;
             }
+        }
+
+        private void lstBoxChats_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var chat = (ChatDTO)lstBoxChats.SelectedItem;
+            if (chat != null)
+            {
+                //_chatApi.GetMessagesBetweenUser((int)user.Id);
+                ucChannelMessageView.SetChat((int)chat.Id);
+            }
+        }
+
+        private void btnCreateChat_Click(object sender, RoutedEventArgs e)
+        {
+            CreateChat createChat = new CreateChat();
+            createChat.ShowDialog();
         }
     }
 }

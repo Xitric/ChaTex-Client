@@ -27,14 +27,14 @@
                   SelectedItemChanged="ChannelSelectionChanged"
                   BorderBrush="#FFB1B1B1"
                   BorderThickness="1,0"
-                  Foreground="#FF002864"
-                  Margin="3,0,4,0">
+                  Foreground="#FFB1B1B1"
+                  Margin="3,0,4,0" Background="#FF2F3136">
 
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type business:GroupDTO}"   ItemsSource="{Binding Channels}">
                     <StackPanel Orientation="Horizontal">
 
-                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding Name}" Foreground="#b4b9c1" Background="{x:Null}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate  DataType="{x:Type business:ChannelDTO}">
@@ -62,7 +62,7 @@
                 Grid.ColumnSpan="2"
                 Margin="3,12,3,13">
             <StackPanel Width="23" >
-                <Image Source="/pictures/button/settingsIcon.png" Height="19" RenderTransformOrigin="0.587,0.5" />
+                <Image Source="/pictures/button/settingsIcon.png" RenderOptions.BitmapScalingMode="HighQuality" Height="19" RenderTransformOrigin="0.587,0.5" />
             </StackPanel>
         </Button>
         

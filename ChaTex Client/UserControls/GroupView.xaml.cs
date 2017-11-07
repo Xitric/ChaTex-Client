@@ -22,7 +22,8 @@ namespace ChaTex_Client.UserControls
         private GroupView()
         {
             InitializeComponent();
-            usersApi = new UsersApi();           
+            usersApi = new UsersApi();
+            channelsApi = new ChannelsApi();
         }
 
         private void populateUI()
@@ -46,6 +47,7 @@ namespace ChaTex_Client.UserControls
         {            
             if (e.NewValue is ChannelDTO channel)
             {
+                selectedChannel = channel;
                 ucChannelMessageView.SetChannel((int)channel.Id);
                 
             }

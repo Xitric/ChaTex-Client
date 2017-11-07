@@ -84,7 +84,6 @@ namespace IO.Swagger.Client
 
             if (Configuration.ApiKey.ContainsKey("token"))
             {
-                String str = Configuration.ApiKey["token"];
                 request.AddHeader("token", Configuration.ApiKey["token"]);
             }
             // add query parameter, if any

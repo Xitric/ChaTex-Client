@@ -145,9 +145,10 @@ namespace ChaTex_Client.UserControls
 
         private void PopulateChat()
         {
+            List<GetMessageDTO> messages = null;
             if (state == MessageViewState.Channel)
             {
-                List<GetMessageDTO> messages = messagesApi.GetMessages(currentChannelId, 0, 25); //TODO: Rely on default
+                messages = messagesApi.GetMessages(currentChannelId, 0, 25); //TODO: Rely on default
             }
             else
             {

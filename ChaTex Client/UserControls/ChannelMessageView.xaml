@@ -8,16 +8,6 @@
              xmlns:local="clr-namespace:ChaTex_Client.UserControls"
              mc:Ignorable="d">
 
-    <!--<UserControl.Resources>
-        <Style TargetType="TextBlock">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Sender.MiddleInitial}" Value="S">
-                    <Setter TargetName="txtMiddleInitial" Property="TextBlock.Background" Value="Red"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>-->
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -36,41 +26,74 @@
             <ItemsControl Name="icMessages">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type business:GetMessageDTO}">
-                        <DockPanel>
-                            <Border Margin="0,0,0,10" Padding="10" Background="WhiteSmoke">
-                                
-                                <!-- Position border element -->
-                                <Border.Resources>
-                                    <Style TargetType="Border">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Sender.Me}" Value="True">
-                                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Sender.Me}" Value="False">
-                                                <Setter Property="HorizontalAlignment" Value="Left"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Resources>
-                                
+                        <Grid Name="HereIAm">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.Resources>
+
+                                <!-- Position message element -->
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Sender.Me}" Value="True">
+                                            <Setter Property="Grid.Column" Value="4"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Sender.Me}" Value="False">
+                                            <Setter Property="Grid.Column" Value="0"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+
+                                <!-- Position edit button element -->
+                                <Style TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Sender.Me}" Value="True">
+                                            <Setter Property="Grid.Column" Value="3"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Sender.Me}" Value="False">
+                                            <Setter Property="Grid.Column" Value="1"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Resources>
+
+                            <!-- Button for making changes to a message -->
+                            <Button Name="btnManageMessage"
+                                    Background="Transparent" BorderThickness="0"
+                                    Grid.Row="0"
+                                    MinHeight="0"
+                                    Margin="5, 0, 5, 0"
+                                    Click="btnManageMessage_Click"
+                                    ContextMenuService.IsEnabled="false">
+                                <Image Source="/pictures/button/dotsIcon.png"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       Height="4"/>
+
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Name="miEditMessage" Header="Edit" Click="miEditMessage_Click"/>
+                                        <MenuItem Name="miDeleteMessage" Header="Delete" Click="miDeleteMessage_Click"/>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+
+                            <!-- Message element -->
+                            <Border Margin="0,0,0,10" Padding="10" Background="WhiteSmoke"
+                                    Grid.RowSpan="4"
+                                    CornerRadius="10">
                                 <StackPanel>
-                                    
-                                    <!-- Position text blocks -->
-                                    <!--<StackPanel.Resources>
-                                        <Style TargetType="TextBlock">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Sender.Me}" Value="True">
-                                                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                                                    <Setter Property="TextAlignment" Value="Right"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Sender.Me}" Value="False">
-                                                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                                                    <Setter Property="TextAlignment" Value="Left"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </StackPanel.Resources>-->
-                                    
+
                                     <!-- Author line -->
                                     <StackPanel Orientation="Horizontal">
                                         <StackPanel.Resources>
@@ -84,25 +107,16 @@
                                                                   StringFormat='\{0\} '}"/>
                                         <TextBlock Text="{Binding Sender.LastName}"/>
                                     </StackPanel>
-                                    
+
                                     <!-- Content line -->
                                     <TextBlock Text="{Binding Content}"/>
 
                                 </StackPanel>
                             </Border>
-                        </DockPanel>
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <!--<StackPanel x:Name="spnlMessages" Background="White" >
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="Margin" Value="0,0,0,10"/>
-                        <Setter Property="Padding" Value="10"/>
-                        <Setter Property="Background" Value="WhiteSmoke"/>
-                    </Style>
-                </StackPanel.Resources>
-            </StackPanel>-->
         </ScrollViewer>
 
         <!-- write message textbox -->

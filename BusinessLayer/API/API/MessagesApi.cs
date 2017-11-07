@@ -276,6 +276,7 @@ namespace IO.Swagger.Api
 
 
             var path = "/channels/{channelId}/messages/live";
+            path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
             path = path.Replace("{format}", "json");
 
             var queryParams = new Dictionary<String, String>();

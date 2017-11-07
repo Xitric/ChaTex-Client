@@ -26,7 +26,8 @@ namespace IO.Swagger.Client
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "http://localhost:51976/1.0.0")
+        public ApiClient(String basePath = "http://chatextest.azurewebsites.net/1.0.0")
+
         {
             BasePath = basePath;
             RestClient = new RestClient(BasePath);
@@ -100,7 +101,7 @@ namespace IO.Swagger.Client
 
             if (postBody != null) // http body (model) parameter
                 request.AddParameter("application/json", postBody, ParameterType.RequestBody);
-            
+
             return (Object)RestClient.Execute(request);
         }
 

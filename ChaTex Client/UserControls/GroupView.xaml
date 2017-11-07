@@ -40,6 +40,11 @@
                 <DataTemplate  DataType="{x:Type business:ChannelDTO}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" />
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Name="miDeleteChannel" Header="Delete" Click="miDeleteChannel_Click"/>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
                     </StackPanel>
                 </DataTemplate>
             </TreeView.Resources>

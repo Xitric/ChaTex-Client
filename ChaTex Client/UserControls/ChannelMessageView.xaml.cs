@@ -87,7 +87,7 @@ namespace ChaTex_Client.UserControls
             {
                 foreach (MessageEventDTO msgEvent in messageEvents)
                 {
-                    switch(msgEvent.Type)
+                    switch (msgEvent.Type)
                     {
                         case "NewMessage":
                             AddMessage(msgEvent.Message);
@@ -128,10 +128,7 @@ namespace ChaTex_Client.UserControls
         private void AddMessage(GetMessageDTO message)
         {
             messages.Add(message);
-            if (message.CreationTime != null)
-            {
-                latestMessage = (DateTime)message.CreationTime;
-            }
+            latestMessage = (DateTime)message.CreationTime;
 
             svMessages.ScrollToBottom();
         }
@@ -144,10 +141,7 @@ namespace ChaTex_Client.UserControls
                 messages[replaceIndex] = message;
             }
 
-            if (message.CreationTime != null)
-            {
-                latestMessage = (DateTime)message.DeletionDate;
-            }
+            latestMessage = (DateTime)message.DeletionDate;
         }
 
         private void UpdateMessage(GetMessageDTO message)
@@ -158,10 +152,7 @@ namespace ChaTex_Client.UserControls
                 messages[replaceIndex] = message;
             }
 
-            if (message.CreationTime != null)
-            {
-                latestMessage = (DateTime)message.LastEdited;
-            }
+            latestMessage = (DateTime)message.LastEdited;
         }
 
         private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)

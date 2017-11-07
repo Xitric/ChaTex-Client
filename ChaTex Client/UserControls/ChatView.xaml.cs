@@ -72,5 +72,11 @@ namespace ChaTex_Client.UserControls
                 ucChannelMessageView.SetChat((int)chat.Id);
             }
         }
+
+        private void btnCreateChat_Click(object sender, RoutedEventArgs e)
+        {
+            CreateChat createChat = new CreateChat();
+            createChat.ShowDialog();
+        }
     }
 }

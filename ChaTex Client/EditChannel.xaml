@@ -29,7 +29,7 @@
 
         <!--change name-->
         <Label x:Name="lblEditName" Grid.Column="1" Grid.Row="1" Content="Edit name:"  HorizontalAlignment="Center"  VerticalAlignment="Bottom" Foreground="#FFCED2D8"/>
-        <TextBox x:Name="txtChannelName" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Left" Height="23"  TextWrapping="Wrap" VerticalAlignment="Bottom" Width="229" BorderBrush="#FF002864" CaretBrush="#FF002864" Foreground="White"/>
+        <TextBox x:Name="txtChannelName" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Left" Height="23"  TextWrapping="Wrap" VerticalAlignment="Bottom" Width="229" BorderBrush="#FF002864" CaretBrush="White" Foreground="White"/>
 
         <!--add image-->
 

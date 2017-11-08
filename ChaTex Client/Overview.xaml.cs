@@ -22,6 +22,9 @@ namespace ChaTex_Client
         {
             CreateNewGroup createNewGroup = new CreateNewGroup();
             createNewGroup.ShowDialog();
+
+            dpnlMainUI.Children.Clear();
+            dpnlMainUI.Children.Add(GroupView.GetInstance());
         }
 
 

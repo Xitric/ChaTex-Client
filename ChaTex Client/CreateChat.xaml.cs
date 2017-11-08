@@ -38,7 +38,8 @@ namespace ChaTex_Client
 
         private void lstBoxUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var users = (List<UserDTO>)lstBoxUsers.SelectedItems;
+            var selectedUserIds = lstBoxUsers.SelectedItems.Cast<UserDTO>().Select(x => x.Id);
+
             if (users != null)
             {
                 //_chatApi.GetMessagesBetweenUser((int)user.Id);

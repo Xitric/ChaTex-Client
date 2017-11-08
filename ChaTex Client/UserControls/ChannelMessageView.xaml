@@ -129,7 +129,7 @@
                  TextWrapping="Wrap"
                  BorderBrush="#FF002864"
                  TextChanged="txtMessage_TextChanged"
-                 Margin="0, 0, 10, 0" CaretBrush="#FF002864"/>
+                 Margin="0, 0, 10, 0" CaretBrush="White"/>
 
         <!-- send button -->
         <Button Name="btnSendMessage"

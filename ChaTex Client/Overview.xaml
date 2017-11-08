@@ -35,7 +35,7 @@
 
         <!-- main menu -->
 
-        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="1" Grid.ColumnSpan="1" Background="#FF1E2124">
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="1" Grid.ColumnSpan="1" Background="#FF202225">
             <Grid Height="454" Margin="0,0,0.333,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />

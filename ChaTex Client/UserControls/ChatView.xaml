@@ -17,7 +17,7 @@
         BorderThickness="0.5,0,0.5,0" Background="{x:Null}" />-->
 
         <Border Grid.Column="0" Grid.Row="0" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Margin="3,0,4,0" Grid.RowSpan="3">
-            <Grid>
+            <Grid Background="#FF2F3136">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
@@ -55,7 +55,7 @@
             </Grid>
         </Border>
         <!-- MessageView -->
-        <local:ChannelMessageView Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" x:Name="ucChannelMessageView"/>
+        <local:ChannelMessageView Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" x:Name="ucChannelMessageView" Background="#FF36393E"/>
     </Grid>
 
 

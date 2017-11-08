@@ -11,13 +11,13 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class Channel {
+  public class GroupDTO {
     /// <summary>
     /// Gets or Sets Id
     /// </summary>
     [DataMember(Name="Id", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "Id")]
-    public long? Id { get; set; }
+    public int? Id { get; set; }
 
     /// <summary>
     /// Gets or Sets Name
@@ -26,6 +26,13 @@ namespace IO.Swagger.Model {
     [JsonProperty(PropertyName = "Name")]
     public string Name { get; set; }
 
+    /// <summary>
+    /// Gets or Sets Channels
+    /// </summary>
+    [DataMember(Name="Channels", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Channels")]
+    public List<ChannelDTO> Channels { get; set; }
+
 
     /// <summary>
     /// Get the string presentation of the object
@@ -33,9 +40,10 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class Channel {\n");
+      sb.Append("class GroupDTO {\n");
       sb.Append("  Id: ").Append(Id).Append("\n");
       sb.Append("  Name: ").Append(Name).Append("\n");
+      sb.Append("  Channels: ").Append(Channels).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

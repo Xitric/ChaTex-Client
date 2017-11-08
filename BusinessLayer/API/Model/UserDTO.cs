@@ -11,13 +11,13 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class User {
+  public class UserDTO {
     /// <summary>
     /// Gets or Sets Id
     /// </summary>
     [DataMember(Name="Id", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "Id")]
-    public long? Id { get; set; }
+    public int? Id { get; set; }
 
     /// <summary>
     /// Gets or Sets FirstName
@@ -47,6 +47,20 @@ namespace IO.Swagger.Model {
     [JsonProperty(PropertyName = "Email")]
     public string Email { get; set; }
 
+    /// <summary>
+    /// Gets or Sets Me
+    /// </summary>
+    [DataMember(Name="Me", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "Me")]
+    public bool? Me { get; set; }
+
+    /// <summary>
+    /// Gets or Sets IsDeleted
+    /// </summary>
+    [DataMember(Name="IsDeleted", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "IsDeleted")]
+    public bool? IsDeleted { get; set; }
+
 
     /// <summary>
     /// Get the string presentation of the object
@@ -54,12 +68,14 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class User {\n");
+      sb.Append("class UserDTO {\n");
       sb.Append("  Id: ").Append(Id).Append("\n");
       sb.Append("  FirstName: ").Append(FirstName).Append("\n");
       sb.Append("  MiddleInitial: ").Append(MiddleInitial).Append("\n");
       sb.Append("  LastName: ").Append(LastName).Append("\n");
       sb.Append("  Email: ").Append(Email).Append("\n");
+      sb.Append("  Me: ").Append(Me).Append("\n");
+      sb.Append("  IsDeleted: ").Append(IsDeleted).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

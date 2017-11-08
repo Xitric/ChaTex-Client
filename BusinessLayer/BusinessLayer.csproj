@@ -5,14 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="API\Model\" />
     <Folder Include="API\API\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="7.0.1" />
-    <PackageReference Include="RestSharp" Version="2.1.1.11" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="RestSharp" Version="105.2.3" />
   </ItemGroup>
 
 </Project>

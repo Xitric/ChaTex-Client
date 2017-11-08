@@ -10,6 +10,8 @@ using System.Text;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Extensions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace IO.Swagger.Client
 {
@@ -24,7 +26,8 @@ namespace IO.Swagger.Client
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "http://10.126.88.243:51976/1.0.0")
+        public ApiClient(String basePath = "http://chatextest.azurewebsites.net/1.0.0")
+
         {
             BasePath = basePath;
             RestClient = new RestClient(BasePath);
@@ -80,7 +83,9 @@ namespace IO.Swagger.Client
                 request.AddHeader(param.Key, param.Value);
 
             if (Configuration.ApiKey.ContainsKey("token"))
+            {
                 request.AddHeader("token", Configuration.ApiKey["token"]);
+            }
             // add query parameter, if any
             foreach (var param in queryParams)
                 request.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);
@@ -97,7 +102,71 @@ namespace IO.Swagger.Client
                 request.AddParameter("application/json", postBody, ParameterType.RequestBody);
 
             return (Object)RestClient.Execute(request);
+        }
 
+        /// <summary>
+        /// Makes the HTTP request (Async).
+        /// </summary>
+        /// <param name="path">URL path.</param>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="queryParams">Query parameters.</param>
+        /// <param name="postBody">HTTP body (POST request).</param>
+        /// <param name="headerParams">Header parameters.</param>
+        /// <param name="formParams">Form parameters.</param>
+        /// <param name="fileParams">File parameters.</param>
+        /// <param name="authSettings">Authentication settings.</param>
+        /// <param name="cancellation">Token to cancel request</param>
+        /// <returns>Object</returns>
+        public Object CallApiCancellable(String path, RestSharp.Method method, Dictionary<String, String> queryParams, String postBody,
+            Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
+            Dictionary<String, FileParameter> fileParams, String[] authSettings, CancellationToken cancellation)
+        {
+
+            var request = new RestRequest(path, method);
+
+            UpdateParamsForAuth(queryParams, headerParams, authSettings);
+
+            // add default header, if any
+            foreach (var defaultHeader in _defaultHeaderMap)
+                request.AddHeader(defaultHeader.Key, defaultHeader.Value);
+
+            // add header parameter, if any
+            foreach (var param in headerParams)
+                request.AddHeader(param.Key, param.Value);
+
+            if (Configuration.ApiKey.ContainsKey("token"))
+            {
+                String str = Configuration.ApiKey["token"];
+                request.AddHeader("token", Configuration.ApiKey["token"]);
+            }
+            // add query parameter, if any
+            foreach (var param in queryParams)
+                request.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);
+
+            // add form parameter, if any
+            foreach (var param in formParams)
+                request.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);
+
+            // add file parameter, if any
+            //foreach(var param in fileParams)
+            //    request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
+
+            if (postBody != null) // http body (model) parameter
+                request.AddParameter("application/json", postBody, ParameterType.RequestBody);
+
+            try
+            {
+                return RestClient.ExecuteTaskAsync(request, cancellation).Result;
+            }
+            catch (AggregateException e)
+            {
+                if (e.InnerException is TaskCanceledException)
+                {
+                    throw new TaskCanceledException("Canceled waiting for new messages", e);
+                }
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -116,10 +185,10 @@ namespace IO.Swagger.Client
         /// </summary>
         /// <param name="str">String to be escaped.</param>
         /// <returns>Escaped string.</returns>
-        public string EscapeString(string str)
-        {
-            return RestSharp.Contrib.HttpUtility.UrlEncode(str);
-        }
+        //public string EscapeString(string str)
+        //{
+        //    return RestSharp.Contrib.HttpUtility.UrlEncode(str);
+        //}
 
         /// <summary>
         /// Create FileParameter based on Stream.

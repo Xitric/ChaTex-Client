@@ -11,20 +11,13 @@ namespace IO.Swagger.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class UserToken {
+  public class MessageContentDTO {
     /// <summary>
-    /// Gets or Sets UserId
+    /// Gets or Sets Message
     /// </summary>
-    [DataMember(Name="UserId", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "UserId")]
-    public long? UserId { get; set; }
-
-    /// <summary>
-    /// Gets or Sets Token
-    /// </summary>
-    [DataMember(Name="Token", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "Token")]
-    public string Token { get; set; }
+    [DataMember(Name="message", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "message")]
+    public string Message { get; set; }
 
 
     /// <summary>
@@ -33,9 +26,8 @@ namespace IO.Swagger.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class UserToken {\n");
-      sb.Append("  UserId: ").Append(UserId).Append("\n");
-      sb.Append("  Token: ").Append(Token).Append("\n");
+      sb.Append("class MessageContentDTO {\n");
+      sb.Append("  Message: ").Append(Message).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

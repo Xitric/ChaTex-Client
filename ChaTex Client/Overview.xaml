@@ -1,0 +1,93 @@
+﻿<!--main window-->
+<Window x:Class="ChaTex_Client.Overview"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChaTex_Client"
+        xmlns:BLayer="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"
+        xmlns:usercontrols="clr-namespace:ChaTex_Client.UserControls"
+        mc:Ignorable="d"
+         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        Icon="ChaTexIcon.ico"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        Title="ChaTex" Height="484.81" Width="655.696" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" >
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF36393E" Offset="0"/>
+            <GradientStop Color="#FF36393E" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+
+    <!-- main background -->
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="107px" />
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- main menu -->
+
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="1" Grid.ColumnSpan="1" Background="#FF1E2124">
+            <Grid Height="454" Margin="0,0,0.333,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Height="65" Grid.Row="0"   Source="pictures/person/person-icon.png" RenderOptions.BitmapScalingMode="HighQuality"  />
+
+                <Button x:Name="btnChat" Grid.Row="1" d:LayoutOverrides="Height" BorderBrush="{x:Null}"  BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnChat_Click">
+                    <StackPanel>
+                        <Image Source="pictures/button/chat.png" RenderOptions.BitmapScalingMode="HighQuality">
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Source" Value="pictures/button/chat.png"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Source" Value="pictures/button/friends3.png"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="btnGroups"  Grid.Row="2" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnGroups_Click">
+                    <StackPanel>
+                        <Image Source="pictures/button/friends3.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="btnAddGroup" Grid.Row="3" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnAddGroup_Click">
+                    <StackPanel>
+                        <Image Source="pictures/button/AddGroup.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                        <TextBlock>Chat</TextBlock>
+                    </StackPanel>
+                </Button>
+                
+            </Grid>
+        </StackPanel>
+
+        <!-- This window, is the one we replace when switching between views (Chat, Group) -->
+        <DockPanel Name="dpnlMainUI" Grid.Column="1"
+                                  Grid.ColumnSpan="1"
+                                  Grid.Row="1"
+                                  Grid.RowSpan="1"/>
+    </Grid>
+
+</Window>

@@ -178,7 +178,9 @@ namespace ChaTex_Client.UserControls
             int replaceIndex = messages.IndexOf(messages.SingleOrDefault(m => m.Id == message.Id));
             if (replaceIndex != -1)
             {
+                message.Content = ("This message has been deleted on the "+ "\n" + (DateTime)message.DeletionDate);
                 messages[replaceIndex] = message;
+
             }
 
             latestMessage = (DateTime)message.DeletionDate;

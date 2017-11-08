@@ -146,6 +146,7 @@ namespace IO.Swagger.Api
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
+
     
                                                     
             // authentication setting, if any
@@ -161,48 +162,48 @@ namespace IO.Swagger.Api
     
             return;
         }
-    
+
         /// <summary>
         /// Modify a channel in a group Modify a channel in a group
         /// </summary>
         /// <param name="channelId">The id of the channel to update</param> 
         /// <param name="channelName">The new name of the channel</param> 
         /// <returns></returns>            
-        public void UpdateChannel (int? channelId, string channelName)
+        public void UpdateChannel(int? channelId, string channelName)
         {
-            
+
             // verify the required parameter 'channelId' is set
             if (channelId == null) throw new ApiException(400, "Missing required parameter 'channelId' when calling UpdateChannel");
-            
+
             // verify the required parameter 'channelName' is set
             if (channelName == null) throw new ApiException(400, "Missing required parameter 'channelName' when calling UpdateChannel");
-            
-    
+
+
             var path = "/channels/{channelId}";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "channelId" + "}", ApiClient.ParameterToString(channelId));
-    
+
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
-    
-             if (channelName != null) queryParams.Add("channelName", ApiClient.ParameterToString(channelName)); // query parameter
-                                        
+
+            postBody = ApiClient.Serialize(channelName); // http body (model) parameter
+
             // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
+            String[] authSettings = new String[] { };
+
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
+            IRestResponse response = (IRestResponse)ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling UpdateChannel: " + response.Content, response.Content);
+                throw new ApiException((int)response.StatusCode, "Error calling UpdateChannel: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling UpdateChannel: " + response.ErrorMessage, response.ErrorMessage);
-    
+                throw new ApiException((int)response.StatusCode, "Error calling UpdateChannel: " + response.ErrorMessage, response.ErrorMessage);
+
             return;
         }
-    
+
     }
 }

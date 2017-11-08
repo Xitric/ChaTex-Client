@@ -29,7 +29,7 @@
                     <TextBox x:Name="txtSearchChats" 
                               BorderBrush="#FF002864" Foreground="White"
                              materialDesign:HintAssist.Hint="Type a message"
-                             HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" TextChanged="txtSearchUsers_TextChanged" CaretBrush="#FF002864"/>
+                             HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" TextChanged="txtSearchUsers_TextChanged" CaretBrush="White"/>
                 </StackPanel>
                 <Button Name="btnCreateChat" Grid.Row="1" Width="100" Height="30" Content="Create chat" Background="#FF002864" BorderBrush="#FF002864" Click="btnCreateChat_Click" FontSize="12"></Button>
                 <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >

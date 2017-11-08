@@ -24,14 +24,14 @@ namespace ChaTex_Client
     /// </summary>
     public partial class EditChannel : Window
     {
-        ChannelsApi chApi = new ChannelsApi();
-        ChannelDTO channel;
+        ChannelsApi _channelApi = new ChannelsApi();
+        ChannelDTO _selectedChannel;
 
         public EditChannel(ChannelDTO channel)
         {
             InitializeComponent();
 
-            this.channel = channel;
+            this._selectedChannel = channel;
             txtChannelName.Text = channel.Name;
         }
 
@@ -39,29 +39,21 @@ namespace ChaTex_Client
         //MessageBox for deleting a channel
         private void btnDeleteChannel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult deleteChannel = MessageBox.Show("All messages will be lost if Channel is deleted. Are you sure you want to delete this Channel? ", "Delete Channel", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (deleteChannel == MessageBoxResult.Yes)
+
+            MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + _selectedChannel.Name + "?", "Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (result == MessageBoxResult.Yes)
             {
-                //er skal insættes funktion til at slette en channel hvis der bliver trykket yes!
+                _channelApi.DeleteChannel(_selectedChannel.Id);
+                MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
 
-                //chApi.DeleteChannel(channel.Id);
-
-                //a message box to display that a channel have been deleted 
-                MessageBoxResult exitEditChannel = MessageBox.Show("this channel have been succesfully deleted.", "Channel deleted", MessageBoxButton.OK, MessageBoxImage.Information);
-                {
-                    if (exitEditChannel == MessageBoxResult.OK)
-                    {
-                        this.Close();  //the edit window will be closed upon sucseful deleting channel
-                    }
-                }
+                Close();  //the edit window will be closed upon sucseful deleting channel
             }
         }
 
-        private void btnSaveChannel_Click(object sender, RoutedEventArgs e)
-        {
-            //TODO
-            chApi.UpdateChannel(channel.Id, txtChannelName.Text);
-            Close();
-        }
+    private void btnSaveChannel_Click(object sender, RoutedEventArgs e)
+    {
+        _channelApi.UpdateChannel(_selectedChannel.Id, txtChannelName.Text);
+        Close();
     }
+}
 }

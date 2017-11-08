@@ -16,7 +16,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Label Grid.Column="0" Grid.Row="0" x:Name="lblChatName" Content="Chat name:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FFCED2D8"/>
-        <TextBox Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="202"  BorderBrush="#FF002864" CaretBrush="#FF002864" Foreground="White"/>
+        <TextBox Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="202"  BorderBrush="#FF002864" CaretBrush="White" Foreground="White"/>
         <ScrollViewer Grid.Row="2" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
             <ListBox Name="lstBoxUsers" Foreground="#FFB1B1B1" SelectionChanged="lstBoxUsers_SelectionChanged" SelectionMode="Multiple">
                 <ListBox.ItemTemplate>

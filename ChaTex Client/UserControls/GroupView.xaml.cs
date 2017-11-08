@@ -57,6 +57,7 @@ namespace ChaTex_Client.UserControls
         {
             var wEditChannel = new EditChannel(selectedChannel);
             wEditChannel.ShowDialog();
+            populateUI();
         }
 
         private void ucChannelMessageView_Loaded(object sender, RoutedEventArgs e)
@@ -76,6 +77,7 @@ namespace ChaTex_Client.UserControls
                 case MessageBoxResult.Yes:
                     channelsApi.DeleteChannel(channel.Id);
                     MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
+                    populateUI();
                     break;
                 case MessageBoxResult.No:
                     break;

@@ -22,72 +22,82 @@ namespace ChaTex_Client
     /// </summary>
     public partial class CreateNewGroup : Window
     {
-        private String EA = "EmployeeAcknowledgeable";
-        private String EB = "EmployeeBookmark";
-        private String ES = "EmployeeSticky";
+        private IUsersApi usersApi;
+        private IRolesApi rolesApi = new RolesApi();
+
+        private String employeeAcknowledgeableString = "Is acknowledgeable allowed for employees?";
+        private String employeeBookmarkString = "Is bookmarks allowed for employees?";
+        private String employeeStickyString = "Is stickies allowed for employees";
+
         public CreateNewGroup()
         {
             InitializeComponent();
+            usersApi = new UsersApi();
+            rolesApi = new RolesApi();
+            populateUI();
+           
+           
+        }
 
-            IUsersApi usersApi = new UsersApi();
-            IRolesApi rolesApi = new RolesApi();
-            LBusers.ItemsSource = usersApi.GetAllUsers();
-            LBroles.ItemsSource = rolesApi.GetAllRoles();
+        private void populateUI()
+        {
+            lstBoxUsers.ItemsSource = usersApi.GetAllUsers();
+            lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
 
             List<String> AllowableList = new List<string>();
-            AllowableList.Add(EA);
-            AllowableList.Add(EB);
-            AllowableList.Add(ES);
-            LBallowable.ItemsSource = AllowableList;
+            AllowableList.Add(employeeAcknowledgeableString);
+            AllowableList.Add(employeeBookmarkString);
+            AllowableList.Add(employeeStickyString);
+            lstBoxAllowables.ItemsSource = AllowableList;
         }
-       
-            private void Button_Click(object sender, RoutedEventArgs e)
-              {
-                List<int?> rolesToAdd = new List<int?>();
-                List<int?> usersToAdd = new List<int?>();
-                bool AllowEA = false;
-                bool AllowEB = false;
-                bool AllowES = false;
+
+        private void btnCreateGroup_Click(object sender, RoutedEventArgs e)
+        {
+            List<int?> rolesToAdd = new List<int?>();
+            List<int?> usersToAdd = new List<int?>();
+            bool AllowEA = false;
+            bool AllowEB = false;
+            bool AllowES = false;
             try
 
             {
                 GroupsApi groupsApi = new GroupsApi();
 
-                foreach (String item in LBallowable.Items)
+                foreach (String item in lstBoxAllowables.Items)
                 {
-                    if ((LBallowable.SelectedItems.Contains(item) == true) & (item.Equals(EA)))
+                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeAcknowledgeableString)))
                     {
                         AllowEA = true;
                     }
-                    if ((LBallowable.SelectedItems.Contains(item) == true) & (item.Equals(EB)))
+                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeBookmarkString)))
                     {
                         AllowEB = true;
                     }
-                    if ((LBallowable.SelectedItems.Contains(item) == true) & (item.Equals(ES)))
+                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeStickyString)))
                     {
                         AllowES = true;
                     }
                 }
-                
+
                 GroupDTO group = groupsApi.CreateGroup(new CreateGroupDTO()
                 {
                     AllowEmployeeAcknowledgeable = AllowEA,
                     AllowEmployeeBookmark = AllowEB,
                     AllowEmployeeSticky = AllowES,
-                    GroupName = TBgroupName.Text
+                    GroupName = txtGroupName.Text
                 });
-                
-                foreach (RoleDTO item in LBroles.Items)
+
+                foreach (RoleDTO item in lstBoxRoles.Items)
                 {
-                    if (LBroles.SelectedItems.Contains(item) == true)
+                    if (lstBoxRoles.SelectedItems.Contains(item) == true)
                     {
                         rolesToAdd.Add(item.Id);
                     }
                 }
-            
-                foreach (UserDTO item in LBusers.Items)
+
+                foreach (UserDTO item in lstBoxUsers.Items)
                 {
-                    if (LBusers.SelectedItems.Contains(item) == true)
+                    if (lstBoxUsers.SelectedItems.Contains(item) == true)
                     {
                         usersToAdd.Add(item.Id);
                     }
@@ -96,36 +106,35 @@ namespace ChaTex_Client
 
                 groupsApi.AddRolesToGroup(new AddRolesToGroupDTO()
                 {
-                     GroupId = group.Id,
-                     RoleIds = rolesToAdd
-                   } );
+                    GroupId = group.Id,
+                    RoleIds = rolesToAdd
+                });
 
                 groupsApi.AddUsersToGroup(new AddUsersToGroupDTO()
                 {
-                   GroupId = group.Id,
-                   UserIds = usersToAdd
+                    GroupId = group.Id,
+                    UserIds = usersToAdd
                 });
 
+                MessageBox.Show("The group has now been created!");
 
-
-                /*
-                 groupsApi.AddUsersToGroup(new AddUsersToGroupDTO()
-                 {
-                     UserIds = usersToAdd
-                 } );
-                 */
 
             }
             catch (ApiException er)
             {
-                //lav message boks med fejlen
-                    throw er;
+                MessageBox.Show("An error occured: " + er.InnerException.Message);
+                throw er;
+            }
+
+            finally
+            {
+                Close();
             }
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void txtGroupName_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            btnCreateGroup.IsEnabled = txtGroupName.Text.Length > 0;
         }
     }
 }

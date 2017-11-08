@@ -48,18 +48,18 @@ namespace ChaTex_Client.UserControls
         private void populateUI()
         {
             //chats = new ObservableCollection<ChatDTO>(_chatApi.GetAllChats());
-            lstBoxChats.ItemsSource = chats;
+            //lstBoxChats.ItemsSource = chats;
         }
 
         private void txtSearchUsers_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (txtSearchChats.Text.Length > 0)
             {
-                lstBoxChats.ItemsSource = chats.Where(x => x.Name.ToLower().Contains(txtSearchChats.Text.ToLower()));
+                //lstBoxChats.ItemsSource = chats.Where(x => x.Name.ToLower().Contains(txtSearchChats.Text.ToLower()));
             }
             else
             {
-                lstBoxChats.ItemsSource = chats;
+                //lstBoxChats.ItemsSource = chats;
             }
         }
 

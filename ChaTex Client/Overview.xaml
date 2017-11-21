@@ -11,7 +11,7 @@
          TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
-        Icon="ChaTexIcon.ico"
+        Icon="pictures/icon/ChaTexIcon.ico"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         Title="ChaTex" Height="484.81" Width="655.696" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" >
     <Window.Background>

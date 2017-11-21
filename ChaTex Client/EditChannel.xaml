@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChaTex_Client"
         mc:Ignorable="d"
-        Icon="ChaTexIcon.ico"
+        Icon="pictures/icon/ChaTexIcon.ico"
         Title="Edit Channel" Height="190.788" Width="497.301" ResizeMode="CanMinimize" Background="#FF36393E">
     <Grid >
         <Grid.RowDefinitions>

@@ -1,5 +1,4 @@
-﻿using IO.Swagger.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,17 +15,17 @@ using System.Windows.Shapes;
 namespace ChaTex_Client.UserDialogs
 {
     /// <summary>
-    /// Interaction logic for ExceptionDialog.xaml
+    /// Interaction logic for ErrorDialog.xaml
     /// </summary>
-    public partial class ExceptionDialog : Window
+    public partial class ErrorDialog : Window
     {
-        public string ErrorCode { get; set; }
+        public string ErrorTitle { get; set; }
         public string ErrorMessage { get; set; }
 
-        public ExceptionDialog(ApiException e)
+        public ErrorDialog(string title, string message)
         {
-            ErrorCode = e.ErrorCode.ToString();
-            ErrorMessage = e.Message;
+            ErrorTitle = title;
+            ErrorMessage = message;
             InitializeComponent();
             SizeToContent = SizeToContent.WidthAndHeight;
         }

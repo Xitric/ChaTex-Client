@@ -242,7 +242,15 @@ namespace ChaTex_Client.UserControls
             }
             catch (ApiException er)
             {
-                new ExceptionDialog(er).ShowDialog();
+                switch(er.ErrorCode)
+                {
+                    case 401:
+                        new ErrorDialog("Authentication failed", "You can not delete this message because you are not the owner.").ShowDialog();
+                        break;
+                    default:
+                        new ExceptionDialog(er).ShowDialog();
+                        break;
+                }
             }
         }
 

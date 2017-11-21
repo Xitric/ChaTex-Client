@@ -1,4 +1,6 @@
-﻿using IO.Swagger.Api;
+﻿using ChaTex_Client.UserDialogs;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,8 +24,15 @@ namespace ChaTex_Client
 
         private void populateUI()
         {
-            users = new ObservableCollection<UserDTO>(userApi.GetAllUsers());
-            lstBoxUsers.ItemsSource = users;
+            try
+            {
+                users = new ObservableCollection<UserDTO>(userApi.GetAllUsers());
+                lstBoxUsers.ItemsSource = users;
+            }
+            catch (ApiException er)
+            {
+                new ExceptionDialog(er).ShowDialog();
+            }
         }
 
         private void lstBoxUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)

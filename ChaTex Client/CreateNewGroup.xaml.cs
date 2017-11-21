@@ -1,4 +1,5 @@
-﻿using IO.Swagger.Api;
+﻿using ChaTex_Client.UserDialogs;
+using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System;
@@ -30,8 +31,23 @@ namespace ChaTex_Client
 
         private void populateUI()
         {
-            lstBoxUsers.ItemsSource = usersApi.GetAllUsers();
-            lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
+            try
+            {
+                lstBoxUsers.ItemsSource = usersApi.GetAllUsers();
+            }
+            catch (ApiException er)
+            {
+                new ExceptionDialog(er).ShowDialog();
+            }
+
+            try
+            {
+                lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
+            }
+            catch (ApiException er)
+            {
+                new ExceptionDialog(er).ShowDialog();
+            }
 
             List<String> allowableList = new List<string>
             {

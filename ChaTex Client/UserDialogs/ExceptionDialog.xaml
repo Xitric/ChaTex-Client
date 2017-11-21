@@ -28,7 +28,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Image Source="/pictures/icon/alert-circle.png"
+                <Image Source="/pictures/icon/nuke.png"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        Height="48"
                        Grid.Column="0"

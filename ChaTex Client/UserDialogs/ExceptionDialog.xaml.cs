@@ -30,5 +30,10 @@ namespace ChaTex_Client.UserDialogs
             InitializeComponent();
             SizeToContent = SizeToContent.WidthAndHeight;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

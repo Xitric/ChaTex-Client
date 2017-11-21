@@ -5,27 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChaTex_Client.UserDialogs"
         mc:Ignorable="d"
-        Title="ExceptionDialog" Height="auto" Width="auto" ResizeMode="NoResize">
-    <Grid>
+        Title="ExceptionDialog" MinWidth="450" ResizeMode="NoResize">
+    <Grid Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding ErrorCode, StringFormat='Error: {0}', RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                 FontSize="32"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Top"
-                 Grid.Column="1"
-                 Grid.Row="0"/>
-        <TextBlock Text="{Binding ErrorMessage, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                 FontSize="32"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Top"
-                 Grid.Column="1"
-                 Grid.Row="1"/>
+        <Border Padding="16, 16, 16, 16"
+                Grid.Column="1"
+                Grid.Row="0"
+                Background="#FF2F3136">
+            <TextBlock Text="{Binding ErrorCode, StringFormat='Error: {0}', RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                       FontSize="32"
+                       Foreground="White"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+        </Border>
+
+        <Border Padding="16, 16, 16, 64"
+                Grid.Column="1"
+                Grid.Row="1"
+                Background="White"
+                BorderBrush="#cccccc"
+                BorderThickness="0 1 0 1">
+            <TextBlock Text="{Binding ErrorMessage, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                       FontSize="20"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+        </Border>
+
+        <Border Padding="16, 16, 16, 16"
+                Grid.Column="1"
+                Grid.Row="2">
+            <Button Content="Ok"
+                    MinWidth="80"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Click="Button_Click"
+                    IsDefault="True"/>
+        </Border>
     </Grid>
 </Window>

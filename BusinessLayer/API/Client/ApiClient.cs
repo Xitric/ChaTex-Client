@@ -18,6 +18,7 @@ namespace IO.Swagger.Client
     /// <summary>
     /// API client is mainly responible for making the HTTP call to the API backend.
     /// </summary>
+    /// 
     public class ApiClient
     {
         private readonly Dictionary<String, String> _defaultHeaderMap = new Dictionary<String, String>();
@@ -26,8 +27,7 @@ namespace IO.Swagger.Client
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "http://chatextest.azurewebsites.net/1.0.0")
-
+        public ApiClient(String basePath = "http://chatex.azurewebsites.net/1.0.0")
         {
             BasePath = basePath;
             RestClient = new RestClient(BasePath);
@@ -359,4 +359,4 @@ namespace IO.Swagger.Client
         }
 
     }
-}
+}        

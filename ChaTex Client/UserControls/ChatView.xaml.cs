@@ -1,20 +1,7 @@
-﻿using IO.Swagger.Api;
-using IO.Swagger.Model;
-using System;
-using System.Collections.Generic;
+﻿using IO.Swagger.Model;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ChaTex_Client.UserControls
 {
@@ -25,9 +12,7 @@ namespace ChaTex_Client.UserControls
     {
         ObservableCollection<ChatDTO> chats;
         //ChatAPI _chatApi = null;
-
         public static ChatView m_Instance = null;
-       
 
         public static ChatView GetInstance()
         {
@@ -41,7 +26,6 @@ namespace ChaTex_Client.UserControls
         private ChatView()
         {
             InitializeComponent();
-
             //_chatApi = new ChatApi();
         }
 

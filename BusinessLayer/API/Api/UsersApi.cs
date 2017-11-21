@@ -127,8 +127,6 @@ namespace IO.Swagger.Api
         /// <returns>List&lt;GroupDTO&gt;</returns>            
         public List<GroupDTO> GetGroupsForUser ()
         {
-            
-    
             var path = "/users/me/groups";
             path = path.Replace("{format}", "json");
                 

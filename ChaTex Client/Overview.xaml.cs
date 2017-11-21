@@ -1,8 +1,4 @@
-using System;
 using System.Windows;
-using IO.Swagger.Api;
-using IO.Swagger.Model;
-using System.Collections.ObjectModel;
 using ChaTex_Client.UserControls;
 
 namespace ChaTex_Client
@@ -13,7 +9,6 @@ namespace ChaTex_Client
     public partial class Overview : Window {
 
         public Overview() {
-
             InitializeComponent();
             dpnlMainUI.Children.Add(GroupView.GetInstance());
         }
@@ -22,7 +17,6 @@ namespace ChaTex_Client
         {
             CreateNewGroup createNewGroup = new CreateNewGroup();
             createNewGroup.ShowDialog();
-
             dpnlMainUI.Children.Clear();
             dpnlMainUI.Children.Add(GroupView.GetInstance());
         }

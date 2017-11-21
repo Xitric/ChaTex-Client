@@ -13,6 +13,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +26,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -47,6 +47,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ChaTexIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -190,35 +193,37 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Pictures\icon\ChaTexIcon.ico" />
+    <Resource Include="Pictures\button\emojiIcon.png" />
+    <Resource Include="Pictures\button\gifIcon.png" />
+    <Resource Include="Pictures\person\person-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\settingsIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\fileicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\friends.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\friends2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\friends3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\chat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\AddGroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\dotsIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="ChaTexIcon.ico" />
-    <Resource Include="pictures\button\emojiIcon.png" />
-    <Resource Include="pictures\button\gifIcon.png" />
-    <Resource Include="pictures\person\person-icon.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pictures\button\settingsIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pictures\button\fileicon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pictures\button\friends.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pictures\button\friends2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pictures\button\friends3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pictures\button\chat.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pictures\button\AddGroup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pictures\button\dotsIcon.png" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

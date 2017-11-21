@@ -3,17 +3,8 @@ using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ChaTex_Client
 {
@@ -22,8 +13,8 @@ namespace ChaTex_Client
     /// </summary>
     public partial class CreateNewGroup : Window
     {
-        private IUsersApi usersApi;
-        private IRolesApi rolesApi = new RolesApi();
+        private readonly IUsersApi usersApi;
+        private readonly IRolesApi rolesApi;
 
         private String employeeAcknowledgeableString = "Is acknowledgeable allowed for employees?";
         private String employeeBookmarkString = "Is bookmarks allowed for employees?";
@@ -35,8 +26,6 @@ namespace ChaTex_Client
             usersApi = new UsersApi();
             rolesApi = new RolesApi();
             populateUI();
-           
-           
         }
 
         private void populateUI()
@@ -44,20 +33,22 @@ namespace ChaTex_Client
             lstBoxUsers.ItemsSource = usersApi.GetAllUsers();
             lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
 
-            List<String> AllowableList = new List<string>();
-            AllowableList.Add(employeeAcknowledgeableString);
-            AllowableList.Add(employeeBookmarkString);
-            AllowableList.Add(employeeStickyString);
-            lstBoxAllowables.ItemsSource = AllowableList;
+            List<String> allowableList = new List<string>
+            {
+                employeeAcknowledgeableString,
+                employeeBookmarkString,
+                employeeStickyString
+            };
+            lstBoxAllowables.ItemsSource = allowableList;
         }
 
         private void btnCreateGroup_Click(object sender, RoutedEventArgs e)
         {
             List<int?> rolesToAdd = new List<int?>();
             List<int?> usersToAdd = new List<int?>();
-            bool AllowEA = false;
-            bool AllowEB = false;
-            bool AllowES = false;
+            bool allowEmployeeAcknowledgeable = false;
+            bool allowEmployeeBookmark = false;
+            bool allowEmployeeSticky = false;
             try
 
             {
@@ -67,42 +58,41 @@ namespace ChaTex_Client
                 {
                     if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeAcknowledgeableString)))
                     {
-                        AllowEA = true;
+                        allowEmployeeAcknowledgeable = true;
                     }
                     if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeBookmarkString)))
                     {
-                        AllowEB = true;
+                        allowEmployeeBookmark = true;
                     }
                     if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeStickyString)))
                     {
-                        AllowES = true;
+                        allowEmployeeSticky = true;
                     }
                 }
 
                 GroupDTO group = groupsApi.CreateGroup(new CreateGroupDTO()
                 {
-                    AllowEmployeeAcknowledgeable = AllowEA,
-                    AllowEmployeeBookmark = AllowEB,
-                    AllowEmployeeSticky = AllowES,
+                    AllowEmployeeAcknowledgeable = allowEmployeeAcknowledgeable,
+                    AllowEmployeeBookmark = allowEmployeeBookmark,
+                    AllowEmployeeSticky = allowEmployeeSticky,
                     GroupName = txtGroupName.Text
                 });
 
-                foreach (RoleDTO item in lstBoxRoles.Items)
+                foreach (RoleDTO roleDto in lstBoxRoles.Items)
                 {
-                    if (lstBoxRoles.SelectedItems.Contains(item) == true)
+                    if (lstBoxRoles.SelectedItems.Contains(roleDto) == true)
                     {
-                        rolesToAdd.Add(item.Id);
+                        rolesToAdd.Add(roleDto.Id);
                     }
                 }
 
-                foreach (UserDTO item in lstBoxUsers.Items)
+                foreach (UserDTO userDto in lstBoxUsers.Items)
                 {
-                    if (lstBoxUsers.SelectedItems.Contains(item) == true)
+                    if (lstBoxUsers.SelectedItems.Contains(userDto) == true)
                     {
-                        usersToAdd.Add(item.Id);
+                        usersToAdd.Add(userDto.Id);
                     }
                 }
-
 
                 groupsApi.AddRolesToGroup(new AddRolesToGroupDTO()
                 {
@@ -117,7 +107,6 @@ namespace ChaTex_Client
                 });
 
                 MessageBox.Show("The group has now been created!");
-
 
             }
             catch (ApiException er)

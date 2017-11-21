@@ -11,7 +11,7 @@
         <Label x:Name="lblEmail" Foreground="#FFCED2D8" FontWeight="Bold"  Content="E-mail:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <!--textbox for email-->
 
-        <TextBox x:Name="txtEmail" BorderBrush="#FF002864" Foreground="White" HorizontalAlignment="Left" Height="23" Margin="58,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227"   TextChanged="txtEmail_TextChanged" CaretBrush="White" />
+        <TextBox x:Name="txtUserEmail" BorderBrush="#FF002864" Foreground="White" HorizontalAlignment="Left" Height="23" Margin="58,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227"   TextChanged="txtUserEmail_TextChanged" CaretBrush="White" />
 
         <!--sign in button-->
         <Button x:Name="btnSignIn" Content="Sign In" HorizontalAlignment="Left" Margin="100,54,0,0" VerticalAlignment="Top" Width="80" Click="btnSignIn_Click" BorderBrush="#FF002864" Background=" #FF002864" IsEnabled="False" IsDefault="True" Foreground="#FFCED2D8"/>

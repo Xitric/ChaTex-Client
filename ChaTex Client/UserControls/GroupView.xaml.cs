@@ -12,11 +12,10 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class GroupView : UserControl
     {
+        private ChannelDTO selectedChannel;
         private ObservableCollection<GroupDTO> groups;
         private readonly UsersApi usersApi;
-        ChannelDTO selectedChannel;
         private readonly ChannelsApi channelsApi;
-
         public static GroupView m_Instance;
 
         private GroupView()
@@ -24,12 +23,6 @@ namespace ChaTex_Client.UserControls
             InitializeComponent();
             usersApi = new UsersApi();
             channelsApi = new ChannelsApi();
-        }
-
-        private void populateUI()
-        {
-            groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-            tvGroups.ItemsSource = groups;
         }
 
         public static GroupView GetInstance()
@@ -42,8 +35,13 @@ namespace ChaTex_Client.UserControls
             m_Instance.populateUI();
             return m_Instance;
         }
+        private void populateUI()
+        {
+            groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
+            tvGroups.ItemsSource = groups;
+        }
 
-        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
+        private void channelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
         {            
             if (e.NewValue is ChannelDTO channel)
             {
@@ -62,9 +60,7 @@ namespace ChaTex_Client.UserControls
 
         private void ucChannelMessageView_Loaded(object sender, RoutedEventArgs e)
         {
-            
-          
-
+           
         }
 
         private void miDeleteChannel_Click(object sender, RoutedEventArgs e)

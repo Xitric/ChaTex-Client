@@ -1,4 +1,5 @@
 ﻿using IO.Swagger.Api;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System;
 using System.Collections.ObjectModel;
@@ -28,8 +29,12 @@ namespace ChaTex_Client.UserControls
 
         private void populateUI()
         {
-            groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-            tvGroups.ItemsSource = groups;
+            try
+            {
+                groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
+                tvGroups.ItemsSource = groups;
+            }
+            catch (ApiException) { }
         }
 
         public static GroupView GetInstance()
@@ -72,16 +77,20 @@ namespace ChaTex_Client.UserControls
             var menuItem = sender as MenuItem;
             ChannelDTO channel = (ChannelDTO)menuItem.DataContext;
             MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + channel.Name + "?","Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            switch (result)
+            try
             {
-                case MessageBoxResult.Yes:
-                    channelsApi.DeleteChannel(channel.Id);
-                    MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
-                    populateUI();
-                    break;
-                case MessageBoxResult.No:
-                    break;
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        channelsApi.DeleteChannel(channel.Id);
+                        MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
+                        populateUI();
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                }
             }
+            catch (ApiException) { }
         }
     }
 }

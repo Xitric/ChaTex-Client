@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
+using ChaTex_Client.UserDialogs;
+
 namespace ChaTex_Client {
     /// <summary>
     /// Interaction logic for Login.xaml
@@ -37,10 +39,11 @@ namespace ChaTex_Client {
             }
             catch (ApiException er)
             {
+                new ExceptionDialog(er).ShowDialog();
                 if (er.ErrorCode == 404)
-                    MessageBox.Show(er.Message, "Error logging in", MessageBoxButton.OK, MessageBoxImage.Error);
-                else
-                    throw er;
+                {
+                    return;
+                }
             }
             new Overview().Show();
             Close();

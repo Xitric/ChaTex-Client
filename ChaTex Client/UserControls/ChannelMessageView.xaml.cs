@@ -1,5 +1,7 @@
 ﻿using BusinessLayer.Enum;
+using ChaTex_Client.UserDialogs;
 using IO.Swagger.Api;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
@@ -103,37 +105,46 @@ namespace ChaTex_Client.UserControls
         /// </summary>
         private void FetchNewMessages()
         {
-            IEnumerable<MessageEventDTO> messageEvents = messagesApi.GetMessageEvents(currentChannelId, latestMessage, cancellation.Token);
-
-            if (state == MessageViewState.Channel)
+            IEnumerable<MessageEventDTO> messageEvents = null;
+            try
             {
-                messagesApi.GetMessageEvents(currentChannelId, latestMessage, cancellation.Token);
-            }
-            else
-            {
+                messageEvents = messagesApi.GetMessageEvents(currentChannelId, latestMessage, cancellation.Token);
 
-            }
-
-            //Add to ui when ready
-            Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
-            {
-                foreach (MessageEventDTO msgEvent in messageEvents)
+                if (state == MessageViewState.Channel)
                 {
-                    switch (msgEvent.Type)
-                    {
-                        case "NewMessage":
-                            AddMessage(msgEvent.Message);
-                            break;
-                        case "DeleteMessage":
-                            DeleteMessage(msgEvent.Message);
-                            break;
-                        case "UpdateMessage":
-                            UpdateMessage(msgEvent.Message);
-                            break;
-                    }
+                    messagesApi.GetMessageEvents(currentChannelId, latestMessage, cancellation.Token);
                 }
-            });
+                else
+                {
+
+                }
+
+                //Add to ui when ready
+                Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
+                {
+                    foreach (MessageEventDTO msgEvent in messageEvents)
+                    {
+                        switch (msgEvent.Type)
+                        {
+                            case "NewMessage":
+                                AddMessage(msgEvent.Message);
+                                break;
+                            case "DeleteMessage":
+                                DeleteMessage(msgEvent.Message);
+                                break;
+                            case "UpdateMessage":
+                                UpdateMessage(msgEvent.Message);
+                                break;
+                        }
+                    }
+                });
+            }
+            catch (ApiException er)
+            {
+                new ExceptionDialog(er).ShowDialog();
+            }
         }
+
 
         /// <summary>
         /// Remove all messages from the message view.
@@ -146,18 +157,25 @@ namespace ChaTex_Client.UserControls
         private void PopulateChat()
         {
             List<GetMessageDTO> messages = null;
-            if (state == MessageViewState.Channel)
+            try
             {
-                messages = messagesApi.GetMessages(currentChannelId, 0, 25); //TODO: Rely on default
-            }
-            else
-            {
+                if (state == MessageViewState.Channel)
+                {
+                    messages = messagesApi.GetMessages(currentChannelId, 0, 25); //TODO: Rely on default
+                }
+                else
+                {
 
-            }
+                }
 
-            foreach (GetMessageDTO message in messages)
+                foreach (GetMessageDTO message in messages)
+                {
+                    AddMessage(message);
+                }
+            }
+            catch (ApiException er)
             {
-                AddMessage(message);
+                new ExceptionDialog(er).ShowDialog();
             }
         }
 
@@ -178,7 +196,7 @@ namespace ChaTex_Client.UserControls
             int replaceIndex = messages.IndexOf(messages.SingleOrDefault(m => m.Id == message.Id));
             if (replaceIndex != -1)
             {
-                message.Content = ("This message has been deleted on the "+ "\n" + (DateTime)message.DeletionDate);
+                message.Content = ("This message has been deleted on the " + "\n" + ((DateTime)message.DeletionDate).ToLocalTime());
                 messages[replaceIndex] = message;
 
             }
@@ -209,10 +227,17 @@ namespace ChaTex_Client.UserControls
             {
                 Message = txtMessage.Text
             };
-            messagesApi.CreateMessage(currentChannelId, messageContentDTO);
+            try
+            {
+                messagesApi.CreateMessage(currentChannelId, messageContentDTO);
 
-            txtMessage.Clear();
-            txtMessage.Focus();
+                txtMessage.Clear();
+                txtMessage.Focus();
+            }
+            catch (ApiException er)
+            {
+                new ExceptionDialog(er).ShowDialog();
+            }
         }
 
         private void miEditMessage_Click(object sender, EventArgs e)
@@ -222,8 +247,15 @@ namespace ChaTex_Client.UserControls
 
         private void miDeleteMessage_Click(object sender, EventArgs e)
         {
-            int id = (int)selectedMessage.Id;
-            messagesApi.DeleteMessage(id);
+            try
+            {
+                int id = (int)selectedMessage.Id;
+                messagesApi.DeleteMessage(id);
+            }
+            catch (ApiException er)
+            {
+                new ExceptionDialog(er).ShowDialog();
+            }
         }
 
         private void btnManageMessage_Click(object sender, RoutedEventArgs e)

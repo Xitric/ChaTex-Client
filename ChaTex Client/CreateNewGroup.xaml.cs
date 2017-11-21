@@ -15,6 +15,7 @@ namespace ChaTex_Client
     {
         private readonly IUsersApi usersApi;
         private readonly IRolesApi rolesApi;
+        private readonly IGroupsApi groupsApi;
 
         private String employeeAcknowledgeableString = "Is acknowledgeable allowed for employees?";
         private String employeeBookmarkString = "Is bookmarks allowed for employees?";
@@ -25,6 +26,7 @@ namespace ChaTex_Client
             InitializeComponent();
             usersApi = new UsersApi();
             rolesApi = new RolesApi();
+            groupsApi = new GroupsApi();
             populateUI();
         }
 
@@ -44,32 +46,12 @@ namespace ChaTex_Client
 
         private void btnCreateGroup_Click(object sender, RoutedEventArgs e)
         {
-            List<int?> rolesToAdd = new List<int?>();
             List<int?> usersToAdd = new List<int?>();
-            bool allowEmployeeAcknowledgeable = false;
-            bool allowEmployeeBookmark = false;
-            bool allowEmployeeSticky = false;
+            bool allowEmployeeAcknowledgeable = isEmployeeAcknowledgeableAllowed();
+            bool allowEmployeeBookmark = isEmployeeBookmarkAllowed();
+            bool allowEmployeeSticky = isEmployeeStickyAllowed();
             try
-
             {
-                GroupsApi groupsApi = new GroupsApi();
-
-                foreach (String item in lstBoxAllowables.Items)
-                {
-                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeAcknowledgeableString)))
-                    {
-                        allowEmployeeAcknowledgeable = true;
-                    }
-                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeBookmarkString)))
-                    {
-                        allowEmployeeBookmark = true;
-                    }
-                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeStickyString)))
-                    {
-                        allowEmployeeSticky = true;
-                    }
-                }
-
                 GroupDTO group = groupsApi.CreateGroup(new CreateGroupDTO()
                 {
                     AllowEmployeeAcknowledgeable = allowEmployeeAcknowledgeable,
@@ -78,33 +60,8 @@ namespace ChaTex_Client
                     GroupName = txtGroupName.Text
                 });
 
-                foreach (RoleDTO roleDto in lstBoxRoles.Items)
-                {
-                    if (lstBoxRoles.SelectedItems.Contains(roleDto) == true)
-                    {
-                        rolesToAdd.Add(roleDto.Id);
-                    }
-                }
-
-                foreach (UserDTO userDto in lstBoxUsers.Items)
-                {
-                    if (lstBoxUsers.SelectedItems.Contains(userDto) == true)
-                    {
-                        usersToAdd.Add(userDto.Id);
-                    }
-                }
-
-                groupsApi.AddRolesToGroup(new AddRolesToGroupDTO()
-                {
-                    GroupId = group.Id,
-                    RoleIds = rolesToAdd
-                });
-
-                groupsApi.AddUsersToGroup(new AddUsersToGroupDTO()
-                {
-                    GroupId = group.Id,
-                    UserIds = usersToAdd
-                });
+                addSelectedRolesToGroup(group);
+                addSelectedUsersToGroup(group);
 
                 MessageBox.Show("The group has now been created!");
 
@@ -114,11 +71,62 @@ namespace ChaTex_Client
                 MessageBox.Show("An error occured: " + er.InnerException.Message);
                 throw er;
             }
-
             finally
             {
                 Close();
             }
+        }
+
+        private bool isEmployeeAcknowledgeableAllowed()
+        {
+            return lstBoxAllowables.SelectedItems.Contains(employeeAcknowledgeableString);
+        }
+
+        private bool isEmployeeBookmarkAllowed()
+        {
+            return lstBoxAllowables.SelectedItems.Contains(employeeBookmarkString);
+        }
+
+        private bool isEmployeeStickyAllowed()
+        {
+            return lstBoxAllowables.SelectedItems.Contains(employeeStickyString);
+        }
+
+        private void addSelectedRolesToGroup(GroupDTO group)
+        {
+            List<int?> selectedRoles = new List<int?>();
+            foreach (RoleDTO roleDto in lstBoxRoles.Items)
+            {
+                if (lstBoxRoles.SelectedItems.Contains(roleDto) == true)
+                {
+                    selectedRoles.Add(roleDto.Id);
+                }
+            }
+
+            groupsApi.AddRolesToGroup(new AddRolesToGroupDTO()
+            {
+                GroupId = group.Id,
+                RoleIds = selectedRoles
+            });
+            
+        }
+
+        private void addSelectedUsersToGroup(GroupDTO group)
+        {
+            List<int?> selectedUsers = new List<int?>();
+            foreach (UserDTO userDto in lstBoxUsers.Items)
+            {
+                if (lstBoxUsers.SelectedItems.Contains(userDto) == true)
+                {
+                    selectedUsers.Add(userDto.Id);
+                }
+            }
+
+            groupsApi.AddUsersToGroup(new AddUsersToGroupDTO()
+            {
+                GroupId = group.Id,
+                UserIds = selectedUsers
+            });
         }
 
         private void txtGroupName_TextChanged(object sender, TextChangedEventArgs e)

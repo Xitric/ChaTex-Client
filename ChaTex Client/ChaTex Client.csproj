@@ -240,5 +240,11 @@
   <ItemGroup>
     <Resource Include="Pictures\icon\alert-circle.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\icon\nuke.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\icon\CHATEX.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

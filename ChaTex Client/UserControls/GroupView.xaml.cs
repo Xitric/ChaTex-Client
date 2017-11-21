@@ -1,4 +1,5 @@
-﻿using IO.Swagger.Api;
+﻿using ChaTex_Client.UserDialogs;
+using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System;
@@ -39,8 +40,26 @@ namespace ChaTex_Client.UserControls
 
         private void populateUI()
         {
-            groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-            tvGroups.ItemsSource = groups;
+            try
+            {
+                groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
+                tvGroups.ItemsSource = groups;
+            }
+            catch (ApiException er)
+            {
+                switch (er.ErrorCode)
+                {
+                    case 401:
+                        new ErrorDialog("Authentication failed", "You do not have access to the groups of this user.").ShowDialog();
+                        break;
+                    case 404:
+                        new ErrorDialog("Not found", "The specified user does not exist.").ShowDialog();
+                        break;
+                    default:
+                        new ExceptionDialog(er).ShowDialog();
+                        break;
+                }
+            }
         }
 
         private void channelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
@@ -75,9 +94,27 @@ namespace ChaTex_Client.UserControls
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        channelsApi.DeleteChannel(channel.Id);
-                        MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
-                        populateUI();
+                        try
+                        {
+                            channelsApi.DeleteChannel(channel.Id);
+                            MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
+                            populateUI();
+                        }
+                        catch (ApiException er)
+                        {
+                            switch (er.ErrorCode)
+                            {
+                                case 401:
+                                    new ErrorDialog("Authentication failed", "You do not have permission to delete this channel.").ShowDialog();
+                                    break;
+                                case 404:
+                                    new ErrorDialog("Not found", "The specified channel does not exist.").ShowDialog();
+                                    break;
+                                default:
+                                    new ExceptionDialog(er).ShowDialog();
+                                    break;
+                            }
+                        }
                         break;
                     case MessageBoxResult.No:
                         break;

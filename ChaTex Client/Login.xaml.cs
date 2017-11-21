@@ -41,5 +41,10 @@ namespace ChaTex_Client {
         {
             btnSignIn.IsEnabled = txtUserEmail.Text.Length > 0;
         }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

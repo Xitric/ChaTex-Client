@@ -283,7 +283,7 @@ namespace ChaTex_Client.UserControls
                 switch (er.ErrorCode)
                 {
                     case 401:
-                        new ErrorDialog("Authentication failed", "You can not delete this message because you are not the owner.").ShowDialog();
+                        new ErrorDialog("Authentication failed", "You can not delete this message, because you are not the owner.").ShowDialog();
                         break;
                     case 404:
                         new ErrorDialog("Not found", "The message you tried to delete does not exist.").ShowDialog();

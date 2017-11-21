@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChaTex_Client.UserDialogs"
         mc:Ignorable="d"
-        Title="ErrorDialog" Height="300" MinWidth="450" MaxWidth="600">
+        Title="Error" Height="300" MinWidth="450" MaxWidth="600" ResizeMode="NoResize" WindowStyle="ToolWindow">
     
     <Grid Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
@@ -28,7 +28,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Image Source="/pictures/button/gifIcon.png"
+                <Image Source="/pictures/icon/alert-circle.png"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        Height="48"
                        Grid.Column="0"

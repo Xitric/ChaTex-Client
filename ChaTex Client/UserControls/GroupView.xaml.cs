@@ -1,4 +1,5 @@
-﻿using IO.Swagger.Api;
+﻿using ChaTex_Client.UserDialogs;
+using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System;
@@ -44,17 +45,21 @@ namespace ChaTex_Client.UserControls
         }
 
         private void channelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
-        {            
+        {
             if (e.NewValue is ChannelDTO channel)
             {
                 selectedChannel = channel;
                 ucChannelMessageView.SetChannel((int)channel.Id);
-                
+
             }
         }
 
         private void btnEditChannel_Click(object sender, RoutedEventArgs e)
         {
+           /* if (this.selectedChannel == null)
+            {
+                return;
+            }*/
             var wEditChannel = new EditChannel(selectedChannel);
             wEditChannel.ShowDialog();
             populateUI();
@@ -62,28 +67,42 @@ namespace ChaTex_Client.UserControls
 
         private void ucChannelMessageView_Loaded(object sender, RoutedEventArgs e)
         {
-           
+
         }
 
         private void miDeleteChannel_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
             ChannelDTO channel = (ChannelDTO)menuItem.DataContext;
-            MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + channel.Name + "?","Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            try
+            MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + channel.Name + "?", "Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            switch (result)
             {
-                switch (result)
-                {
-                    case MessageBoxResult.Yes:
+                case MessageBoxResult.Yes:
+                    try
+                    {
                         channelsApi.DeleteChannel(channel.Id);
-                        MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
-                        populateUI();
-                        break;
-                    case MessageBoxResult.No:
-                        break;
-                }
+                    }
+                    catch (ApiException er)
+                    {
+                        switch (er.ErrorCode)
+                        {
+                            case 401:
+                                new ErrorDialog("Authentication failed", "You can not delete this channel because you are not the owner.").ShowDialog();
+                                break;
+                            default:
+                                new ExceptionDialog(er).ShowDialog();
+                                break;
+                        }
+                    }
+                    MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
+                    populateUI();
+                    break;
+                case MessageBoxResult.No:
+                    break;
             }
-            catch (ApiException) { }
         }
+
     }
 }
+
+

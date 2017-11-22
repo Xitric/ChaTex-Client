@@ -109,11 +109,6 @@ namespace ChaTex_Client.UserControls
             {
                 IEnumerable<MessageEventDTO>  messageEvents = messagesApi.GetMessageEvents(currentChannelId, latestMessage, cancellation.Token);
 
-                if (state == MessageViewState.Channel)
-                {
-                    messagesApi.GetMessageEvents(currentChannelId, latestMessage, cancellation.Token);
-                }
-
                 //Add to ui when ready
                 Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
                 {
@@ -136,7 +131,18 @@ namespace ChaTex_Client.UserControls
             }
             catch (ApiException er)
             {
-                new ExceptionDialog(er).ShowDialog();
+                switch (er.ErrorCode)
+                {
+                    case 401:
+                        showUnauthorizedDialog();
+                        break;
+                    case 404:
+                        showMissingChannelDialog();
+                        break;
+                    default:
+                        new ExceptionDialog(er).ShowDialog();
+                        break;
+                }
             }
         }
 
@@ -166,7 +172,18 @@ namespace ChaTex_Client.UserControls
             }
             catch (ApiException er)
             {
-                new ExceptionDialog(er).ShowDialog();
+                switch (er.ErrorCode)
+                {
+                    case 401:
+                        showUnauthorizedDialog();
+                        break;
+                    case 404:
+                        showMissingChannelDialog();
+                        break;
+                    default:
+                        new ExceptionDialog(er).ShowDialog();
+                        break;
+                }
             }
         }
 
@@ -204,6 +221,16 @@ namespace ChaTex_Client.UserControls
             latestMessage = (DateTime)message.LastEdited;
         }
 
+        private void showUnauthorizedDialog()
+        {
+            new ErrorDialog("Authentication failed", "You do not have access to this channel.").ShowDialog();
+        }
+
+        private void showMissingChannelDialog()
+        {
+            new ErrorDialog("Not found", "The requested channel does not exist.").ShowDialog();
+        }
+
         private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
         {
             btnSendMessage.IsEnabled = txtMessage.Text.Length > 0;
@@ -224,7 +251,18 @@ namespace ChaTex_Client.UserControls
             }
             catch (ApiException er)
             {
-                new ExceptionDialog(er).ShowDialog();
+                switch (er.ErrorCode)
+                {
+                    case 401:
+                        showUnauthorizedDialog();
+                        break;
+                    case 404:
+                        showMissingChannelDialog();
+                        break;
+                    default:
+                        new ExceptionDialog(er).ShowDialog();
+                        break;
+                }
             }
         }
 
@@ -242,10 +280,13 @@ namespace ChaTex_Client.UserControls
             }
             catch (ApiException er)
             {
-                switch(er.ErrorCode)
+                switch (er.ErrorCode)
                 {
                     case 401:
-                        new ErrorDialog("Authentication failed", "You can not delete this message because you are not the owner.").ShowDialog();
+                        new ErrorDialog("Authentication failed", "You can not delete this message, because you are not the owner.").ShowDialog();
+                        break;
+                    case 404:
+                        new ErrorDialog("Not found", "The message you tried to delete does not exist.").ShowDialog();
                         break;
                     default:
                         new ExceptionDialog(er).ShowDialog();

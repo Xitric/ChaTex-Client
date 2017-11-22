@@ -40,8 +40,26 @@ namespace ChaTex_Client.UserControls
 
         private void populateUI()
         {
-            groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-            tvGroups.ItemsSource = groups;
+            try
+            {
+                groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
+                tvGroups.ItemsSource = groups;
+            }
+            catch (ApiException er)
+            {
+                switch (er.ErrorCode)
+                {
+                    case 401:
+                        new ErrorDialog("Authentication failed", "You do not have access to the groups of this user.").ShowDialog();
+                        break;
+                    case 404:
+                        new ErrorDialog("Not found", "The specified user does not exist.").ShowDialog();
+                        break;
+                    default:
+                        new ExceptionDialog(er).ShowDialog();
+                        break;
+                }
+            }
         }
 
         private void channelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
@@ -56,10 +74,10 @@ namespace ChaTex_Client.UserControls
 
         private void btnEditChannel_Click(object sender, RoutedEventArgs e)
         {
-           /* if (this.selectedChannel == null)
+            if (this.selectedChannel == null)
             {
                 return;
-            }*/
+            }
             var wEditChannel = new EditChannel(selectedChannel);
             wEditChannel.ShowDialog();
             populateUI();
@@ -75,30 +93,34 @@ namespace ChaTex_Client.UserControls
             var menuItem = sender as MenuItem;
             ChannelDTO channel = (ChannelDTO)menuItem.DataContext;
             MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + channel.Name + "?", "Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            switch (result)
-            {
-                case MessageBoxResult.Yes:
-                    try
-                    {
-                        channelsApi.DeleteChannel(channel.Id);
-                    }
-                    catch (ApiException er)
-                    {
-                        switch (er.ErrorCode)
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        try
                         {
-                            case 401:
-                                new ErrorDialog("Authentication failed", "You can not delete this channel because you are not the owner.").ShowDialog();
-                                break;
-                            default:
-                                new ExceptionDialog(er).ShowDialog();
-                                break;
+                            channelsApi.DeleteChannel(channel.Id);
+                            MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
+                            populateUI();
                         }
-                    }
-                    MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
-                    populateUI();
-                    break;
-                case MessageBoxResult.No:
-                    break;
+                        catch (ApiException er)
+                        {
+                            switch (er.ErrorCode)
+                            {
+                                case 401:
+                                    new ErrorDialog("Authentication failed", "You do not have permission to delete this channel.").ShowDialog();
+                                    break;
+                                case 404:
+                                    new ErrorDialog("Not found", "The specified channel does not exist.").ShowDialog();
+                                    break;
+                                default:
+                                    new ExceptionDialog(er).ShowDialog();
+                                    break;
+                            }
+                        }
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                }
             }
         }
 

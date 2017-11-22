@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChaTex_Client.UserDialogs"
         mc:Ignorable="d"
-        Title="ExceptionDialog" MinWidth="450" ResizeMode="NoResize">
+        Title="Unknown Error" Height="300" MinWidth="450" MaxWidth="600" ResizeMode="NoResize" WindowStyle="ToolWindow">
+
     <Grid Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
@@ -20,35 +21,76 @@
                 Grid.Column="1"
                 Grid.Row="0"
                 Background="#FF2F3136">
-            <TextBlock Text="{Binding ErrorCode, StringFormat='Error: {0}', RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                       FontSize="32"
-                       Foreground="White"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/pictures/icon/nuke.png"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       Height="48"
+                       Grid.Column="0"
+                       Margin="0 0 16 0"/>
+                <TextBlock Text="{Binding ErrorCode, StringFormat='Error code: {0}', RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                           FontSize="32"
+                           Foreground="White"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Grid.Column="1"/>
+            </Grid>
         </Border>
 
-        <Border Padding="16, 16, 16, 64"
+        <Border Padding="16, 16, 16, 16"
                 Grid.Column="1"
                 Grid.Row="1"
                 Background="White"
                 BorderBrush="#cccccc"
                 BorderThickness="0 1 0 1">
-            <TextBlock Text="{Binding ErrorMessage, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-                       FontSize="20"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock Text="Please send this stack trace to the administrator:"
+                           FontSize="20"
+                           Grid.Row="0"/>
+                <Border BorderThickness="1"
+                        BorderBrush="#cccccc"
+                        Margin="0 8 0 0"
+                        Grid.Row="1">
+                    <ScrollViewer MinHeight="200"
+                                  MaxHeight="400"
+                                  Padding="4"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding StackTrace, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                   FontSize="14"/>
+                    </ScrollViewer>
+                </Border>
+                
+            </Grid>
         </Border>
 
         <Border Padding="16, 16, 16, 16"
                 Grid.Column="1"
                 Grid.Row="2">
-            <Button Name="btnClose"
-                    Content="Ok"
-                    MinWidth="80"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Click="btnClose_Click"
-                    IsDefault="True"/>
+            <StackPanel HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Name="btnCopyToClipboard"
+                        Content="Copy to clipboard"
+                        Click="btnCopyToClipboard_Click"
+                        Margin="0 0 8 0"/>
+                <Button Name="btnClose"
+                        Content="Ok"
+                        MinWidth="80"
+                        Click="btnClose_Click"
+                        IsDefault="True"/>
+            </StackPanel>
         </Border>
     </Grid>
 </Window>
+

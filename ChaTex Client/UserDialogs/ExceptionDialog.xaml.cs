@@ -21,12 +21,12 @@ namespace ChaTex_Client.UserDialogs
     public partial class ExceptionDialog : Window
     {
         public string ErrorCode { get; set; }
-        public string ErrorMessage { get; set; }
+        public string StackTrace { get; set; }
 
         public ExceptionDialog(ApiException e)
         {
             ErrorCode = e.ErrorCode.ToString();
-            ErrorMessage = e.Message;
+            StackTrace = e.ToString();
             InitializeComponent();
             SizeToContent = SizeToContent.WidthAndHeight;
         }
@@ -34,6 +34,11 @@ namespace ChaTex_Client.UserDialogs
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void btnCopyToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(StackTrace);
         }
     }
 }

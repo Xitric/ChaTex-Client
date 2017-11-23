@@ -89,6 +89,9 @@
     <Compile Include="CreateChat.xaml.cs">
       <DependentUpon>CreateChat.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CreateNewChannel.xaml.cs">
+      <DependentUpon>CreateNewChannel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditChannel.xaml.cs">
       <DependentUpon>EditChannel.xaml</DependentUpon>
     </Compile>
@@ -102,6 +105,10 @@
       <DependentUpon>GroupView.xaml</DependentUpon>
     </Compile>
     <Page Include="CreateChat.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateNewChannel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -224,6 +231,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ChaTexIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\AddChannel.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

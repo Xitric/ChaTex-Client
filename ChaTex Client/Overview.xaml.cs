@@ -33,5 +33,13 @@ namespace ChaTex_Client
             dpnlMainUI.Children.Clear();
             dpnlMainUI.Children.Add(GroupView.GetInstance());
         }
+
+        private void btnAddChannel_Click(object sender, RoutedEventArgs e)
+        {
+            CreateNewChannel createNewChannel = new CreateNewChannel();
+            createNewChannel.ShowDialog();
+            dpnlMainUI.Children.Clear();
+            dpnlMainUI.Children.Add(GroupView.GetInstance());
+        }
     }
 }

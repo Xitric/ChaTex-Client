@@ -51,6 +51,7 @@ namespace ChaTex_Client.UserControls
             if (e.NewValue is ChannelDTO channel)
             {
                 selectedChannel = channel;
+                txtChannelName.Text = channel.Name;
                 ucChannelMessageView.SetChannel(channel.Id);
             }
         }

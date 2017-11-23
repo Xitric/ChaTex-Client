@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Enum;
 using ChaTex_Client.UserDialogs;
+using ChaTex_Client.ViewModels;
 using IO.ChaTex;
 using IO.ChaTex.Models;
 using Microsoft.Rest;
@@ -20,7 +21,7 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class ChannelMessageView : UserControl
     {
-        private readonly ObservableCollection<GetMessageDTO> messages;
+        private readonly ObservableCollection<MessageViewModel> messages;
         private readonly IMessages messagesApi;
 
         private MessageViewState state;
@@ -29,8 +30,9 @@ namespace ChaTex_Client.UserControls
 
         private DateTime latestMessageTime;
         private CancellationTokenSource messageFetchCancellation;
-        private GetMessageDTO selectedMessage;
-        private Task currentMessageTask;
+        private MessageViewModel selectedMessage;
+        private Task newMessageTask;
+        private Task oldMessageTask;
         private bool keepFetchingMessages;
 
         public ChannelMessageView(IMessages messagesApi)
@@ -38,7 +40,7 @@ namespace ChaTex_Client.UserControls
             this.messagesApi = messagesApi;
 
             InitializeComponent();
-            messages = new ObservableCollection<GetMessageDTO>();
+            messages = new ObservableCollection<MessageViewModel>();
             icMessages.ItemsSource = messages;
         }
 
@@ -49,7 +51,7 @@ namespace ChaTex_Client.UserControls
             //Sets our state, so the program knows if we're in a channel or chat
             state = MessageViewState.Channel;
 
-            currentMessageTask = beginDisplayingMessages();
+            newMessageTask = beginDisplayingMessages().ContinueWith(t => Console.WriteLine("Message fetcher stopped"));
         }
 
         public void SetChat(int chatId)
@@ -57,7 +59,7 @@ namespace ChaTex_Client.UserControls
             currentChatId = chatId;
             state = MessageViewState.Chat;
 
-            currentMessageTask = beginDisplayingMessages().ContinueWith(t => Console.WriteLine("Message fetcher stopped"));
+            newMessageTask = beginDisplayingMessages();
         }
 
         private async Task beginDisplayingMessages()
@@ -67,7 +69,7 @@ namespace ChaTex_Client.UserControls
 
             //Repopulate window with new messages
             clearChat();
-            await populateChat();
+            await fetchNewMessages();
 
             //Begin listening for messages in the new channel
             await beginFetchingMessages();
@@ -81,9 +83,14 @@ namespace ChaTex_Client.UserControls
             messageFetchCancellation?.Cancel();
             keepFetchingMessages = false;
 
-            if (currentMessageTask != null)
+            if (newMessageTask != null)
             {
-                await currentMessageTask;
+                await newMessageTask;
+            }
+
+            if (oldMessageTask != null)
+            {
+                await oldMessageTask;
             }
 
             messageFetchCancellation = new CancellationTokenSource();
@@ -106,7 +113,6 @@ namespace ChaTex_Client.UserControls
                         //Get message events
                         //When we call await we pass control back to the caller, so this while loop does not block the UI
                         messageEvents = await messagesApi.GetMessageEventsAsync((int)currentChannelId, latestMessageTime, messageFetchCancellation.Token);
-                        //messageEvents = messagesApi.GetMessageEvents((int)currentChannelId, latestMessageTime);
                     }
 
                     await handleMessageEventsAsync(messageEvents, messageFetchCancellation.Token);
@@ -138,7 +144,7 @@ namespace ChaTex_Client.UserControls
                     switch (msgEvent.Type)
                     {
                         case "NewMessage":
-                            addMessage(msgEvent.Message);
+                            appendMessage(msgEvent.Message);
                             break;
                         case "DeleteMessage":
                             deleteMessage(msgEvent.Message);
@@ -159,20 +165,19 @@ namespace ChaTex_Client.UserControls
             messages.Clear();
         }
 
-        private async Task populateChat()
+        private async Task fetchNewMessages()
         {
-            IList<GetMessageDTO> messages = null;
+            IList<GetMessageDTO> newMessages = null;
             try
             {
                 if (state == MessageViewState.Channel && currentChannelId != null)
                 {
-                    messages = await messagesApi.GetMessagesAsync((int)currentChannelId, 0, 25, messageFetchCancellation.Token);
-                    //messages = messagesApi.GetMessages((int)currentChannelId, 0, 25);
+                    newMessages = await messagesApi.GetMessagesAsync((int)currentChannelId, 0, 25, messageFetchCancellation.Token);
                 }
-                
-                foreach (GetMessageDTO message in messages)
+
+                foreach (GetMessageDTO message in newMessages)
                 {
-                    addMessage(message);
+                    appendMessage(message);
                 }
             }
             catch (HttpOperationException er)
@@ -181,15 +186,56 @@ namespace ChaTex_Client.UserControls
             }
         }
 
-        /// <summary>
-        /// Adds a new message to the message view.
-        /// </summary>
-        /// <param name="message">The message to add</param>
-        private void addMessage(GetMessageDTO message)
+        private async Task fetchOldMessages()
         {
-            messages.Add(message);
-            latestMessageTime = message.CreationTime;
+            IList<GetMessageDTO> oldMessages = null;
+            try
+            {
+                if (state == MessageViewState.Channel && currentChannelId != null)
+                {
+                    oldMessages = await messagesApi.GetMessagesAsync((int)currentChannelId, messages.Count, 10, messageFetchCancellation.Token);
+                }
+
+                for (int i = oldMessages.Count - 1; i >= 0; i--)
+                {
+                    prependMessage(oldMessages[i]);
+                }
+            }
+            catch (HttpOperationException er)
+            {
+                throw er;
+            }
+        }
+
+        private void appendMessage(GetMessageDTO message)
+        {
+            messages.Add(new MessageViewModel(message));
             svMessages.ScrollToBottom();
+            updateLatestTime(message);
+        }
+
+        private void prependMessage(GetMessageDTO message)
+        {
+            messages.Insert(0, new MessageViewModel(message));
+            updateLatestTime(message);
+        }
+
+        private void updateLatestTime(GetMessageDTO message)
+        {
+            if (message.CreationTime > latestMessageTime)
+            {
+                latestMessageTime = message.CreationTime;
+            }
+
+            if (message.LastEdited != null && message.LastEdited > latestMessageTime)
+            {
+                latestMessageTime = (DateTime)message.LastEdited;
+            }
+
+            if (message.DeletionDate != null && message.DeletionDate > latestMessageTime)
+            {
+                latestMessageTime = (DateTime)message.DeletionDate;
+            }
         }
 
         private void deleteMessage(GetMessageDTO message)
@@ -197,8 +243,7 @@ namespace ChaTex_Client.UserControls
             int replaceIndex = messages.IndexOf(messages.SingleOrDefault(m => m.Id == message.Id));
             if (replaceIndex != -1)
             {
-                message.Content = ("This message has been deleted on the " + "\n" + ((DateTime)message.DeletionDate).ToLocalTime());
-                messages[replaceIndex] = message;
+                messages[replaceIndex] = new MessageViewModel(message);
             }
 
             latestMessageTime = (DateTime)message.DeletionDate;
@@ -209,7 +254,7 @@ namespace ChaTex_Client.UserControls
             int replaceIndex = messages.IndexOf(messages.SingleOrDefault(m => m.Id == message.Id));
             if (replaceIndex != -1)
             {
-                messages[replaceIndex] = message;
+                messages[replaceIndex] = new MessageViewModel(message);
             }
 
             latestMessageTime = (DateTime)message.LastEdited;
@@ -273,11 +318,43 @@ namespace ChaTex_Client.UserControls
         private void btnManageMessage_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
- 
+
             btn.ContextMenu.Visibility = Visibility.Visible;
             btn.ContextMenu.IsOpen = true;
 
-            selectedMessage = (GetMessageDTO)btn.DataContext;
+            selectedMessage = (MessageViewModel)btn.DataContext;
+        }
+
+        private async void svMessages_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (currentChannelId == null) return;
+
+            //If we are already fetching old messages, then there is no need to make a new call
+            if (oldMessageTask != null && !oldMessageTask.IsCompleted)
+            {
+                return;
+            }
+
+            ScrollViewer scrollViewer = (ScrollViewer)sender;
+
+            //If we hit the top of the message view we should load previous messages
+            if (scrollViewer.VerticalOffset == 0)
+            {
+                //Temporarely stop listening to scroll events, as we will be generating some ourselves
+                scrollViewer.ScrollChanged -= svMessages_ScrollChanged;
+
+                double oldOffsetFromBottom = scrollViewer.ScrollableHeight;
+
+                try
+                {
+                    oldMessageTask = fetchOldMessages();
+                    await oldMessageTask;
+                }
+                catch (TaskCanceledException) { }
+
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.ScrollableHeight - oldOffsetFromBottom);
+                scrollViewer.ScrollChanged += svMessages_ScrollChanged;
+            }
         }
     }
 }

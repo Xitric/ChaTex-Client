@@ -132,6 +132,7 @@
     <Compile Include="UserDialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\MessageViewModel.cs" />
     <Page Include="CreateChat.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -10,14 +10,14 @@
              IsVisibleChanged="UserControl_IsVisibleChanged">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200px" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="1*" MinWidth="200px"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
 
         <!--<Border Grid.Column="0" Grid.RowSpan="3" BorderBrush="Gray" 
         BorderThickness="0.5,0,0.5,0" Background="{x:Null}" />-->
 
-        <Border Grid.Column="0" Grid.Row="0" BorderBrush="#FFB1B1B1" BorderThickness="1,0" Margin="3,0,4,0" Grid.RowSpan="3">
+        <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
             <Grid Background="#FF2F3136">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />

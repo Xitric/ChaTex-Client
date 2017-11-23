@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:business="clr-namespace:IO.ChaTex.Models;assembly=BusinessLayer"
+             xmlns:vm="clr-namespace:ChaTex_Client.ViewModels"
              mc:Ignorable="d" Background="#FF36393E">
 
     <Grid>
@@ -20,12 +20,15 @@
 
         <!-- message display -->
         <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1"
-                      Name="svMessages">
+                      Name="svMessages" ScrollChanged="svMessages_ScrollChanged"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="16 0 16 0">
 
             <ItemsControl Name="icMessages">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type business:GetMessageDTO}">
-                        <Grid Name="HereIAm">
+                    <DataTemplate DataType="{x:Type vm:MessageViewModel}">
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
@@ -45,11 +48,14 @@
                                 <!-- Position message element -->
                                 <Style TargetType="Border">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Sender.Me}" Value="True">
+                                        <DataTrigger Binding="{Binding Me}" Value="True">
                                             <Setter Property="Grid.Column" Value="4"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Sender.Me}" Value="False">
+                                        <DataTrigger Binding="{Binding Me}" Value="False">
                                             <Setter Property="Grid.Column" Value="0"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Deleted}" Value="True">
+                                            <Setter Property="Opacity" Value="0.3"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -57,10 +63,10 @@
                                 <!-- Position edit button element -->
                                 <Style TargetType="Button">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Sender.Me}" Value="True">
+                                        <DataTrigger Binding="{Binding Me}" Value="True">
                                             <Setter Property="Grid.Column" Value="3"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Sender.Me}" Value="False">
+                                        <DataTrigger Binding="{Binding Me}" Value="False">
                                             <Setter Property="Grid.Column" Value="1"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -91,27 +97,37 @@
                             <Border Margin="0,0,0,10" Padding="10" Background="WhiteSmoke"
                                     Grid.RowSpan="4"
                                     CornerRadius="10">
-                                <StackPanel>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
 
                                     <!-- Author line -->
-                                    <StackPanel Orientation="Horizontal">
-                                        <StackPanel.Resources>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="FontSize" Value="10"/>
-                                                <Setter Property="Foreground" Value="DimGray"/>
-                                            </Style>
-                                        </StackPanel.Resources>
-
-                                        <TextBlock Text="{Binding Sender.FirstName,
-                                                                  StringFormat='\{0\} '}"/>
-                                        <TextBlock Text="{Binding Sender.LastName}"/>
-                                    </StackPanel>
+                                    <TextBlock Text="{Binding AuthorName}"
+                                               FontSize="12"
+                                               Foreground="DimGray"
+                                               Grid.Row="0"/>
 
                                     <!-- Content line -->
-                                    <TextBlock Text="{Binding Content}"
-                                               TextWrapping="Wrap"/>
-
-                                </StackPanel>
+                                    <TextBlock Text="{Binding MessageContent}"
+                                               FontSize="14"
+                                               TextWrapping="Wrap"
+                                               MaxWidth="{Binding ElementName=svMessages, Path=ViewportWidth}"
+                                               Grid.Row="1">
+                                        <TextBlock.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Deleted}" Value="True">
+                                                        <Setter Property="FontStyle" Value="Italic"/>
+                                                        <Setter Property="FontSize" Value="12"/>
+                                                        <Setter Property="Foreground" Value="DimGray"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Resources>
+                                    </TextBlock>
+                                </Grid>
                             </Border>
                         </Grid>
                     </DataTemplate>
@@ -129,7 +145,7 @@
                  TextWrapping="Wrap"
                  BorderBrush="#FF002864"
                  TextChanged="txtMessage_TextChanged"
-                 Margin="0, 0, 10, 0" CaretBrush="White"/>
+                 Margin="16, 0, 16, 0" CaretBrush="White"/>
 
         <!-- send button -->
         <Button Name="btnSendMessage"
@@ -140,6 +156,7 @@
                 Background="#FF002864"
                 BorderBrush="#FF002864"
                 IsDefault="True"
+                Margin="0 0 16 0"
                 Click="btnSendMessage_Click"/>
     </Grid>
 </UserControl>

@@ -1,8 +1,8 @@
 ﻿using BusinessLayer.Enum;
 using ChaTex_Client.UserDialogs;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
+using IO.ChaTex;
+using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,11 +28,12 @@ namespace ChaTex_Client.UserControls
         private CancellationTokenSource cancellation;
         private GetMessageDTO selectedMessage;
         private readonly ObservableCollection<GetMessageDTO> messages;
-        private readonly MessagesApi messagesApi;
+        private readonly IMessages messagesApi;
 
-        public ChannelMessageView()
+        public ChannelMessageView(IMessages messagesApi)
         {
-            messagesApi = new MessagesApi();
+            this.messagesApi = messagesApi;
+
             InitializeComponent();
             messages = new ObservableCollection<GetMessageDTO>();
             icMessages.ItemsSource = messages;
@@ -45,22 +46,19 @@ namespace ChaTex_Client.UserControls
             //Sets our state, so the program knows if we're in a channel or chat
             state = MessageViewState.Channel;
 
-            //Stop fetching messages in previous channel
-            stopFetchingMessages();
-
-            //Repopulate window with new messages
-            clearChat();
-            populateChat();
-
-            //Begin listening for messages in the new channel
-            beginFetchingMessages();
+            SourceChanged();
         }
 
         public void SetChat(int chatId)
         {
-            state = MessageViewState.Chat;
             currentChatId = chatId;
+            state = MessageViewState.Chat;
 
+            SourceChanged();
+        }
+
+        private void SourceChanged()
+        {
             //Stop fetching messages in previous channel
             stopFetchingMessages();
 
@@ -85,6 +83,7 @@ namespace ChaTex_Client.UserControls
         /// </summary>
         private void beginFetchingMessages()
         {
+            /*
             cancellation = new CancellationTokenSource();
             messageFetcherThread = new Thread(new ThreadStart(() =>
             {
@@ -97,7 +96,7 @@ namespace ChaTex_Client.UserControls
                 }
                 catch (TaskCanceledException) { }
             }));
-            messageFetcherThread.Start();
+            messageFetcherThread.Start();*/
         }
 
         /// <summary>
@@ -105,6 +104,8 @@ namespace ChaTex_Client.UserControls
         /// </summary>
         private void fetchNewMessages()
         {
+            //TODO: 
+            /*
             try
             {
                 IEnumerable<MessageEventDTO>  messageEvents = messagesApi.GetMessageEvents(currentChannelId, latestMessage, cancellation.Token);
@@ -144,8 +145,8 @@ namespace ChaTex_Client.UserControls
                         break;
                 }
             }
+            */
         }
-
 
         /// <summary>
         /// Remove all messages from the message view.
@@ -155,14 +156,14 @@ namespace ChaTex_Client.UserControls
             messages.Clear();
         }
 
-        private void populateChat()
+        private async void populateChat()
         {
-            List<GetMessageDTO> messages = null;
+            IList<GetMessageDTO> messages = null;
             try
             {
-                if (state == MessageViewState.Channel)
+                if (state == MessageViewState.Channel && currentChannelId != null)
                 {
-                    messages = messagesApi.GetMessages(currentChannelId, 0, 25); //TODO: Rely on default
+                    messages = await messagesApi.GetMessagesAsync((int)currentChannelId, 0, 25); //TODO: Rely on default
                 }
 
                 foreach (GetMessageDTO message in messages)
@@ -170,20 +171,9 @@ namespace ChaTex_Client.UserControls
                     addMessage(message);
                 }
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
-                switch (er.ErrorCode)
-                {
-                    case 401:
-                        showUnauthorizedDialog();
-                        break;
-                    case 404:
-                        showMissingChannelDialog();
-                        break;
-                    default:
-                        new ExceptionDialog(er).ShowDialog();
-                        break;
-                }
+                throw er;
             }
         }
 
@@ -194,7 +184,7 @@ namespace ChaTex_Client.UserControls
         private void addMessage(GetMessageDTO message)
         {
             messages.Add(message);
-            latestMessage = (DateTime)message.CreationTime;
+            latestMessage = message.CreationTime;
             svMessages.ScrollToBottom();
         }
 
@@ -242,27 +232,18 @@ namespace ChaTex_Client.UserControls
             {
                 Message = txtMessage.Text
             };
+
             try
             {
-                messagesApi.CreateMessage(currentChannelId, messageContentDTO);
+                messagesApi.CreateMessage((int)currentChannelId, messageContentDTO);
 
                 txtMessage.Clear();
                 txtMessage.Focus();
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
-                switch (er.ErrorCode)
-                {
-                    case 401:
-                        showUnauthorizedDialog();
-                        break;
-                    case 404:
-                        showMissingChannelDialog();
-                        break;
-                    default:
-                        new ExceptionDialog(er).ShowDialog();
-                        break;
-                }
+                //TODO: Exception handling
+                throw er;
             }
         }
 
@@ -275,23 +256,13 @@ namespace ChaTex_Client.UserControls
         {
             try
             {
-                int id = (int)selectedMessage.Id;
+                int id = selectedMessage.Id;
                 messagesApi.DeleteMessage(id);
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
-                switch (er.ErrorCode)
-                {
-                    case 401:
-                        new ErrorDialog("Authentication failed", "You can not delete this message, because you are not the owner.").ShowDialog();
-                        break;
-                    case 404:
-                        new ErrorDialog("Not found", "The message you tried to delete does not exist.").ShowDialog();
-                        break;
-                    default:
-                        new ExceptionDialog(er).ShowDialog();
-                        break;
-                }
+                //TODO: Exception handling
+                throw er;
             }
         }
 

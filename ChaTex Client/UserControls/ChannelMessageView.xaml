@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:business="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"  
-             xmlns:local="clr-namespace:ChaTex_Client.UserControls"
+             xmlns:business="clr-namespace:IO.ChaTex.Models;assembly=BusinessLayer"
              mc:Ignorable="d" Background="#FF36393E">
 
     <Grid>
@@ -95,7 +94,7 @@
                                 <StackPanel>
 
                                     <!-- Author line -->
-                                    <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
                                         <StackPanel.Resources>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="FontSize" Value="10"/>
@@ -109,7 +108,8 @@
                                     </StackPanel>
 
                                     <!-- Content line -->
-                                    <TextBlock Text="{Binding Content}"/>
+                                    <TextBlock Text="{Binding Content}"
+                                               TextWrapping="Wrap"/>
 
                                 </StackPanel>
                             </Border>

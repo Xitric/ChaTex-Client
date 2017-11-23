@@ -1,17 +1,4 @@
-﻿using IO.Swagger.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace ChaTex_Client.UserDialogs
 {
@@ -23,10 +10,10 @@ namespace ChaTex_Client.UserDialogs
         public string ErrorCode { get; set; }
         public string StackTrace { get; set; }
 
-        public ExceptionDialog(ApiException e)
+        public ExceptionDialog(/*TODO: ApiException e*/)
         {
-            ErrorCode = e.ErrorCode.ToString();
-            StackTrace = e.ToString();
+            //TODO: ErrorCode = e.ErrorCode.ToString();
+            //TODO: StackTrace = e.ToString();
             InitializeComponent();
             SizeToContent = SizeToContent.WidthAndHeight;
         }

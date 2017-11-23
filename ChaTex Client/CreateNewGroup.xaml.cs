@@ -1,7 +1,6 @@
 ﻿using ChaTex_Client.UserDialogs;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
+using IO.ChaTex;
+using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -14,47 +13,42 @@ namespace ChaTex_Client
     /// </summary>
     public partial class CreateNewGroup : Window
     {
-        private readonly IUsersApi usersApi;
-        private readonly IRolesApi rolesApi;
+        private readonly IUsers usersApi;
+        private readonly IRoles rolesApi;
 
         private String employeeAcknowledgeableString = "Is acknowledgeable allowed for employees?";
         private String employeeBookmarkString = "Is bookmarks allowed for employees?";
         private String employeeStickyString = "Is stickies allowed for employees";
 
-        public CreateNewGroup()
+        public CreateNewGroup(IUsers usersApi, IRoles rolesApi)
         {
+            this.usersApi = usersApi;
+            this.rolesApi = rolesApi;
+
             InitializeComponent();
-            usersApi = new UsersApi();
-            rolesApi = new RolesApi();
             populateUI();
         }
 
-        private void populateUI()
+        private async void populateUI()
         {
             try
             {
-                lstBoxUsers.ItemsSource = usersApi.GetAllUsers();
+                lstBoxUsers.ItemsSource = await usersApi.GetAllUsersAsync();
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
-                switch (er.ErrorCode)
-                {
-                    case 401:
-                        new ErrorDialog("Authentication failed", "You do not have permission to access the user list.").ShowDialog();
-                        break;
-                    default:
-                        new ExceptionDialog(er).ShowDialog();
-                        break;
-                }
+                //TODO: Exception handling
+                throw er;
             }
 
             try
             {
                 lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
-                new ExceptionDialog(er).ShowDialog();
+                //TODO: Exception handling
+                throw er;
             }
 
             List<String> allowableList = new List<string>
@@ -73,8 +67,9 @@ namespace ChaTex_Client
             bool allowEmployeeAcknowledgeable = false;
             bool allowEmployeeBookmark = false;
             bool allowEmployeeSticky = false;
+            //TODO: 
+            /*
             try
-
             {
                 GroupsApi groupsApi = new GroupsApi();
 
@@ -143,6 +138,7 @@ namespace ChaTex_Client
             {
                 Close();
             }
+            */
         }
 
         private void txtGroupName_TextChanged(object sender, TextChangedEventArgs e)

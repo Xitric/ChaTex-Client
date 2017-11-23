@@ -1,7 +1,7 @@
 ﻿using ChaTex_Client.UserDialogs;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
+using IO.ChaTex;
+using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -9,37 +9,32 @@ using System.Windows.Controls;
 
 namespace ChaTex_Client
 {
-  
+
     public partial class CreateChat : Window
     {
-        private readonly UsersApi userApi;
+        private readonly IUsers usersApi;
+
         private ObservableCollection<UserDTO> users;
 
-        public CreateChat()
+        public CreateChat(IUsers usersApi)
         {
+            this.usersApi = usersApi;
+
             InitializeComponent();
-            userApi = new UsersApi();
             populateUI();
         }
 
-        private void populateUI()
+        private async void populateUI()
         {
             try
             {
-                users = new ObservableCollection<UserDTO>(userApi.GetAllUsers());
+                users = new ObservableCollection<UserDTO>(await usersApi.GetAllUsersAsync());
                 lstBoxUsers.ItemsSource = users;
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
-                switch (er.ErrorCode)
-                {
-                    case 401:
-                        new ErrorDialog("Authentication failed", "You do not have permission to access the user list.").ShowDialog();
-                        break;
-                    default:
-                        new ExceptionDialog(er).ShowDialog();
-                        break;
-                }
+                //TODO: Exception handling
+                throw er;
             }
         }
 

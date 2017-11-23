@@ -150,7 +150,8 @@ namespace IO.ChaTex
             Messages = new Messages(this);
             Roles = new Roles(this);
             Chats = new Chats(this);
-            BaseUri = new System.Uri("http://localhost:51976/1.0.0");
+            //BaseUri = new System.Uri("http://localhost:51976/1.0.0");
+            BaseUri = new System.Uri("https://chatex.azurewebsites.net/1.0.0");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,

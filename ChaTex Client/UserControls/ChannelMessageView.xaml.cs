@@ -20,15 +20,18 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class ChannelMessageView : UserControl
     {
+        private readonly ObservableCollection<GetMessageDTO> messages;
+        private readonly IMessages messagesApi;
+
         private MessageViewState state;
         private int? currentChannelId;
         private int? currentChatId;
-        private DateTime latestMessage;
-        private Thread messageFetcherThread;
-        private CancellationTokenSource cancellation;
+
+        private DateTime latestMessageTime;
+        private CancellationTokenSource messageFetchCancellation;
         private GetMessageDTO selectedMessage;
-        private readonly ObservableCollection<GetMessageDTO> messages;
-        private readonly IMessages messagesApi;
+        private Task currentMessageTask;
+        private bool keepFetchingMessages;
 
         public ChannelMessageView(IMessages messagesApi)
         {
@@ -46,7 +49,7 @@ namespace ChaTex_Client.UserControls
             //Sets our state, so the program knows if we're in a channel or chat
             state = MessageViewState.Channel;
 
-            SourceChanged();
+            currentMessageTask = beginDisplayingMessages();
         }
 
         public void SetChat(int chatId)
@@ -54,98 +57,98 @@ namespace ChaTex_Client.UserControls
             currentChatId = chatId;
             state = MessageViewState.Chat;
 
-            SourceChanged();
+            currentMessageTask = beginDisplayingMessages().ContinueWith(t => Console.WriteLine("Message fetcher stopped"));
         }
 
-        private void SourceChanged()
+        private async Task beginDisplayingMessages()
         {
-            //Stop fetching messages in previous channel
-            stopFetchingMessages();
+            //Stop fetching messages in previous channel. We cannot continue until this is truly completed
+            await stopFetchingMessages();
 
             //Repopulate window with new messages
             clearChat();
-            populateChat();
+            await populateChat();
 
             //Begin listening for messages in the new channel
-            beginFetchingMessages();
+            await beginFetchingMessages();
         }
 
         /// <summary>
         /// Stop listening for new messages from the server.
         /// </summary>
-        private void stopFetchingMessages()
+        private async Task stopFetchingMessages()
         {
-            cancellation?.Cancel();
+            messageFetchCancellation?.Cancel();
+            keepFetchingMessages = false;
+
+            if (currentMessageTask != null)
+            {
+                await currentMessageTask;
+            }
+
+            messageFetchCancellation = new CancellationTokenSource();
+            keepFetchingMessages = true;
         }
 
         /// <summary>
         /// Begin listening for message events from the server.
         /// </summary>
-        private void beginFetchingMessages()
+        private async Task beginFetchingMessages()
         {
-            /*
-            cancellation = new CancellationTokenSource();
-            messageFetcherThread = new Thread(new ThreadStart(() =>
+            while (keepFetchingMessages)
             {
                 try
                 {
-                    while (true)
+                    IEnumerable<MessageEventDTO> messageEvents = null;
+
+                    if (state == MessageViewState.Channel)
                     {
-                        fetchNewMessages();
+                        //Get message events
+                        //When we call await we pass control back to the caller, so this while loop does not block the UI
+                        messageEvents = await messagesApi.GetMessageEventsAsync((int)currentChannelId, latestMessageTime, messageFetchCancellation.Token);
+                        //messageEvents = messagesApi.GetMessageEvents((int)currentChannelId, latestMessageTime);
                     }
+
+                    await handleMessageEventsAsync(messageEvents, messageFetchCancellation.Token);
                 }
-                catch (TaskCanceledException) { }
-            }));
-            messageFetcherThread.Start();*/
+                catch (TaskCanceledException e)
+                {
+                    Console.WriteLine("The live message fetch task was canceled");
+                }
+            }
         }
 
-        /// <summary>
-        /// Get message events from the web service and update the message view. This operation will block until it receives a result, and should therefore be called from a separate thread.
-        /// </summary>
-        private void fetchNewMessages()
+        private async Task handleMessageEventsAsync(IEnumerable<MessageEventDTO> messageEvents, CancellationToken token)
         {
-            //TODO: 
-            /*
-            try
+            if (messageEvents == null)
             {
-                IEnumerable<MessageEventDTO>  messageEvents = messagesApi.GetMessageEvents(currentChannelId, latestMessage, cancellation.Token);
+                throw new ApplicationException("Null content received when getting new message events!");
+            }
 
-                //Add to ui when ready
-                Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate ()
-                {
-                    foreach (MessageEventDTO msgEvent in messageEvents)
-                    {
-                        switch (msgEvent.Type)
-                        {
-                            case "NewMessage":
-                                addMessage(msgEvent.Message);
-                                break;
-                            case "DeleteMessage":
-                                deleteMessage(msgEvent.Message);
-                                break;
-                            case "UpdateMessage":
-                                updateMessage(msgEvent.Message);
-                                break;
-                        }
-                    }
-                });
-            }
-            catch (ApiException er)
+            //Add to ui when ready
+            await Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate ()
             {
-                switch (er.ErrorCode)
+                foreach (MessageEventDTO msgEvent in messageEvents)
                 {
-                    case 401:
-                        showUnauthorizedDialog();
-                        break;
-                    case 404:
-                        showMissingChannelDialog();
-                        break;
-                    default:
-                        new ExceptionDialog(er).ShowDialog();
-                        break;
+                    if (token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    switch (msgEvent.Type)
+                    {
+                        case "NewMessage":
+                            addMessage(msgEvent.Message);
+                            break;
+                        case "DeleteMessage":
+                            deleteMessage(msgEvent.Message);
+                            break;
+                        case "UpdateMessage":
+                            updateMessage(msgEvent.Message);
+                            break;
+                    }
                 }
-            }
-            */
+            });
         }
 
         /// <summary>
@@ -156,16 +159,17 @@ namespace ChaTex_Client.UserControls
             messages.Clear();
         }
 
-        private async void populateChat()
+        private async Task populateChat()
         {
             IList<GetMessageDTO> messages = null;
             try
             {
                 if (state == MessageViewState.Channel && currentChannelId != null)
                 {
-                    messages = await messagesApi.GetMessagesAsync((int)currentChannelId, 0, 25); //TODO: Rely on default
+                    messages = await messagesApi.GetMessagesAsync((int)currentChannelId, 0, 25, messageFetchCancellation.Token);
+                    //messages = messagesApi.GetMessages((int)currentChannelId, 0, 25);
                 }
-
+                
                 foreach (GetMessageDTO message in messages)
                 {
                     addMessage(message);
@@ -184,7 +188,7 @@ namespace ChaTex_Client.UserControls
         private void addMessage(GetMessageDTO message)
         {
             messages.Add(message);
-            latestMessage = message.CreationTime;
+            latestMessageTime = message.CreationTime;
             svMessages.ScrollToBottom();
         }
 
@@ -197,7 +201,7 @@ namespace ChaTex_Client.UserControls
                 messages[replaceIndex] = message;
             }
 
-            latestMessage = (DateTime)message.DeletionDate;
+            latestMessageTime = (DateTime)message.DeletionDate;
         }
 
         private void updateMessage(GetMessageDTO message)
@@ -208,7 +212,7 @@ namespace ChaTex_Client.UserControls
                 messages[replaceIndex] = message;
             }
 
-            latestMessage = (DateTime)message.LastEdited;
+            latestMessageTime = (DateTime)message.LastEdited;
         }
 
         private void showUnauthorizedDialog()

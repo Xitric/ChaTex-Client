@@ -65,5 +65,13 @@ namespace ChaTex_Client
         {
             setCurrentView(groupView);
         }
+
+        private void btnAddChannel_Click(object sender, RoutedEventArgs e)
+        {
+            CreateNewChannel createNewChannel = new CreateNewChannel();
+            createNewChannel.ShowDialog();
+            dpnlMainUI.Children.Clear();
+            dpnlMainUI.Children.Add(GroupView.GetInstance());
+        }
     }
 }

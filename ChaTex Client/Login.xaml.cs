@@ -41,14 +41,7 @@ namespace ChaTex_Client
             }
             catch (HttpOperationException er)
             {
-                if (er.Response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
-                }
-                else
-                {
-                    new ExceptionDialog(er).ShowDialog();
-                }
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
 
             return token;

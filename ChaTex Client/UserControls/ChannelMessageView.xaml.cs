@@ -336,6 +336,7 @@ namespace ChaTex_Client.UserControls
             }
 
             ScrollViewer scrollViewer = (ScrollViewer)sender;
+            if (scrollViewer.ComputedVerticalScrollBarVisibility != Visibility.Visible) return;
 
             //If we hit the top of the message view we should load previous messages
             if (scrollViewer.VerticalOffset == 0)

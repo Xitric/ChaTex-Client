@@ -22,11 +22,11 @@ namespace ChaTex_Client
             this.channelsApi = channelsApi;
             populateUI();
         }
-        private void populateUI()
+        private async void populateUI()
         {
             try
             {
-                lstBoxGroups.ItemsSource = usersApi.GetGroupsForUser();
+                lstBoxGroups.ItemsSource = await usersApi.GetGroupsForUserAsync();
             }
             catch (HttpOperationException er)
             {
@@ -35,11 +35,11 @@ namespace ChaTex_Client
             }
         }
 
-        private void btnCreateChannel_Click(object sender, RoutedEventArgs e)
+        private async void btnCreateChannel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                channelsApi.CreateChannel(((GroupDTO)lstBoxGroups.SelectedItem).Id, new CreateChannelDTO()
+                await channelsApi.CreateChannelAsync(((GroupDTO)lstBoxGroups.SelectedItem).Id, new CreateChannelDTO()
                 {
                     Name = txtChannelName.Text
                 });

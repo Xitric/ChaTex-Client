@@ -1,5 +1,4 @@
-﻿using ChaTex_Client.UserDialogs;
-using IO.ChaTex;
+﻿using IO.ChaTex;
 using IO.ChaTex.Models;
 using Microsoft.Rest;
 using System.Collections.ObjectModel;
@@ -13,7 +12,6 @@ namespace ChaTex_Client
     public partial class CreateChat : Window
     {
         private readonly IUsers usersApi;
-
         private ObservableCollection<UserDTO> users;
 
         public CreateChat(IUsers usersApi)

@@ -18,7 +18,6 @@ namespace ChaTex_Client.UserControls
         private readonly IChannels channelsApi;
 
         private readonly ChannelMessageView ucChannelMessageView;
-
         private ChannelDTO selectedChannel;
         private ObservableCollection<GroupDTO> groups;
 

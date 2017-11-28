@@ -275,7 +275,7 @@ namespace ChaTex_Client.UserControls
             btnSendMessage.IsEnabled = txtMessage.Text.Length > 0;
         }
 
-        private void btnSendMessage_Click(object sender, RoutedEventArgs e)
+        private async void btnSendMessage_Click(object sender, RoutedEventArgs e)
         {
             var messageContentDTO = new MessageContentDTO()
             {
@@ -284,7 +284,7 @@ namespace ChaTex_Client.UserControls
 
             try
             {
-                messagesApi.CreateMessage((int)currentChannelId, messageContentDTO);
+                await messagesApi.CreateMessageAsync((int)currentChannelId, messageContentDTO);
 
                 txtMessage.Clear();
                 txtMessage.Focus();
@@ -301,12 +301,12 @@ namespace ChaTex_Client.UserControls
 
         }
 
-        private void miDeleteMessage_Click(object sender, EventArgs e)
+        private async void miDeleteMessage_Click(object sender, EventArgs e)
         {
             try
             {
                 int id = selectedMessage.Id;
-                messagesApi.DeleteMessage(id);
+                await messagesApi.DeleteMessageAsync(id);
             }
             catch (HttpOperationException er)
             {

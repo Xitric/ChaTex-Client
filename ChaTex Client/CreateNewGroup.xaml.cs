@@ -1,5 +1,6 @@
 ﻿using ChaTex_Client.UserDialogs;
 using IO.ChaTex;
+using IO.ChaTex.Models;
 using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,17 @@ namespace ChaTex_Client
     {
         private readonly IUsers usersApi;
         private readonly IRoles rolesApi;
+        private readonly IGroups groupsApi;
 
         private String employeeAcknowledgeableString = "Is acknowledgeable allowed for employees?";
         private String employeeBookmarkString = "Is bookmarks allowed for employees?";
         private String employeeStickyString = "Is stickies allowed for employees";
 
-        public CreateNewGroup(IUsers usersApi, IRoles rolesApi)
+        public CreateNewGroup(IUsers usersApi, IRoles rolesApi, IGroups groupsApi)
         {
             this.usersApi = usersApi;
             this.rolesApi = rolesApi;
+            this.groupsApi = groupsApi;
 
             InitializeComponent();
             populateUI();
@@ -67,12 +70,9 @@ namespace ChaTex_Client
             bool allowEmployeeAcknowledgeable = false;
             bool allowEmployeeBookmark = false;
             bool allowEmployeeSticky = false;
-            //TODO: 
-            /*
+
             try
             {
-                GroupsApi groupsApi = new GroupsApi();
-
                 foreach (String item in lstBoxAllowables.Items)
                 {
                     if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeAcknowledgeableString)))
@@ -128,7 +128,7 @@ namespace ChaTex_Client
                 MessageBox.Show("The group has now been created!");
 
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
                 MessageBox.Show("An error occured: " + er.InnerException.Message);
                 throw er;
@@ -138,7 +138,6 @@ namespace ChaTex_Client
             {
                 Close();
             }
-            */
         }
 
         private void txtGroupName_TextChanged(object sender, TextChangedEventArgs e)

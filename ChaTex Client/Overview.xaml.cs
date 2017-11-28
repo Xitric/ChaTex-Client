@@ -13,15 +13,19 @@ namespace ChaTex_Client
 
         private readonly IUsers usersApi;
         private readonly IRoles rolesApi;
+        private readonly IChannels channelsApi;
+        private readonly IGroups groupsApi;
 
         private readonly GroupView groupView;
         private readonly ChatView chatView;
         private UserControl currentView;
 
-        public Overview(GroupView groupView, ChatView chatView, IUsers usersApi, IRoles rolesApi)
+        public Overview(GroupView groupView, ChatView chatView, IUsers usersApi, IRoles rolesApi, IChannels channelsApi, IGroups groupsApi)
         {
             this.usersApi = usersApi;
             this.rolesApi = rolesApi;
+            this.channelsApi = channelsApi;
+            this.groupsApi = groupsApi;
 
             this.groupView = groupView;
             this.chatView = chatView;
@@ -49,7 +53,7 @@ namespace ChaTex_Client
         
         private void btnAddGroup_Click(object sender, RoutedEventArgs e)
         {
-            CreateNewGroup createNewGroup = new CreateNewGroup(usersApi, rolesApi);
+            CreateNewGroup createNewGroup = new CreateNewGroup(usersApi, rolesApi, groupsApi);
             createNewGroup.ShowDialog();
 
             setCurrentView(groupView);
@@ -68,10 +72,10 @@ namespace ChaTex_Client
 
         private void btnAddChannel_Click(object sender, RoutedEventArgs e)
         {
-            CreateNewChannel createNewChannel = new CreateNewChannel();
+            CreateNewChannel createNewChannel = new CreateNewChannel(usersApi, channelsApi);
             createNewChannel.ShowDialog();
             dpnlMainUI.Children.Clear();
-            dpnlMainUI.Children.Add(GroupView.GetInstance());
+            dpnlMainUI.Children.Add(groupView);
         }
     }
 }

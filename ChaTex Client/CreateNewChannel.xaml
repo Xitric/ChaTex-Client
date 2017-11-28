@@ -3,8 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChaTex_Client"
-        xmlns:business="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"
         mc:Ignorable="d"
         Title="Create a new channel" Height="300" Width="300"
         WindowStartupLocation="CenterScreen" Background="#FF36393E" ResizeMode="CanMinimize">

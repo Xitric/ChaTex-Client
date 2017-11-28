@@ -63,7 +63,7 @@ namespace ChaTex_Client
             lstBoxAllowables.ItemsSource = allowableList;
         }
 
-        private void btnCreateGroup_Click(object sender, RoutedEventArgs e)
+        private async void  btnCreateGroup_Click(object sender, RoutedEventArgs e)
         {
             List<int?> usersToAdd = new List<int?>();
             bool allowEmployeeAcknowledgeable = isEmployeeAcknowledgeableAllowed();
@@ -72,7 +72,7 @@ namespace ChaTex_Client
             try
             {
 
-                GroupDTO group = groupsApi.CreateGroup(new CreateGroupDTO()
+                var group = await groupsApi.CreateGroupAsync(new CreateGroupDTO()
                 {
                     AllowEmployeeAcknowledgeable = allowEmployeeAcknowledgeable,
                     AllowEmployeeBookmark = allowEmployeeBookmark,
@@ -112,7 +112,7 @@ namespace ChaTex_Client
             return lstBoxAllowables.SelectedItems.Contains(employeeStickyString);
         }
 
-        private void addSelectedRolesToGroup(GroupDTO group)
+        private async void addSelectedRolesToGroup(GroupDTO group)
         {
             List<int?> selectedRoles = new List<int?>();
             foreach (RoleDTO roleDto in lstBoxRoles.Items)
@@ -123,7 +123,7 @@ namespace ChaTex_Client
                 }
             }
 
-            groupsApi.AddRolesToGroup(new AddRolesToGroupDTO()
+            await groupsApi.AddRolesToGroupAsync(new AddRolesToGroupDTO()
             {
                 GroupId = group.Id,
                 RoleIds = selectedRoles
@@ -131,7 +131,7 @@ namespace ChaTex_Client
             
         }
 
-        private void addSelectedUsersToGroup(GroupDTO group)
+        private async void addSelectedUsersToGroup(GroupDTO group)
         {
             List<int?> selectedUsers = new List<int?>();
             foreach (UserDTO userDto in lstBoxUsers.Items)
@@ -142,7 +142,7 @@ namespace ChaTex_Client
                 }
             }
 
-            groupsApi.AddUsersToGroup(new AddUsersToGroupDTO()
+            await groupsApi.AddUsersToGroupAsync(new AddUsersToGroupDTO()
             {
                 GroupId = group.Id,
                 UserIds = selectedUsers

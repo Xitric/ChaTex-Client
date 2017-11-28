@@ -19,7 +19,7 @@ namespace ChaTex_Client.UserControls
         public ChatView(IUsers usersApi)
         {
             this.usersApi = usersApi;
-
+      
             InitializeComponent();
             //_chatApi = new ChatApi();
         }

@@ -5,6 +5,7 @@ using IO.ChaTex;
 using Microsoft.Rest;
 using BusinessLayer;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace ChaTex_Client
 {
@@ -25,34 +26,52 @@ namespace ChaTex_Client
             txtUserEmail.Text = Properties.Settings.Default.Username;
         }
 
-        private async void btnSignIn_Click(object sender, RoutedEventArgs e)
+        private async Task<string> login(string email)
         {
-            btnSignIn.IsEnabled = false;
+            string token = null;
 
             try
             {
-                var token = await usersApi.LoginAsync(txtUserEmail.Text);
-                Properties.Settings.Default.Username = txtUserEmail.Text;
-                Properties.Settings.Default.Save();
-                TokenHandler.Token = token;
+                token = await usersApi.LoginAsync(email);
 
-                mainWindow.Show();
-                Close();
+                if (token == null)
+                {
+                    new ErrorDialog("Network error", "Unable to contact server.\nPlease inform your administrator.").ShowDialog();
+                }
             }
             catch (HttpOperationException er)
             {
                 if (er.Response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    new ErrorDialog("Error signing in", "Invalid E-mail").ShowDialog();
+                    new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
                 }
                 else
                 {
-                    new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                    new ExceptionDialog(er).ShowDialog();
                 }
             }
-            finally
+
+            return token;
+        }
+
+        private void saveCredentials(string email, string token)
+        {
+            Properties.Settings.Default.Username = email;
+            Properties.Settings.Default.Save();
+            TokenHandler.Token = token;
+        }
+
+        private async void btnSignIn_Click(object sender, RoutedEventArgs e)
+        {
+            btnSignIn.IsEnabled = false;
+            string token = await login(txtUserEmail.Text);
+            btnSignIn.IsEnabled = true;
+
+            if (token != null)
             {
-                btnSignIn.IsEnabled = true;
+                saveCredentials(txtUserEmail.Text, token);
+                mainWindow.Show();
+                Close();
             }
         }
 

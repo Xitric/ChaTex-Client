@@ -1,6 +1,7 @@
-﻿using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
+﻿using ChaTex_Client.UserDialogs;
+using IO.ChaTex;
+using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -13,25 +14,45 @@ namespace ChaTex_Client
     /// </summary>
     public partial class CreateNewGroup : Window
     {
-        private readonly IUsersApi usersApi;
-        private readonly IRolesApi rolesApi;
+        private readonly IUsers usersApi;
+        private readonly IRoles rolesApi;
+        private readonly IGroups groupsApi;
 
         private String employeeAcknowledgeableString = "Is acknowledgeable allowed for employees?";
         private String employeeBookmarkString = "Is bookmarks allowed for employees?";
         private String employeeStickyString = "Is stickies allowed for employees";
 
-        public CreateNewGroup()
+        public CreateNewGroup(IUsers usersApi, IRoles rolesApi, IGroups groupsApi)
         {
+            this.usersApi = usersApi;
+            this.rolesApi = rolesApi;
+            this.groupsApi = groupsApi;
+
             InitializeComponent();
-            usersApi = new UsersApi();
-            rolesApi = new RolesApi();
             populateUI();
         }
 
-        private void populateUI()
+        private async void populateUI()
         {
-            lstBoxUsers.ItemsSource = usersApi.GetAllUsers();
-            lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
+            try
+            {
+                lstBoxUsers.ItemsSource = await usersApi.GetAllUsersAsync();
+            }
+            catch (HttpOperationException er)
+            {
+                //TODO: Exception handling
+                throw er;
+            }
+
+            try
+            {
+                lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
+            }
+            catch (HttpOperationException er)
+            {
+                //TODO: Exception handling
+                throw er;
+            }
 
             List<String> allowableList = new List<string>
             {
@@ -49,11 +70,9 @@ namespace ChaTex_Client
             bool allowEmployeeAcknowledgeable = false;
             bool allowEmployeeBookmark = false;
             bool allowEmployeeSticky = false;
+
             try
-
             {
-                GroupsApi groupsApi = new GroupsApi();
-
                 foreach (String item in lstBoxAllowables.Items)
                 {
                     if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeAcknowledgeableString)))
@@ -109,7 +128,7 @@ namespace ChaTex_Client
                 MessageBox.Show("The group has now been created!");
 
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
                 MessageBox.Show("An error occured: " + er.InnerException.Message);
                 throw er;

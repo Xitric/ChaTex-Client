@@ -1,5 +1,7 @@
-﻿using IO.Swagger.Api;
-using IO.Swagger.Model;
+﻿using ChaTex_Client.UserDialogs;
+using IO.ChaTex;
+using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -7,23 +9,33 @@ using System.Windows.Controls;
 
 namespace ChaTex_Client
 {
-  
+
     public partial class CreateChat : Window
     {
-        private readonly UsersApi userApi;
+        private readonly IUsers usersApi;
+
         private ObservableCollection<UserDTO> users;
 
-        public CreateChat()
+        public CreateChat(IUsers usersApi)
         {
+            this.usersApi = usersApi;
+
             InitializeComponent();
-            userApi = new UsersApi();
             populateUI();
         }
 
-        private void populateUI()
+        private async void populateUI()
         {
-            users = new ObservableCollection<UserDTO>(userApi.GetAllUsers());
-            lstBoxUsers.ItemsSource = users;
+            try
+            {
+                users = new ObservableCollection<UserDTO>(await usersApi.GetAllUsersAsync());
+                lstBoxUsers.ItemsSource = users;
+            }
+            catch (HttpOperationException er)
+            {
+                //TODO: Exception handling
+                throw er;
+            }
         }
 
         private void lstBoxUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)

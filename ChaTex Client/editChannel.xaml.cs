@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using IO.Swagger.Api;
-using IO.Swagger.Model;
-
-
+using ChaTex_Client.UserDialogs;
+using IO.ChaTex.Models;
+using IO.ChaTex;
+using Microsoft.Rest;
 
 namespace ChaTex_Client
 {
@@ -11,32 +11,52 @@ namespace ChaTex_Client
     /// </summary>
     public partial class EditChannel : Window
     {
-        private readonly ChannelsApi channelApi;
-        private readonly ChannelDTO selectedChannel;
+        private readonly IChannels channelsApi;
+        private ChannelDTO channel;
 
-        public EditChannel(ChannelDTO channel)
+        public EditChannel(ChannelDTO channel, IChannels channelsApi)
         {
+            this.channelsApi = channelsApi;
+            this.channel = channel;
+
             InitializeComponent();
-            channelApi = new ChannelsApi();
-            this.selectedChannel = channel;
             txtChannelName.Text = channel.Name;
         }
 
-
-        //MessageBox for deleting a channel
-        private void btnDeleteChannel_Click(object sender, RoutedEventArgs e)
+        private async void btnDeleteChannel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + selectedChannel.Name + "?", "Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + channel.Name + "?", "Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result != MessageBoxResult.Yes) return;
-            channelApi.DeleteChannel(selectedChannel.Id);
+
+            try
+            {
+                await channelsApi.DeleteChannelAsync(channel.Id);
+            }
+            catch (HttpOperationException er)
+            {
+                //TODO: Handle exception
+                throw er;
+            }
+
             MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
-            Close();  //the edit window will be closed upon sucseful deleting channel
+            DialogResult = true;
+            Close();
         }
 
-    private void btnSaveChannel_Click(object sender, RoutedEventArgs e)
-    {
-        channelApi.UpdateChannel(selectedChannel.Id, txtChannelName.Text);
-        Close();
+        private async void btnSaveChannel_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await channelsApi.UpdateChannelAsync(channel.Id, txtChannelName.Text);
+            }
+            catch (HttpOperationException er)
+            {
+                //TODO: Handle exception
+                throw er;
+            }
+
+            DialogResult = true;
+            Close();
+        }
     }
-}
 }

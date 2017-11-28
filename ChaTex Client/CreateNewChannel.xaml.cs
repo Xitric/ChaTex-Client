@@ -1,19 +1,8 @@
-﻿using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IO.ChaTex;
+using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ChaTex_Client
 {
@@ -22,14 +11,15 @@ namespace ChaTex_Client
     /// </summary>
     public partial class CreateNewChannel : Window
     {
-        private readonly IUsersApi usersApi;
-        private readonly IChannelsApi channelsApi;
+        private readonly IUsers usersApi;
+        private readonly IChannels channelsApi;
         private bool groupSelected = false;
-        public CreateNewChannel()
+
+        public CreateNewChannel(IUsers usersApi, IChannels channelsApi)
         {
             InitializeComponent();
-            usersApi = new UsersApi();
-            channelsApi = new ChannelsApi();
+            this.usersApi = usersApi;
+            this.channelsApi = channelsApi;
             populateUI();
         }
         private void populateUI()
@@ -38,7 +28,7 @@ namespace ChaTex_Client
             {
                 lstBoxGroups.ItemsSource = usersApi.GetGroupsForUser();
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
                 MessageBox.Show("An error occured: " + er.InnerException.Message);
                 throw er;
@@ -54,7 +44,7 @@ namespace ChaTex_Client
                     Name = txtChannelName.Text
                 });
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
                 MessageBox.Show("An error occured: " + er.InnerException.Message);
                 throw er;

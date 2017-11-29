@@ -31,8 +31,7 @@ namespace ChaTex_Client
             }
             catch (HttpOperationException er)
             {
-                //TODO: Exception handling
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
         }
 

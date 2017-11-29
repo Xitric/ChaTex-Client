@@ -1,4 +1,5 @@
-﻿using IO.ChaTex;
+﻿using ChaTex_Client.UserDialogs;
+using IO.ChaTex;
 using IO.ChaTex.Models;
 using Microsoft.Rest;
 using System.Windows;
@@ -30,8 +31,7 @@ namespace ChaTex_Client
             }
             catch (HttpOperationException er)
             {
-                MessageBox.Show("An error occured: " + er.InnerException.Message);
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
         }
 
@@ -46,10 +46,8 @@ namespace ChaTex_Client
             }
             catch (HttpOperationException er)
             {
-                MessageBox.Show("An error occured: " + er.InnerException.Message);
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
-
             finally
             {
                 Close();

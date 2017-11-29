@@ -29,13 +29,6 @@ namespace ChaTex_Client
             try
             {
                 HttpOperationResponse response = await channelsApi.DeleteChannelWithHttpMessagesAsync(channelId);
-
-                //Check for network error, as this does not generate an exception
-                if (response.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    MessageBox.Show("Unable to connect to server. The channel could not be deleted.", "Delete channel");
-                    return false;
-                }
             }
             catch (HttpOperationException er)
             {
@@ -51,13 +44,6 @@ namespace ChaTex_Client
             try
             {
                 HttpOperationResponse response = await channelsApi.UpdateChannelWithHttpMessagesAsync(channelId, channelName);
-
-                //Check for network error, as this does not generate an exception
-                if (response.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    MessageBox.Show("Unable to connect to server. The channel name could not be changed.", "Update channel");
-                    return false;
-                }
             }
             catch (HttpOperationException er)
             {

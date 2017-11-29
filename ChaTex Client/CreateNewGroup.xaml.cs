@@ -38,15 +38,7 @@ namespace ChaTex_Client
             try
             {
                 IList<UserDTO> allUsers = await usersApi.GetAllUsersAsync();
-
-                if (allUsers == null)
-                {
-                    new ErrorDialog("Network error", "Unable to contact server.\nPlease inform your administrator.").ShowDialog();
-                }
-                else
-                {
-                    lstBoxUsers.ItemsSource = allUsers;
-                }
+                lstBoxUsers.ItemsSource = allUsers;
             }
             catch (HttpOperationException er)
             {
@@ -59,15 +51,7 @@ namespace ChaTex_Client
             try
             {
                 IList<RoleDTO> allRoles = await rolesApi.GetAllRolesAsync();
-
-                if (allRoles == null)
-                {
-                    new ErrorDialog("Network error", "Unable to contact server.\nPlease inform your administrator.").ShowDialog();
-                }
-                else
-                {
-                    lstBoxUsers.ItemsSource = allRoles;
-                }
+                lstBoxUsers.ItemsSource = allRoles;
             }
             catch (HttpOperationException er)
             {
@@ -137,11 +121,6 @@ namespace ChaTex_Client
             try
             {
                 createdGroup = await groupsApi.CreateGroupAsync();
-
-                if (createdGroup == null)
-                {
-                    new ErrorDialog("Network error", "Unable to contact server.\nPlease inform your administrator.").ShowDialog();
-                }
             }
             catch (HttpOperationException er)
             {
@@ -169,13 +148,6 @@ namespace ChaTex_Client
                     GroupId = group.Id,
                     RoleIds = selectedRoles
                 });
-
-                //Check for network error, as this does not generate an exception
-                if (response.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    MessageBox.Show("Unable to connect to server. The channel name could not be changed.", "Update channel");
-                    return false;
-                }
             }
             catch (HttpOperationException er)
             {
@@ -204,13 +176,6 @@ namespace ChaTex_Client
                     GroupId = group.Id,
                     UserIds = selectedUsers
                 });
-
-                //Check for network error, as this does not generate an exception
-                if (response.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    MessageBox.Show("Unable to connect to server. The channel name could not be changed.", "Update channel");
-                    return false;
-                }
             }
             catch (HttpOperationException er)
             {

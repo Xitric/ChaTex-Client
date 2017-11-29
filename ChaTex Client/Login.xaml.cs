@@ -33,11 +33,6 @@ namespace ChaTex_Client
             try
             {
                 token = await usersApi.LoginAsync(email);
-
-                if (token == null)
-                {
-                    new ErrorDialog("Network error", "Unable to contact server.\nPlease inform your administrator.").ShowDialog();
-                }
             }
             catch (HttpOperationException er)
             {

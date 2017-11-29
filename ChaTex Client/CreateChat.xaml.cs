@@ -1,4 +1,5 @@
-﻿using IO.ChaTex;
+﻿using ChaTex_Client.UserDialogs;
+using IO.ChaTex;
 using IO.ChaTex.Models;
 using Microsoft.Rest;
 using System.Collections.ObjectModel;

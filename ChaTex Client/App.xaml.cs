@@ -23,7 +23,7 @@ namespace ChaTex_Client
             base.OnStartup(e);
 
             //Initialize API
-            ChaTexWebAPI api = new ChaTexWebAPI(new TokenHandler());
+            ChaTexWebAPI api = new ChaTexWebAPI(new TokenHandler(), new NoConnectionHandler());
 
             //Register API handlers
             IUnityContainer iocContainer = new UnityContainer();

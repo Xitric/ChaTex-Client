@@ -117,9 +117,13 @@ namespace ChaTex_Client.UserControls
 
                     await handleMessageEventsAsync(messageEvents, messageFetchCancellation.Token);
                 }
-                catch (TaskCanceledException e)
+                catch (TaskCanceledException)
                 {
                     Console.WriteLine("The live message fetch task was canceled");
+                }
+                catch (HttpOperationException er)
+                {
+                    new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
                 }
             }
         }
@@ -182,7 +186,7 @@ namespace ChaTex_Client.UserControls
             }
             catch (HttpOperationException er)
             {
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
         }
 
@@ -203,7 +207,7 @@ namespace ChaTex_Client.UserControls
             }
             catch (HttpOperationException er)
             {
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
         }
 
@@ -260,16 +264,6 @@ namespace ChaTex_Client.UserControls
             latestMessageTime = (DateTime)message.LastEdited;
         }
 
-        private void showUnauthorizedDialog()
-        {
-            new ErrorDialog("Authentication failed", "You do not have access to this channel.").ShowDialog();
-        }
-
-        private void showMissingChannelDialog()
-        {
-            new ErrorDialog("Not found", "The requested channel does not exist.").ShowDialog();
-        }
-
         private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
         {
             btnSendMessage.IsEnabled = txtMessage.Text.Length > 0;
@@ -309,8 +303,7 @@ namespace ChaTex_Client.UserControls
             }
             catch (HttpOperationException er)
             {
-                //TODO: Exception handling
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
         }
 

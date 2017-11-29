@@ -14,12 +14,23 @@ namespace BusinessLayer
         {
             HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound && response.Content.Headers.ContentType == null)
+            if (noConnection(response) || siteDisabled(response))
             {
-                response.Content = new StringContent("Network error, unable to contact server!\nWe apologize, but your requests has been lost. Please retry again palter. If the error persists, please contact your system administrator.");
+                response.Content = new StringContent("Network error, unable to contact server!\n" +
+                    "We apologize, but your request has been lost. Please retry again later. If the error persists, please contact your system administrator.");
             }
 
             return response;
+        }
+
+        private bool noConnection(HttpResponseMessage response)
+        {
+            return response.StatusCode == System.Net.HttpStatusCode.NotFound && response.Content.Headers.ContentType == null;
+        }
+
+        private bool siteDisabled(HttpResponseMessage response)
+        {
+            return response.StatusCode == System.Net.HttpStatusCode.Forbidden && response.ReasonPhrase.Equals("Site Disabled");
         }
     }
 }

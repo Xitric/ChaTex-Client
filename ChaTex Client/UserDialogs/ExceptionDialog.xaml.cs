@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Microsoft.Rest;
+using System.Windows;
 
 namespace ChaTex_Client.UserDialogs
 {
@@ -10,10 +11,10 @@ namespace ChaTex_Client.UserDialogs
         public string ErrorCode { get; set; }
         public string StackTrace { get; set; }
 
-        public ExceptionDialog(/*TODO: ApiException e*/)
+        public ExceptionDialog(HttpOperationException e)
         {
-            //TODO: ErrorCode = e.ErrorCode.ToString();
-            //TODO: StackTrace = e.ToString();
+            ErrorCode = e.Response.StatusCode.ToString();
+            StackTrace = e.StackTrace;
             InitializeComponent();
             SizeToContent = SizeToContent.WidthAndHeight;
         }

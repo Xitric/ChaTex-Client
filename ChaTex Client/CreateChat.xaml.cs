@@ -1,4 +1,5 @@
-﻿using IO.ChaTex;
+﻿using ChaTex_Client.UserDialogs;
+using IO.ChaTex;
 using IO.ChaTex.Models;
 using Microsoft.Rest;
 using System.Collections.ObjectModel;
@@ -31,8 +32,7 @@ namespace ChaTex_Client
             }
             catch (HttpOperationException er)
             {
-                //TODO: Exception handling
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
         }
 

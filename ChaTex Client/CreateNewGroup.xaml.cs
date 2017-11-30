@@ -4,6 +4,7 @@ using IO.ChaTex.Models;
 using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -32,27 +33,36 @@ namespace ChaTex_Client
             populateUI();
         }
 
-        private async void populateUI()
+        private async Task populateUsersListBox()
         {
             try
             {
-                lstBoxUsers.ItemsSource = await usersApi.GetAllUsersAsync();
+                IList<UserDTO> allUsers = await usersApi.GetAllUsersAsync();
+                lstBoxUsers.ItemsSource = allUsers;
             }
             catch (HttpOperationException er)
             {
-                //TODO: Exception handling
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
+        }
 
+        private async Task populateRolesListBox()
+        {
             try
             {
-                lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
+                IList<RoleDTO> allRoles = await rolesApi.GetAllRolesAsync();
+                lstBoxUsers.ItemsSource = allRoles;
             }
             catch (HttpOperationException er)
             {
-                //TODO: Exception handling
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
+        }
+
+        private async void populateUI()
+        {
+            await populateUsersListBox();
+            await populateRolesListBox();
 
             List<String> allowableList = new List<string>
             {
@@ -63,38 +73,30 @@ namespace ChaTex_Client
             lstBoxAllowables.ItemsSource = allowableList;
         }
 
-        private async void  btnCreateGroup_Click(object sender, RoutedEventArgs e)
+        private async void btnCreateGroup_Click(object sender, RoutedEventArgs e)
         {
             List<int?> usersToAdd = new List<int?>();
             bool allowEmployeeAcknowledgeable = isEmployeeAcknowledgeableAllowed();
             bool allowEmployeeBookmark = isEmployeeBookmarkAllowed();
             bool allowEmployeeSticky = isEmployeeStickyAllowed();
-            try
+
+            var group = await createGroup(new CreateGroupDTO()
             {
+                AllowEmployeeAcknowledgeable = allowEmployeeAcknowledgeable,
+                AllowEmployeeBookmark = allowEmployeeBookmark,
+                AllowEmployeeSticky = allowEmployeeSticky,
+                GroupName = txtGroupName.Text
+            });
 
-                var group = await groupsApi.CreateGroupAsync(new CreateGroupDTO()
-                {
-                    AllowEmployeeAcknowledgeable = allowEmployeeAcknowledgeable,
-                    AllowEmployeeBookmark = allowEmployeeBookmark,
-                    AllowEmployeeSticky = allowEmployeeSticky,
-                    GroupName = txtGroupName.Text
-                });
+            if (group == null) return;
 
-                addSelectedRolesToGroup(group);
-                addSelectedUsersToGroup(group);
+            bool rolesAdded = await addSelectedRolesToGroup(group);
+            bool usersAdded = await addSelectedUsersToGroup(group);
 
-                MessageBox.Show("The group has now been created!");
+            if (!rolesAdded || !usersAdded) return;
 
-            }
-            catch (HttpOperationException er)
-            {
-                MessageBox.Show("An error occured: " + er.InnerException.Message);
-                throw er;
-            }
-            finally
-            {
-                Close();
-            }
+            MessageBox.Show("The group has now been created!");
+            Close();
         }
 
         private bool isEmployeeAcknowledgeableAllowed()
@@ -112,7 +114,23 @@ namespace ChaTex_Client
             return lstBoxAllowables.SelectedItems.Contains(employeeStickyString);
         }
 
-        private async void addSelectedRolesToGroup(GroupDTO group)
+        private async Task<GroupDTO> createGroup(CreateGroupDTO group)
+        {
+            GroupDTO createdGroup = null;
+
+            try
+            {
+                createdGroup = await groupsApi.CreateGroupAsync();
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+            }
+
+            return createdGroup;
+        }
+
+        private async Task<bool> addSelectedRolesToGroup(GroupDTO group)
         {
             List<int?> selectedRoles = new List<int?>();
             foreach (RoleDTO roleDto in lstBoxRoles.Items)
@@ -123,15 +141,24 @@ namespace ChaTex_Client
                 }
             }
 
-            await groupsApi.AddRolesToGroupAsync(new AddRolesToGroupDTO()
+            try
             {
-                GroupId = group.Id,
-                RoleIds = selectedRoles
-            });
-            
+                HttpOperationResponse response = await groupsApi.AddRolesToGroupWithHttpMessagesAsync(new AddRolesToGroupDTO()
+                {
+                    GroupId = group.Id,
+                    RoleIds = selectedRoles
+                });
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                return false;
+            }
+
+            return true;
         }
 
-        private async void addSelectedUsersToGroup(GroupDTO group)
+        private async Task<bool> addSelectedUsersToGroup(GroupDTO group)
         {
             List<int?> selectedUsers = new List<int?>();
             foreach (UserDTO userDto in lstBoxUsers.Items)
@@ -142,11 +169,21 @@ namespace ChaTex_Client
                 }
             }
 
-            await groupsApi.AddUsersToGroupAsync(new AddUsersToGroupDTO()
+            try
             {
-                GroupId = group.Id,
-                UserIds = selectedUsers
-            });
+                HttpOperationResponse response = await groupsApi.AddUsersToGroupWithHttpMessagesAsync(new AddUsersToGroupDTO()
+                {
+                    GroupId = group.Id,
+                    UserIds = selectedUsers
+                });
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                return false;
+            }
+
+            return true;
         }
 
         private void txtGroupName_TextChanged(object sender, TextChangedEventArgs e)

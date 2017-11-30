@@ -3,6 +3,7 @@ using ChaTex_Client.UserDialogs;
 using IO.ChaTex.Models;
 using IO.ChaTex;
 using Microsoft.Rest;
+using System.Threading.Tasks;
 
 namespace ChaTex_Client
 {
@@ -22,41 +23,61 @@ namespace ChaTex_Client
             InitializeComponent();
             txtChannelName.Text = channel.Name;
         }
-
-        private async void btnDeleteChannel_Click(object sender, RoutedEventArgs e)
+        
+        private async Task<bool> deleteChannel(int channelId)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + channel.Name + "?", "Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            if (result != MessageBoxResult.Yes) return;
-
             try
             {
-                await channelsApi.DeleteChannelAsync(channel.Id);
+                HttpOperationResponse response = await channelsApi.DeleteChannelWithHttpMessagesAsync(channelId);
             }
             catch (HttpOperationException er)
             {
-                //TODO: Handle exception
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                return false;
             }
 
-            MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
-            DialogResult = true;
-            Close();
+            return true;
+        }
+
+        private async Task<bool> updateChannelName(int channelId, string channelName)
+        {
+            try
+            {
+                HttpOperationResponse response = await channelsApi.UpdateChannelWithHttpMessagesAsync(channelId, channelName);
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                return false;
+            }
+
+            return true;
+        }
+
+        private async void btnDeleteChannel_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show($"Are you sure, you want to delete: {channel.Name}?", "Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (result != MessageBoxResult.Yes) return;
+
+            bool success = await deleteChannel(channel.Id);
+
+            if (success)
+            {
+                MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
+                DialogResult = true;
+                Close();
+            }
         }
 
         private async void btnSaveChannel_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                await channelsApi.UpdateChannelAsync(channel.Id, txtChannelName.Text);
-            }
-            catch (HttpOperationException er)
-            {
-                //TODO: Handle exception
-                throw er;
-            }
+            bool success = await updateChannelName(channel.Id, txtChannelName.Text);
 
-            DialogResult = true;
-            Close();
+            if (success)
+            {
+                DialogResult = true;
+                Close();
+            }
         }
     }
 }

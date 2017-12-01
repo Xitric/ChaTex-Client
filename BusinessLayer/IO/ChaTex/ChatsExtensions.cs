@@ -18,51 +18,40 @@ namespace IO.ChaTex
     public static partial class ChatsExtensions
     {
             /// <summary>
-            /// Create a new chat
+            /// Create a new chat with only the caller as a member
             /// </summary>
-            /// <remarks>
-            /// Creates a new chat
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='createChatDTO'>
-            /// The name of the group
+            /// <param name='chatName'>
             /// </param>
-            public static ChatDTO CreateChat(this IChats operations, CreateChatDTO createChatDTO = default(CreateChatDTO))
+            public static ChatDTO CreateChat(this IChats operations, string chatName)
             {
-                return operations.CreateChatAsync(createChatDTO).GetAwaiter().GetResult();
+                return operations.CreateChatAsync(chatName).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Create a new chat
+            /// Create a new chat with only the caller as a member
             /// </summary>
-            /// <remarks>
-            /// Creates a new chat
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='createChatDTO'>
-            /// The name of the group
+            /// <param name='chatName'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ChatDTO> CreateChatAsync(this IChats operations, CreateChatDTO createChatDTO = default(CreateChatDTO), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ChatDTO> CreateChatAsync(this IChats operations, string chatName, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateChatWithHttpMessagesAsync(createChatDTO, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CreateChatWithHttpMessagesAsync(chatName, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Get all messages in a one-to-one chat
+            /// Get a list of all messages in a chat
             /// </summary>
-            /// <remarks>
-            /// This will get a list of messages in a chat from a specific user
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -75,11 +64,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Get all messages in a one-to-one chat
+            /// Get a list of all messages in a chat
             /// </summary>
-            /// <remarks>
-            /// This will get a list of messages in a chat from a specific user
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>

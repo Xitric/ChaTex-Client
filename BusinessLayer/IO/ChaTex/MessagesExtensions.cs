@@ -18,44 +18,40 @@ namespace IO.ChaTex
     public static partial class MessagesExtensions
     {
             /// <summary>
-            /// Get the messages from a specific channel
+            /// Get some of the messages from a specific channel
             /// </summary>
-            /// <remarks>
-            /// Get a number of messages from the specified channel
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='channelId'>
-            /// The id of the channel to delete
+            /// The id of the channel to get messages from
             /// </param>
-            /// <param name='fromIndex'>
-            /// The index of the first message to get, beginning from the most recently
-            /// posted message. This defaults to 0, meaning the most recent message
+            /// <param name='before'>
+            /// The point in time to get messages before. Put differently, this specifies
+            /// the latest possible creation time of messages to get. This defaults to the
+            /// current time, meaning that the latest message will be returned
             /// </param>
             /// <param name='count'>
             /// The amount of messages to get. This defaults to 25
             /// </param>
-            public static IList<GetMessageDTO> GetMessages(this IMessages operations, int channelId, int? fromIndex = default(int?), int? count = default(int?))
+            public static IList<GetMessageDTO> GetMessages(this IMessages operations, int channelId, System.DateTime? before = default(System.DateTime?), int? count = default(int?))
             {
-                return operations.GetMessagesAsync(channelId, fromIndex, count).GetAwaiter().GetResult();
+                return operations.GetMessagesAsync(channelId, before, count).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Get the messages from a specific channel
+            /// Get some of the messages from a specific channel
             /// </summary>
-            /// <remarks>
-            /// Get a number of messages from the specified channel
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='channelId'>
-            /// The id of the channel to delete
+            /// The id of the channel to get messages from
             /// </param>
-            /// <param name='fromIndex'>
-            /// The index of the first message to get, beginning from the most recently
-            /// posted message. This defaults to 0, meaning the most recent message
+            /// <param name='before'>
+            /// The point in time to get messages before. Put differently, this specifies
+            /// the latest possible creation time of messages to get. This defaults to the
+            /// current time, meaning that the latest message will be returned
             /// </param>
             /// <param name='count'>
             /// The amount of messages to get. This defaults to 25
@@ -63,113 +59,54 @@ namespace IO.ChaTex
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<GetMessageDTO>> GetMessagesAsync(this IMessages operations, int channelId, int? fromIndex = default(int?), int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<GetMessageDTO>> GetMessagesAsync(this IMessages operations, int channelId, System.DateTime? before = default(System.DateTime?), int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetMessagesWithHttpMessagesAsync(channelId, fromIndex, count, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetMessagesWithHttpMessagesAsync(channelId, before, count, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Create a new message
+            /// Create a new message in the specified channel
             /// </summary>
-            /// <remarks>
-            /// Create a new message in a specific channel
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='channelId'>
             /// The id of the channel to post the message to
             /// </param>
-            /// <param name='messageContentDTO'>
-            /// Content of the message
+            /// <param name='messageContent'>
+            /// The content of the message
             /// </param>
-            public static void CreateMessage(this IMessages operations, int channelId, MessageContentDTO messageContentDTO)
+            public static void CreateMessage(this IMessages operations, int channelId, string messageContent)
             {
-                operations.CreateMessageAsync(channelId, messageContentDTO).GetAwaiter().GetResult();
+                operations.CreateMessageAsync(channelId, messageContent).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Create a new message
+            /// Create a new message in the specified channel
             /// </summary>
-            /// <remarks>
-            /// Create a new message in a specific channel
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='channelId'>
             /// The id of the channel to post the message to
             /// </param>
-            /// <param name='messageContentDTO'>
-            /// Content of the message
+            /// <param name='messageContent'>
+            /// The content of the message
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task CreateMessageAsync(this IMessages operations, int channelId, MessageContentDTO messageContentDTO, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task CreateMessageAsync(this IMessages operations, int channelId, string messageContent, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.CreateMessageWithHttpMessagesAsync(channelId, messageContentDTO, null, cancellationToken).ConfigureAwait(false)).Dispose();
-            }
-
-            /// <summary>
-            /// Wait for and get new messages, message deletions, and message edits in a
-            /// channel
-            /// </summary>
-            /// <remarks>
-            /// This request will not return from the service until at least one new
-            /// message event has occurred
-            /// </remarks>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='channelId'>
-            /// The id of the channel to listen to
-            /// </param>
-            /// <param name='since'>
-            /// The time to get message events since
-            /// </param>
-            public static IList<MessageEventDTO> GetMessageEvents(this IMessages operations, int channelId, System.DateTime since)
-            {
-                return operations.GetMessageEventsAsync(channelId, since).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Wait for and get new messages, message deletions, and message edits in a
-            /// channel
-            /// </summary>
-            /// <remarks>
-            /// This request will not return from the service until at least one new
-            /// message event has occurred
-            /// </remarks>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='channelId'>
-            /// The id of the channel to listen to
-            /// </param>
-            /// <param name='since'>
-            /// The time to get message events since
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<IList<MessageEventDTO>> GetMessageEventsAsync(this IMessages operations, int channelId, System.DateTime since, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetMessageEventsWithHttpMessagesAsync(channelId, since, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                (await operations.CreateMessageWithHttpMessagesAsync(channelId, messageContent, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
             /// Delete a message
             /// </summary>
-            /// <remarks>
-            /// Delete the message with the specified id
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -184,9 +121,6 @@ namespace IO.ChaTex
             /// <summary>
             /// Delete a message
             /// </summary>
-            /// <remarks>
-            /// Delete the message with the specified id
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -211,7 +145,7 @@ namespace IO.ChaTex
             /// The operations group for this extension method.
             /// </param>
             /// <param name='messageId'>
-            /// The id of the message to delete
+            /// The id of the message to edit
             /// </param>
             /// <param name='newContent'>
             /// The new content of the message
@@ -231,7 +165,7 @@ namespace IO.ChaTex
             /// The operations group for this extension method.
             /// </param>
             /// <param name='messageId'>
-            /// The id of the message to delete
+            /// The id of the message to edit
             /// </param>
             /// <param name='newContent'>
             /// The new content of the message
@@ -248,7 +182,7 @@ namespace IO.ChaTex
             /// Get a message
             /// </summary>
             /// <remarks>
-            /// Get a message with the specified id
+            /// Get the message with the specified id
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
@@ -265,7 +199,7 @@ namespace IO.ChaTex
             /// Get a message
             /// </summary>
             /// <remarks>
-            /// Get a message with the specified id
+            /// Get the message with the specified id
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.

@@ -39,10 +39,7 @@ namespace ChaTex_Client
         {
             try
             {
-                await channelsApi.CreateChannelAsync(((GroupDTO)lstBoxGroups.SelectedItem).Id, new CreateChannelDTO()
-                {
-                    Name = txtChannelName.Text
-                });
+                await channelsApi.CreateChannelAsync(((GroupDTO)lstBoxGroups.SelectedItem).Id, txtChannelName.Text);
             }
             catch (HttpOperationException er)
             {

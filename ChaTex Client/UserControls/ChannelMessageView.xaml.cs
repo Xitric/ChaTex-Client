@@ -23,21 +23,24 @@ namespace ChaTex_Client.UserControls
     {
         private readonly ObservableCollection<MessageViewModel> messages;
         private readonly IMessages messagesApi;
+        private readonly IChannels channelsApi;
 
         private MessageViewState state;
         private int? currentChannelId;
         private int? currentChatId;
 
         private DateTime latestMessageTime;
+        private DateTime earliestMessageTime;
         private CancellationTokenSource messageFetchCancellation;
         private MessageViewModel selectedMessage;
         private Task newMessageTask;
         private Task oldMessageTask;
         private bool keepFetchingMessages;
 
-        public ChannelMessageView(IMessages messagesApi)
+        public ChannelMessageView(IMessages messagesApi, IChannels channelsApi)
         {
             this.messagesApi = messagesApi;
+            this.channelsApi = channelsApi;
 
             InitializeComponent();
             messages = new ObservableCollection<MessageViewModel>();
@@ -106,16 +109,16 @@ namespace ChaTex_Client.UserControls
             {
                 try
                 {
-                    IEnumerable<MessageEventDTO> messageEvents = null;
+                    IEnumerable<ChannelEventDTO> channelEvents = null;
 
                     if (state == MessageViewState.Channel)
                     {
-                        //Get message events
+                        //Get channel events
                         //When we call await we pass control back to the caller, so this while loop does not block the UI
-                        messageEvents = await messagesApi.GetMessageEventsAsync((int)currentChannelId, latestMessageTime, messageFetchCancellation.Token);
+                        channelEvents = await channelsApi.GetChannelEventsAsync((int)currentChannelId, latestMessageTime, messageFetchCancellation.Token);
                     }
 
-                    await handleMessageEventsAsync(messageEvents, messageFetchCancellation.Token);
+                    await handleChannelEventsAsync(channelEvents, messageFetchCancellation.Token);
                 }
                 catch (TaskCanceledException)
                 {
@@ -128,33 +131,37 @@ namespace ChaTex_Client.UserControls
             }
         }
 
-        private async Task handleMessageEventsAsync(IEnumerable<MessageEventDTO> messageEvents, CancellationToken token)
+        private async Task handleChannelEventsAsync(IEnumerable<ChannelEventDTO> channelEvents, CancellationToken token)
         {
-            if (messageEvents == null)
+            if (channelEvents == null)
             {
-                throw new ApplicationException("Null content received when getting new message events!");
+                throw new ApplicationException("Null content received when getting new channel events!");
             }
 
             //Add to ui when ready
             await Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate ()
             {
-                foreach (MessageEventDTO msgEvent in messageEvents)
+                foreach (ChannelEventDTO channelEvent in channelEvents)
                 {
                     if (token.IsCancellationRequested)
                     {
                         return;
                     }
 
-                    switch (msgEvent.Type)
+                    switch (channelEvent.Type)
                     {
-                        case "NewMessage":
-                            appendMessage(msgEvent.Message);
+                        case "newMessage":
+                            appendMessage(channelEvent.Message);
                             break;
-                        case "DeleteMessage":
-                            deleteMessage(msgEvent.Message);
+                        case "updateMessage":
+                            updateMessage(channelEvent.Message);
                             break;
-                        case "UpdateMessage":
-                            updateMessage(msgEvent.Message);
+                        case "deleteMessage":
+                            deleteMessage(channelEvent.Message);
+                            break;
+                        case "renameChannel":
+                            break;
+                        case "deleteChannel":
                             break;
                     }
                 }
@@ -167,6 +174,8 @@ namespace ChaTex_Client.UserControls
         private void clearChat()
         {
             messages.Clear();
+            latestMessageTime = DateTime.MinValue;
+            earliestMessageTime = DateTime.MaxValue;
         }
 
         private async Task fetchNewMessages()
@@ -176,7 +185,7 @@ namespace ChaTex_Client.UserControls
             {
                 if (state == MessageViewState.Channel && currentChannelId != null)
                 {
-                    newMessages = await messagesApi.GetMessagesAsync((int)currentChannelId, 0, 25, messageFetchCancellation.Token);
+                    newMessages = await messagesApi.GetMessagesAsync((int)currentChannelId, cancellationToken: messageFetchCancellation.Token);
                 }
 
                 foreach (GetMessageDTO message in newMessages)
@@ -197,7 +206,7 @@ namespace ChaTex_Client.UserControls
             {
                 if (state == MessageViewState.Channel && currentChannelId != null)
                 {
-                    oldMessages = await messagesApi.GetMessagesAsync((int)currentChannelId, messages.Count, 10, messageFetchCancellation.Token);
+                    oldMessages = await messagesApi.GetMessagesAsync((int)currentChannelId, earliestMessageTime, 10, messageFetchCancellation.Token);
                 }
 
                 for (int i = oldMessages.Count - 1; i >= 0; i--)
@@ -215,17 +224,18 @@ namespace ChaTex_Client.UserControls
         {
             messages.Add(new MessageViewModel(message));
             svMessages.ScrollToBottom();
-            updateLatestTime(message);
+            updateMessageTimes(message);
         }
 
         private void prependMessage(GetMessageDTO message)
         {
             messages.Insert(0, new MessageViewModel(message));
-            updateLatestTime(message);
+            updateMessageTimes(message);
         }
 
-        private void updateLatestTime(GetMessageDTO message)
+        private void updateMessageTimes(GetMessageDTO message)
         {
+            //Latest message time
             if (message.CreationTime > latestMessageTime)
             {
                 latestMessageTime = message.CreationTime;
@@ -240,6 +250,12 @@ namespace ChaTex_Client.UserControls
             {
                 latestMessageTime = (DateTime)message.DeletionDate;
             }
+
+            //Earliest message time (deletion and edit times will always be later than the original post time)
+            if (message.CreationTime < earliestMessageTime)
+            {
+                earliestMessageTime = message.CreationTime;
+            }
         }
 
         private void deleteMessage(GetMessageDTO message)
@@ -250,7 +266,7 @@ namespace ChaTex_Client.UserControls
                 messages[replaceIndex] = new MessageViewModel(message);
             }
 
-            latestMessageTime = (DateTime)message.DeletionDate;
+            updateMessageTimes(message);
         }
 
         private void updateMessage(GetMessageDTO message)
@@ -261,7 +277,7 @@ namespace ChaTex_Client.UserControls
                 messages[replaceIndex] = new MessageViewModel(message);
             }
 
-            latestMessageTime = (DateTime)message.LastEdited;
+            updateMessageTimes(message);
         }
 
         private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
@@ -271,14 +287,9 @@ namespace ChaTex_Client.UserControls
 
         private async void btnSendMessage_Click(object sender, RoutedEventArgs e)
         {
-            var messageContentDTO = new MessageContentDTO()
-            {
-                Message = txtMessage.Text
-            };
-
             try
             {
-                await messagesApi.CreateMessageAsync((int)currentChannelId, messageContentDTO);
+                await messagesApi.CreateMessageAsync((int)currentChannelId, txtMessage.Text);
 
                 txtMessage.Clear();
                 txtMessage.Focus();

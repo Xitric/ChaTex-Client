@@ -22,10 +22,12 @@ namespace IO.ChaTex
         /// Create a new group
         /// </summary>
         /// <remarks>
-        /// Creates a new group with the caller as the group administrator
+        /// Creates a new group with the caller as the group administrator. The
+        /// caller is also initially a member of the group.
         /// </remarks>
         /// <param name='createGroupDTO'>
-        /// The name of the group
+        /// The initial settings of the group regarding group name and member
+        /// rights
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -43,9 +45,6 @@ namespace IO.ChaTex
         /// <summary>
         /// Delete a group
         /// </summary>
-        /// <remarks>
-        /// Deletes the group with the specified id
-        /// </remarks>
         /// <param name='groupId'>
         /// </param>
         /// <param name='customHeaders'>
@@ -59,11 +58,8 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse> DeleteGroupWithHttpMessagesAsync(int groupId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Update group name
+        /// Change group name
         /// </summary>
-        /// <remarks>
-        /// update the group name with the specified id
-        /// </remarks>
         /// <param name='groupId'>
         /// </param>
         /// <param name='groupName'>
@@ -82,13 +78,13 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse> UpdateGroupWithHttpMessagesAsync(int groupId, string groupName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Add users to a group
+        /// Get the list of users who have access to a specific group
         /// </summary>
         /// <remarks>
-        /// This will add a list of users to a specific group
+        /// This takes into account both what users have direct access to the
+        /// group and what users have access because of their roles.
         /// </remarks>
-        /// <param name='addUsersToGroupDTO'>
-        /// Users to be added to group
+        /// <param name='groupId'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -99,15 +95,35 @@ namespace IO.ChaTex
         /// <exception cref="Microsoft.Rest.HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        Task<HttpOperationResponse> AddUsersToGroupWithHttpMessagesAsync(AddUsersToGroupDTO addUsersToGroupDTO = default(AddUsersToGroupDTO), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        Task<HttpOperationResponse<IList<UserDTO>>> GetAllGroupUsersWithHttpMessagesAsync(int groupId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Delete a list of users from a group
+        /// Add a list of users to a group
         /// </summary>
-        /// <remarks>
-        /// This will delete a list of users from the specific group
-        /// </remarks>
         /// <param name='groupId'>
-        /// The Id of the group
+        /// </param>
+        /// <param name='users'>
+        /// The list of users to add to the group
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="Microsoft.Rest.HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse> AddUsersToGroupWithHttpMessagesAsync(int groupId, IList<int?> users, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Remove a list of users from a group
+        /// </summary>
+        /// <param name='groupId'>
         /// </param>
         /// <param name='userIds'>
         /// The Ids of all the users
@@ -126,13 +142,9 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse> DeleteUsersFromGroupWithHttpMessagesAsync(int groupId, IList<int?> userIds, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Add access rights for roles to a group
+        /// Get the list of roles that have access to a specific group
         /// </summary>
-        /// <remarks>
-        /// This will add access rights for a list of roles to a specific group
-        /// </remarks>
-        /// <param name='addRolesToGroupDTO'>
-        /// Roles to be added to group
+        /// <param name='groupId'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -143,15 +155,35 @@ namespace IO.ChaTex
         /// <exception cref="Microsoft.Rest.HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        Task<HttpOperationResponse> AddRolesToGroupWithHttpMessagesAsync(AddRolesToGroupDTO addRolesToGroupDTO = default(AddRolesToGroupDTO), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        Task<HttpOperationResponse<IList<RoleDTO>>> GetAllGroupRolesWithHttpMessagesAsync(int groupId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Remove access rights for roles from a group
+        /// Add access rights for a list of roles to a group
         /// </summary>
-        /// <remarks>
-        /// This will remove access for a list of roles from a specific group
-        /// </remarks>
         /// <param name='groupId'>
-        /// The Id of the group
+        /// </param>
+        /// <param name='roleIds'>
+        /// The Ids of all the roles
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="Microsoft.Rest.HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse> AddRolesToGroupWithHttpMessagesAsync(int groupId, IList<int?> roleIds, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Remove access rights for a list of roles from a group
+        /// </summary>
+        /// <param name='groupId'>
         /// </param>
         /// <param name='roleIds'>
         /// The Ids of all the roles
@@ -170,7 +202,7 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse> DeleteRolesFromGroupWithHttpMessagesAsync(int groupId, IList<int?> roleIds, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Mark or unmark a user as administrator
+        /// Mark or unmark a user as administrator of the group
         /// </summary>
         /// <remarks>
         /// Give a group member administrator rights or remove administrator
@@ -196,33 +228,8 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse> MarkUserAsAdministratorWithHttpMessagesAsync(int groupId, int userId, bool isAdministrator, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Get users for a group
+        /// Get a list of admins for a group
         /// </summary>
-        /// <remarks>
-        /// Get users, taking into account members and roles on the group
-        /// </remarks>
-        /// <param name='groupId'>
-        /// The group id
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        /// <exception cref="Microsoft.Rest.HttpOperationException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
-        Task<HttpOperationResponse<IList<UserDTO>>> GetAllGroupUsersWithHttpMessagesAsync(int groupId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-        /// <summary>
-        /// Get admins for a group
-        /// </summary>
-        /// <remarks>
-        /// Get administrators for the group specified
-        /// </remarks>
         /// <param name='groupId'>
         /// </param>
         /// <param name='customHeaders'>

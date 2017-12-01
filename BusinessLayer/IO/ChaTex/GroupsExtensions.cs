@@ -21,13 +21,14 @@ namespace IO.ChaTex
             /// Create a new group
             /// </summary>
             /// <remarks>
-            /// Creates a new group with the caller as the group administrator
+            /// Creates a new group with the caller as the group administrator. The caller
+            /// is also initially a member of the group.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='createGroupDTO'>
-            /// The name of the group
+            /// The initial settings of the group regarding group name and member rights
             /// </param>
             public static GroupDTO CreateGroup(this IGroups operations, CreateGroupDTO createGroupDTO = default(CreateGroupDTO))
             {
@@ -38,13 +39,14 @@ namespace IO.ChaTex
             /// Create a new group
             /// </summary>
             /// <remarks>
-            /// Creates a new group with the caller as the group administrator
+            /// Creates a new group with the caller as the group administrator. The caller
+            /// is also initially a member of the group.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='createGroupDTO'>
-            /// The name of the group
+            /// The initial settings of the group regarding group name and member rights
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -60,9 +62,6 @@ namespace IO.ChaTex
             /// <summary>
             /// Delete a group
             /// </summary>
-            /// <remarks>
-            /// Deletes the group with the specified id
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -76,9 +75,6 @@ namespace IO.ChaTex
             /// <summary>
             /// Delete a group
             /// </summary>
-            /// <remarks>
-            /// Deletes the group with the specified id
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -93,11 +89,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Update group name
+            /// Change group name
             /// </summary>
-            /// <remarks>
-            /// update the group name with the specified id
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -111,11 +104,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Update group name
+            /// Change group name
             /// </summary>
-            /// <remarks>
-            /// update the group name with the specified id
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -132,53 +122,87 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Add users to a group
+            /// Get the list of users who have access to a specific group
             /// </summary>
             /// <remarks>
-            /// This will add a list of users to a specific group
-            /// </remarks>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='addUsersToGroupDTO'>
-            /// Users to be added to group
-            /// </param>
-            public static void AddUsersToGroup(this IGroups operations, AddUsersToGroupDTO addUsersToGroupDTO = default(AddUsersToGroupDTO))
-            {
-                operations.AddUsersToGroupAsync(addUsersToGroupDTO).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Add users to a group
-            /// </summary>
-            /// <remarks>
-            /// This will add a list of users to a specific group
-            /// </remarks>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='addUsersToGroupDTO'>
-            /// Users to be added to group
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task AddUsersToGroupAsync(this IGroups operations, AddUsersToGroupDTO addUsersToGroupDTO = default(AddUsersToGroupDTO), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                (await operations.AddUsersToGroupWithHttpMessagesAsync(addUsersToGroupDTO, null, cancellationToken).ConfigureAwait(false)).Dispose();
-            }
-
-            /// <summary>
-            /// Delete a list of users from a group
-            /// </summary>
-            /// <remarks>
-            /// This will delete a list of users from the specific group
+            /// This takes into account both what users have direct access to the group and
+            /// what users have access because of their roles.
             /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='groupId'>
-            /// The Id of the group
+            /// </param>
+            public static IList<UserDTO> GetAllGroupUsers(this IGroups operations, int groupId)
+            {
+                return operations.GetAllGroupUsersAsync(groupId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get the list of users who have access to a specific group
+            /// </summary>
+            /// <remarks>
+            /// This takes into account both what users have direct access to the group and
+            /// what users have access because of their roles.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IList<UserDTO>> GetAllGroupUsersAsync(this IGroups operations, int groupId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAllGroupUsersWithHttpMessagesAsync(groupId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Add a list of users to a group
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
+            /// </param>
+            /// <param name='users'>
+            /// The list of users to add to the group
+            /// </param>
+            public static void AddUsersToGroup(this IGroups operations, int groupId, IList<int?> users)
+            {
+                operations.AddUsersToGroupAsync(groupId, users).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Add a list of users to a group
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
+            /// </param>
+            /// <param name='users'>
+            /// The list of users to add to the group
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task AddUsersToGroupAsync(this IGroups operations, int groupId, IList<int?> users, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.AddUsersToGroupWithHttpMessagesAsync(groupId, users, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Remove a list of users from a group
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
             /// </param>
             /// <param name='userIds'>
             /// The Ids of all the users
@@ -189,16 +213,12 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Delete a list of users from a group
+            /// Remove a list of users from a group
             /// </summary>
-            /// <remarks>
-            /// This will delete a list of users from the specific group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='groupId'>
-            /// The Id of the group
             /// </param>
             /// <param name='userIds'>
             /// The Ids of all the users
@@ -212,53 +232,79 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Add access rights for roles to a group
+            /// Get the list of roles that have access to a specific group
             /// </summary>
-            /// <remarks>
-            /// This will add access rights for a list of roles to a specific group
-            /// </remarks>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='addRolesToGroupDTO'>
-            /// Roles to be added to group
-            /// </param>
-            public static void AddRolesToGroup(this IGroups operations, AddRolesToGroupDTO addRolesToGroupDTO = default(AddRolesToGroupDTO))
-            {
-                operations.AddRolesToGroupAsync(addRolesToGroupDTO).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Add access rights for roles to a group
-            /// </summary>
-            /// <remarks>
-            /// This will add access rights for a list of roles to a specific group
-            /// </remarks>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='addRolesToGroupDTO'>
-            /// Roles to be added to group
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task AddRolesToGroupAsync(this IGroups operations, AddRolesToGroupDTO addRolesToGroupDTO = default(AddRolesToGroupDTO), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                (await operations.AddRolesToGroupWithHttpMessagesAsync(addRolesToGroupDTO, null, cancellationToken).ConfigureAwait(false)).Dispose();
-            }
-
-            /// <summary>
-            /// Remove access rights for roles from a group
-            /// </summary>
-            /// <remarks>
-            /// This will remove access for a list of roles from a specific group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='groupId'>
-            /// The Id of the group
+            /// </param>
+            public static IList<RoleDTO> GetAllGroupRoles(this IGroups operations, int groupId)
+            {
+                return operations.GetAllGroupRolesAsync(groupId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get the list of roles that have access to a specific group
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IList<RoleDTO>> GetAllGroupRolesAsync(this IGroups operations, int groupId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAllGroupRolesWithHttpMessagesAsync(groupId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Add access rights for a list of roles to a group
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
+            /// </param>
+            /// <param name='roleIds'>
+            /// The Ids of all the roles
+            /// </param>
+            public static void AddRolesToGroup(this IGroups operations, int groupId, IList<int?> roleIds)
+            {
+                operations.AddRolesToGroupAsync(groupId, roleIds).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Add access rights for a list of roles to a group
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
+            /// </param>
+            /// <param name='roleIds'>
+            /// The Ids of all the roles
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task AddRolesToGroupAsync(this IGroups operations, int groupId, IList<int?> roleIds, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.AddRolesToGroupWithHttpMessagesAsync(groupId, roleIds, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Remove access rights for a list of roles from a group
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
             /// </param>
             /// <param name='roleIds'>
             /// The Ids of all the roles
@@ -269,16 +315,12 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Remove access rights for roles from a group
+            /// Remove access rights for a list of roles from a group
             /// </summary>
-            /// <remarks>
-            /// This will remove access for a list of roles from a specific group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='groupId'>
-            /// The Id of the group
             /// </param>
             /// <param name='roleIds'>
             /// The Ids of all the roles
@@ -292,7 +334,7 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Mark or unmark a user as administrator
+            /// Mark or unmark a user as administrator of the group
             /// </summary>
             /// <remarks>
             /// Give a group member administrator rights or remove administrator rights
@@ -316,7 +358,7 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Mark or unmark a user as administrator
+            /// Mark or unmark a user as administrator of the group
             /// </summary>
             /// <remarks>
             /// Give a group member administrator rights or remove administrator rights
@@ -343,51 +385,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Get users for a group
+            /// Get a list of admins for a group
             /// </summary>
-            /// <remarks>
-            /// Get users, taking into account members and roles on the group
-            /// </remarks>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='groupId'>
-            /// The group id
-            /// </param>
-            public static IList<UserDTO> GetAllGroupUsers(this IGroups operations, int groupId)
-            {
-                return operations.GetAllGroupUsersAsync(groupId).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Get users for a group
-            /// </summary>
-            /// <remarks>
-            /// Get users, taking into account members and roles on the group
-            /// </remarks>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='groupId'>
-            /// The group id
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<IList<UserDTO>> GetAllGroupUsersAsync(this IGroups operations, int groupId, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetAllGroupUsersWithHttpMessagesAsync(groupId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
-            /// Get admins for a group
-            /// </summary>
-            /// <remarks>
-            /// Get administrators for the group specified
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -399,11 +398,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Get admins for a group
+            /// Get a list of admins for a group
             /// </summary>
-            /// <remarks>
-            /// Get administrators for the group specified
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>

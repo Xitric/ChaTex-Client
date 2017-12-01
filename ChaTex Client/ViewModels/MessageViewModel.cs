@@ -20,8 +20,8 @@ namespace ChaTex_Client.ViewModels
         {
             Id = message.Id;
 
-            AuthorName = message.Sender.FirstName;
-            if (message.Sender.MiddleInitial != null) AuthorName += " " + message.Sender.MiddleInitial + ". ";
+            AuthorName = message.Sender.FirstName + " ";
+            if (message.Sender.MiddleInitial != null) AuthorName += message.Sender.MiddleInitial + ". ";
             AuthorName += message.Sender.LastName;
 
             Me = message.Sender.Me;

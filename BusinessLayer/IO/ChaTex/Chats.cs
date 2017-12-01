@@ -47,13 +47,9 @@ namespace IO.ChaTex
         public ChaTexWebAPI Client { get; private set; }
 
         /// <summary>
-        /// Create a new chat
+        /// Create a new chat with only the caller as a member
         /// </summary>
-        /// <remarks>
-        /// Creates a new chat
-        /// </remarks>
-        /// <param name='createChatDTO'>
-        /// The name of the group
+        /// <param name='chatName'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -67,14 +63,20 @@ namespace IO.ChaTex
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ChatDTO>> CreateChatWithHttpMessagesAsync(CreateChatDTO createChatDTO = default(CreateChatDTO), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ChatDTO>> CreateChatWithHttpMessagesAsync(string chatName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (createChatDTO != null)
+            if (chatName == null)
             {
-                createChatDTO.Validate();
+                throw new ValidationException(ValidationRules.CannotBeNull, "chatName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -83,7 +85,7 @@ namespace IO.ChaTex
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("createChatDTO", createChatDTO);
+                tracingParameters.Add("chatName", chatName);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "CreateChat", tracingParameters);
             }
@@ -112,9 +114,9 @@ namespace IO.ChaTex
 
             // Serialize Request
             string _requestContent = null;
-            if(createChatDTO != null)
+            if(chatName != null)
             {
-                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(createChatDTO, Client.SerializationSettings);
+                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(chatName, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
@@ -184,11 +186,8 @@ namespace IO.ChaTex
         }
 
         /// <summary>
-        /// Get all messages in a one-to-one chat
+        /// Get a list of all messages in a chat
         /// </summary>
-        /// <remarks>
-        /// This will get a list of messages in a chat from a specific user
-        /// </remarks>
         /// <param name='chatId'>
         /// The id of the message to get
         /// </param>

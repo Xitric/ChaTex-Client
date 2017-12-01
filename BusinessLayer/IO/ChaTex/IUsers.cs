@@ -19,11 +19,8 @@ namespace IO.ChaTex
     public partial interface IUsers
     {
         /// <summary>
-        /// Get all users
+        /// Get a list of all users registered in the system
         /// </summary>
-        /// <remarks>
-        /// Get the available users in the system
-        /// </remarks>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
@@ -38,11 +35,8 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse<IList<UserDTO>>> GetAllUsersWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Get the available groups to a user.
+        /// Get the the groups that a user is a member of
         /// </summary>
-        /// <remarks>
-        /// Get the available groups to the user with the specified ID.
-        /// </remarks>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
@@ -57,11 +51,8 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse<IList<GroupDTO>>> GetGroupsForUserWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Login a user
+        /// Sign into the system
         /// </summary>
-        /// <remarks>
-        /// Login the user with the specified e-mail
-        /// </remarks>
         /// <param name='userEmail'>
         /// The user's email
         /// </param>
@@ -82,16 +73,14 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse<string>> LoginWithHttpMessagesAsync(string userEmail, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Update a user
+        /// Update the information of a user in the system
         /// </summary>
-        /// <remarks>
-        /// Update an existing user in the database
-        /// </remarks>
         /// <param name='userId'>
-        /// User id of user to update
+        /// The id of the user to update
         /// </param>
         /// <param name='updateUserDTO'>
-        /// The name of the user
+        /// The new user information. All internal null values are ignored by
+        /// the server
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -102,6 +91,9 @@ namespace IO.ChaTex
         /// <exception cref="Microsoft.Rest.HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        Task<HttpOperationResponse> UpdateUserWithHttpMessagesAsync(int userId, UpdateUserDTO updateUserDTO = default(UpdateUserDTO), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse> UpdateUserWithHttpMessagesAsync(int userId, UpdateUserDTO updateUserDTO, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

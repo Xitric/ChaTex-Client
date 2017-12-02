@@ -9,8 +9,11 @@ namespace ChaTex_Client.ViewModels
     {
         private int id;
         private string authorName;
+        private int authorId;
         private bool me;
+        private bool firstInSequence;
         private string messageContent;
+        private DateTime creationDate;
         private DateTime? deletionDate;
         private DateTime? editDate;
 
@@ -24,8 +27,11 @@ namespace ChaTex_Client.ViewModels
             if (message.Sender.MiddleInitial != null) AuthorName += message.Sender.MiddleInitial + ". ";
             AuthorName += message.Sender.LastName;
 
+            AuthorId = message.Sender.Id;
             Me = message.Sender.Me;
+            FirstInSequence = true;
             MessageContent = message.Content;
+            CreationDate = message.CreationTime;
             DeletionDate = message.DeletionDate;
             EditDate = message.LastEdited;
         }
@@ -56,6 +62,19 @@ namespace ChaTex_Client.ViewModels
             }
         }
 
+        public int AuthorId
+        {
+            get => authorId;
+            private set
+            {
+                if (value != authorId)
+                {
+                    authorId = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public bool Me
         {
             get => me;
@@ -64,6 +83,19 @@ namespace ChaTex_Client.ViewModels
                 if (value != me)
                 {
                     me = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public bool FirstInSequence
+        {
+            get => firstInSequence;
+            set
+            {
+                if (value != firstInSequence)
+                {
+                    firstInSequence = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -80,6 +112,19 @@ namespace ChaTex_Client.ViewModels
                 if (value != messageContent)
                 {
                     messageContent = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public DateTime CreationDate
+        {
+            get => creationDate;
+            private set
+            {
+                if (value != creationDate)
+                {
+                    creationDate = value;
                     NotifyPropertyChanged();
                 }
             }

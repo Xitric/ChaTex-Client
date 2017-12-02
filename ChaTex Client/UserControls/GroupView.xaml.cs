@@ -4,6 +4,9 @@ using IO.ChaTex.Models;
 using Microsoft.Rest;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -28,10 +31,13 @@ namespace ChaTex_Client.UserControls
 
             InitializeComponent();
             this.ucChannelMessageView = ucChannelMessageView;
+            this.ucChannelMessageView.ChannelDeleted += ucChannelMessageView_ChannelDeleted;
+            this.ucChannelMessageView.ChannelRenamed += ucChannelMessageView_ChannelRenamed;
             bChannelMessageArea.Child = ucChannelMessageView;
+            ucChannelMessageView.Visibility = Visibility.Hidden;
         }
 
-        public async void Update()
+        public async Task Update()
         {
             try
             {
@@ -51,17 +57,18 @@ namespace ChaTex_Client.UserControls
                 selectedChannel = channel;
                 txtChannelName.Text = channel.Name;
                 ucChannelMessageView.SetChannel(channel.Id);
+                ucChannelMessageView.Visibility = Visibility.Visible;
             }
         }
 
-        private void btnEditChannel_Click(object sender, RoutedEventArgs e)
+        private async void btnEditChannel_Click(object sender, RoutedEventArgs e)
         {
             if (selectedChannel == null) return;
 
             EditChannel dlgEditChannel = new EditChannel(selectedChannel, channelsApi);
             bool? result = dlgEditChannel.ShowDialog();
             
-            if (result == true) Update();
+            if (result == true) await Update();
         }
 
         private async void miDeleteChannel_Click(object sender, RoutedEventArgs e)
@@ -76,7 +83,7 @@ namespace ChaTex_Client.UserControls
             {
                 await channelsApi.DeleteChannelAsync(channel.Id);
                 MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
-                Update();
+                await Update();
             }
             catch (HttpOperationException er)
             {
@@ -84,9 +91,23 @@ namespace ChaTex_Client.UserControls
             }
         }
 
-        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (IsVisible) Update();
+            if (IsVisible) await Update();
+        }
+
+        private async void ucChannelMessageView_ChannelDeleted(ChannelDTO channel)
+        {
+            ucChannelMessageView.SetChannel(null);
+            txtChannelName.Text = "";
+            ucChannelMessageView.Visibility = Visibility.Hidden;
+            await Update();
+        }
+
+        private async void ucChannelMessageView_ChannelRenamed(ChannelDTO channel)
+        {
+            txtChannelName.Text = channel.Name;
+            await Update();
         }
     }
 }

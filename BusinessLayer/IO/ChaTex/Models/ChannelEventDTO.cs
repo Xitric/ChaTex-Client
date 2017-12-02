@@ -26,10 +26,12 @@ namespace IO.ChaTex.Models
         /// <param name="type">The type of action that generated this event.
         /// Possible values include: 'NewMessage', 'UpdateMessage',
         /// 'DeleteMessage', 'RenameChannel', 'DeleteChannel'</param>
-        public ChannelEventDTO(string type, GetMessageDTO message = default(GetMessageDTO))
+        public ChannelEventDTO(string type, System.DateTime timeOfOccurrence, GetMessageDTO message = default(GetMessageDTO), ChannelDTO channel = default(ChannelDTO))
         {
             Type = type;
+            TimeOfOccurrence = timeOfOccurrence;
             Message = message;
+            Channel = channel;
             CustomInit();
         }
 
@@ -48,8 +50,18 @@ namespace IO.ChaTex.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "TimeOfOccurrence")]
+        public System.DateTime TimeOfOccurrence { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "Message")]
         public GetMessageDTO Message { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Channel")]
+        public ChannelDTO Channel { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -66,6 +78,10 @@ namespace IO.ChaTex.Models
             if (Message != null)
             {
                 Message.Validate();
+            }
+            if (Channel != null)
+            {
+                Channel.Validate();
             }
         }
     }

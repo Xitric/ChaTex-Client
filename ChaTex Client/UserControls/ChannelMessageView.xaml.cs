@@ -29,13 +29,15 @@ namespace ChaTex_Client.UserControls
         private int? currentChannelId;
         private int? currentChatId;
 
-        private DateTime latestMessageTime;
-        private DateTime earliestMessageTime;
+        private DateTime latestEventTime;
         private CancellationTokenSource messageFetchCancellation;
         private MessageViewModel selectedMessage;
         private Task newMessageTask;
         private Task oldMessageTask;
         private bool keepFetchingMessages;
+
+        public event Action<ChannelDTO> ChannelDeleted;
+        public event Action<ChannelDTO> ChannelRenamed;
 
         public ChannelMessageView(IMessages messagesApi, IChannels channelsApi)
         {
@@ -47,7 +49,7 @@ namespace ChaTex_Client.UserControls
             icMessages.ItemsSource = messages;
         }
 
-        public void SetChannel(int channelId)
+        public void SetChannel(int? channelId)
         {
             currentChannelId = channelId;
 
@@ -72,6 +74,7 @@ namespace ChaTex_Client.UserControls
 
             //Repopulate window with new messages
             clearChat();
+            if (currentChannelId == null) return;
             await fetchNewMessages();
 
             //Begin listening for messages in the new channel
@@ -115,7 +118,7 @@ namespace ChaTex_Client.UserControls
                     {
                         //Get channel events
                         //When we call await we pass control back to the caller, so this while loop does not block the UI
-                        channelEvents = await channelsApi.GetChannelEventsAsync((int)currentChannelId, latestMessageTime, messageFetchCancellation.Token);
+                        channelEvents = await channelsApi.GetChannelEventsAsync((int)currentChannelId, latestEventTime, messageFetchCancellation.Token);
                     }
 
                     await handleChannelEventsAsync(channelEvents, messageFetchCancellation.Token);
@@ -160,10 +163,14 @@ namespace ChaTex_Client.UserControls
                             deleteMessage(channelEvent.Message);
                             break;
                         case "renameChannel":
+                            ChannelRenamed?.Invoke(channelEvent.Channel);
                             break;
                         case "deleteChannel":
+                            ChannelDeleted?.Invoke(channelEvent.Channel);
                             break;
                     }
+
+                    updateLatestEventTime(channelEvent.TimeOfOccurrence);
                 }
             });
         }
@@ -174,8 +181,7 @@ namespace ChaTex_Client.UserControls
         private void clearChat()
         {
             messages.Clear();
-            latestMessageTime = DateTime.MinValue;
-            earliestMessageTime = DateTime.MaxValue;
+            latestEventTime = DateTime.UtcNow;
         }
 
         private async Task fetchNewMessages()
@@ -206,6 +212,9 @@ namespace ChaTex_Client.UserControls
             {
                 if (state == MessageViewState.Channel && currentChannelId != null)
                 {
+                    DateTime earliestMessageTime = messages.Count() == 0 ?
+                        DateTime.MaxValue : messages[0].CreationDate;
+
                     oldMessages = await messagesApi.GetMessagesAsync((int)currentChannelId, earliestMessageTime, 10, messageFetchCancellation.Token);
                 }
 
@@ -222,39 +231,39 @@ namespace ChaTex_Client.UserControls
 
         private void appendMessage(GetMessageDTO message)
         {
-            messages.Add(new MessageViewModel(message));
+            MessageViewModel messageViewModel = new MessageViewModel(message);
+
+            if (messages.LastOrDefault()?.AuthorId == messageViewModel.AuthorId)
+            {
+                messageViewModel.FirstInSequence = false;
+            }
+
+            messages.Add(messageViewModel);
             svMessages.ScrollToBottom();
-            updateMessageTimes(message);
+            updateLatestEventTime(message.CreationTime, message.DeletionDate, message.LastEdited);
         }
 
         private void prependMessage(GetMessageDTO message)
         {
-            messages.Insert(0, new MessageViewModel(message));
-            updateMessageTimes(message);
+            MessageViewModel messageViewModel = new MessageViewModel(message);
+
+            if (messages.FirstOrDefault()?.AuthorId == messageViewModel.AuthorId)
+            {
+                messages.First().FirstInSequence = false;
+            }
+
+            messages.Insert(0, messageViewModel);
         }
 
-        private void updateMessageTimes(GetMessageDTO message)
+        private void updateLatestEventTime(params DateTime?[] times)
         {
-            //Latest message time
-            if (message.CreationTime > latestMessageTime)
+            foreach (DateTime? time in times)
             {
-                latestMessageTime = message.CreationTime;
-            }
-
-            if (message.LastEdited != null && message.LastEdited > latestMessageTime)
-            {
-                latestMessageTime = (DateTime)message.LastEdited;
-            }
-
-            if (message.DeletionDate != null && message.DeletionDate > latestMessageTime)
-            {
-                latestMessageTime = (DateTime)message.DeletionDate;
-            }
-
-            //Earliest message time (deletion and edit times will always be later than the original post time)
-            if (message.CreationTime < earliestMessageTime)
-            {
-                earliestMessageTime = message.CreationTime;
+                if (time == null) continue;
+                if (time > latestEventTime)
+                {
+                    latestEventTime = (DateTime)time;
+                }
             }
         }
 
@@ -265,8 +274,6 @@ namespace ChaTex_Client.UserControls
             {
                 messages[replaceIndex] = new MessageViewModel(message);
             }
-
-            updateMessageTimes(message);
         }
 
         private void updateMessage(GetMessageDTO message)
@@ -276,8 +283,6 @@ namespace ChaTex_Client.UserControls
             {
                 messages[replaceIndex] = new MessageViewModel(message);
             }
-
-            updateMessageTimes(message);
         }
 
         private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
@@ -315,6 +320,33 @@ namespace ChaTex_Client.UserControls
             catch (HttpOperationException er)
             {
                 new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+            }
+        }
+
+        private void DockPanel_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            isMouseOverChangedInternal(sender, true);
+        }
+
+        private void DockPanel_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            isMouseOverChangedInternal(sender, false);
+        }
+
+        private void isMouseOverChangedInternal(object sender, bool isMouseOver)
+        {
+            DockPanel dpnlOuter = (DockPanel)sender;
+            DockPanel dpnlInner = (DockPanel)dpnlOuter.Children[0];
+
+            MessageViewModel messageViewModel = (MessageViewModel)dpnlOuter.DataContext;
+            if (!messageViewModel.Me) return;
+
+            foreach (UIElement child in dpnlInner.Children)
+            {
+                if (child is Button)
+                {
+                    ((Button)child).Visibility = isMouseOver ? Visibility.Visible : Visibility.Hidden;
+                }
             }
         }
 

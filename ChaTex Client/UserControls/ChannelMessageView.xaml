@@ -5,158 +5,199 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:vm="clr-namespace:ChaTex_Client.ViewModels"
-             mc:Ignorable="d" Background="#FF36393E">
+             mc:Ignorable="d" Background="#FF36393E"
+             d:DesignHeight="400" d:DesignWidth="500">
+
+    <UserControl.Resources>
+        <Style TargetType="DockPanel" x:Key="StyleDpnlMessageElement">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Me}" Value="True">
+                    <Setter Property="DockPanel.Dock" Value="Right"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Me}" Value="False">
+                    <Setter Property="DockPanel.Dock" Value="Left"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding FirstInSequence}" Value="False">
+                    <Setter Property="Margin" Value="0 4 0 0"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding FirstInSequence}" Value="True">
+                    <Setter Property="Margin" Value="0 20 0 0"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="StyleBtnMessageOptions">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Me}" Value="True">
+                    <Setter Property="DockPanel.Dock" Value="Left"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Me}" Value="False">
+                    <Setter Property="DockPanel.Dock" Value="Right"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image" x:Key="StyleImgAvatar">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Me}" Value="True">
+                    <Setter Property="DockPanel.Dock" Value="Right"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Me}" Value="False">
+                    <Setter Property="DockPanel.Dock" Value="Left"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding FirstInSequence}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="DockPanel" x:Key="StyleDpnlMessageBubble">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Me}" Value="False">
+                    <Setter Property="DockPanel.Dock" Value="Left"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Me}" Value="False">
+                    <Setter Property="DockPanel.Dock" Value="Right"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Border" x:Key="StyleBorderMessageBubble">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Me}" Value="True">
+                    <Setter Property="Margin" Value="0 0 8 0"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Me}" Value="False">
+                    <Setter Property="Margin" Value="8 0 0 0"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="StyleTxtAuthorLine">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Me}" Value="True">
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="50" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="auto" />
-        </Grid.ColumnDefinitions>
-
 
         <!-- message display -->
-        <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="1"
-                      Name="svMessages" ScrollChanged="svMessages_ScrollChanged"
+        <ScrollViewer Name="svMessages"
+                      ScrollChanged="svMessages_ScrollChanged"
                       VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled"
-                      Padding="16 0 16 0">
-
-            <ItemsControl Name="icMessages">
+                      HorizontalScrollBarVisibility="Hidden"
+                      Padding="16 0 16 0"
+                      Grid.Row="0">
+            <ItemsControl Name="icMessages" MaxWidth="{Binding ElementName=svMessages, Path=ViewportWidth}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:MessageViewModel}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                            </Grid.RowDefinitions>
+                        
+                        <!-- A row in the message view -->
+                        <DockPanel LastChildFill="False"
+                                   Background="#ff36393e"
+                                   MouseEnter="DockPanel_MouseEnter"
+                                   MouseLeave="DockPanel_MouseLeave">
 
-                            <Grid.Resources>
+                            <!-- A message component, avatar, and options button -->
+                            <DockPanel LastChildFill="False"
+                                       Style="{StaticResource StyleDpnlMessageElement}">
 
-                                <!-- Position message element -->
-                                <Style TargetType="Border">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Me}" Value="True">
-                                            <Setter Property="Grid.Column" Value="4"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Me}" Value="False">
-                                            <Setter Property="Grid.Column" Value="0"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Deleted}" Value="True">
-                                            <Setter Property="Opacity" Value="0.3"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
+                                <Button Name="btnManageMessage"
+                                        Visibility="Hidden"
+                                        VerticalAlignment="Top"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        MinHeight="0"
+                                        Padding="2 2 2 2"
+                                        Margin="5 5 5 0"
+                                        Click="btnManageMessage_Click"
+                                        ContextMenuService.IsEnabled="false"
+                                        Style="{StaticResource StyleBtnMessageOptions}">
 
-                                <!-- Position edit button element -->
-                                <Style TargetType="Button">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Me}" Value="True">
-                                            <Setter Property="Grid.Column" Value="3"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Me}" Value="False">
-                                            <Setter Property="Grid.Column" Value="1"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Resources>
+                                    <Image Source="/Pictures/button/dotsIcon.png"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           Height="4"/>
 
-                            <!-- Button for making changes to a message -->
-                            <Button Name="btnManageMessage"
-                                    Background="Transparent" BorderThickness="0"
-                                    Grid.Row="0"
-                                    MinHeight="0"
-                                    Margin="5, 0, 5, 0"
-                                    Click="btnManageMessage_Click"
-                                    ContextMenuService.IsEnabled="false">
-                                <Image Source="/pictures/button/dotsIcon.png"
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Name="miEditMessage" Header="Edit" Click="miEditMessage_Click"/>
+                                            <MenuItem Name="miDeleteMessage" Header="Delete" Click="miDeleteMessage_Click"/>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+
+                                <Image Source="/Pictures/person/person-icon.png"
                                        RenderOptions.BitmapScalingMode="HighQuality"
-                                       Height="4"/>
+                                       VerticalAlignment="Top"
+                                       Width="75"
+                                       MinWidth="75"
+                                       Style="{StaticResource StyleImgAvatar}"/>
 
-                                <Button.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Name="miEditMessage" Header="Edit" Click="miEditMessage_Click"/>
-                                        <MenuItem Name="miDeleteMessage" Header="Delete" Click="miDeleteMessage_Click"/>
-                                    </ContextMenu>
-                                </Button.ContextMenu>
-                            </Button>
+                                <!-- Message bubble -->
+                                <DockPanel LastChildFill="False"
+                                           Style="{StaticResource StyleDpnlMessageBubble}">
 
-                            <!-- Message element -->
-                            <Border Margin="0,0,0,10" Padding="10" Background="WhiteSmoke"
-                                    Grid.RowSpan="4"
-                                    CornerRadius="10">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
+                                    <Border Background="#ff44474c"
+                                            Padding="10"
+                                            CornerRadius="10"
+                                            Style="{StaticResource StyleBorderMessageBubble}">
 
-                                    <!-- Author line -->
-                                    <TextBlock Text="{Binding AuthorName}"
-                                               FontSize="12"
-                                               Foreground="DimGray"
-                                               Grid.Row="0"/>
+                                        <!-- Author line and message content -->
+                                        <DockPanel>
 
-                                    <!-- Content line -->
-                                    <TextBlock Text="{Binding MessageContent}"
-                                               FontSize="14"
-                                               TextWrapping="Wrap"
-                                               MaxWidth="{Binding ElementName=svMessages, Path=ViewportWidth}"
-                                               Grid.Row="1">
-                                        <TextBlock.Resources>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Deleted}" Value="True">
-                                                        <Setter Property="FontStyle" Value="Italic"/>
-                                                        <Setter Property="FontSize" Value="12"/>
-                                                        <Setter Property="Foreground" Value="DimGray"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Resources>
-                                    </TextBlock>
-                                </Grid>
-                            </Border>
-                        </Grid>
+                                            <!-- Author line -->
+                                            <TextBlock Text="{Binding AuthorName}"
+                                                       FontSize="12"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       DockPanel.Dock="Top"
+                                                       Style="{StaticResource StyleTxtAuthorLine}"/>
+
+                                            <!-- Message content -->
+                                            <TextBlock Text="{Binding MessageContent}"
+                                                       FontSize="14"
+                                                       FontWeight="Light"
+                                                       Foreground="WhiteSmoke"
+                                                       TextWrapping="Wrap"/>
+                                        </DockPanel>
+                                    </Border>
+                                </DockPanel>
+                            </DockPanel>
+                        </DockPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
 
-        <!-- write message textbox -->
-        <TextBox Name="txtMessage"
-                 Foreground="White"
-                 Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="1"
-                 materialDesign:HintAssist.Hint="Type a message here..."
-                 VerticalAlignment="Center"
-                 HorizontalContentAlignment="Stretch"
-                 TextWrapping="Wrap"
-                 BorderBrush="#FF002864"
-                 TextChanged="txtMessage_TextChanged"
-                 Margin="16, 0, 16, 0" CaretBrush="White"/>
+        <DockPanel LastChildFill="True"
+                   Grid.Row="1">
 
-        <!-- send button -->
-        <Button Name="btnSendMessage"
-                Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="1"
-                Content="Send"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Right"
-                Background="#FF002864"
-                BorderBrush="#FF002864"
-                IsDefault="True"
-                Margin="0 0 16 0"
-                Click="btnSendMessage_Click"/>
+            <!-- Send button -->
+            <Button Name="btnSendMessage"
+                    DockPanel.Dock="Right"
+                    FontWeight="Normal"
+                    Content="Send"
+                    VerticalAlignment="Center"
+                    Background="#FF002864"
+                    BorderBrush="#FF002864"
+                    IsDefault="True"
+                    Margin="0 8 16 8"
+                    Click="btnSendMessage_Click"/>
+
+            <!-- Write message textbox -->
+            <TextBox Name="txtMessage"
+                     DockPanel.Dock="Left"
+                     Foreground="WhiteSmoke"
+                     FontWeight="Light"
+                     materialDesign:HintAssist.Hint="Type a message here..."
+                     VerticalAlignment="Center"
+                     TextWrapping="Wrap"
+                     BorderBrush="#FF002864"
+                     TextChanged="txtMessage_TextChanged"
+                     Margin="16, 8, 16, 8"
+                     CaretBrush="White"/>
+        </DockPanel>
     </Grid>
 </UserControl>

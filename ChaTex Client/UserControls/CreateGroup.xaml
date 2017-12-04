@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="ChaTex_Client.UserControls.CreateGroup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ChaTex_Client.UserControls"
+             xmlns:vm="clr-namespace:ChaTex_Client.ViewModels"
+             mc:Ignorable="d" Background="#FF36393E">
+
+    <UserControl.Resources>
+    </UserControl.Resources>
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Hidden">
+        <Grid Margin="16 16 16 16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Group name"
+                       FontWeight="Normal"
+                       Foreground="#FFB1B1B1"
+                       Margin="0 0 0 8"/>
+
+            <TextBox Name="txtGroupName"
+                     FontWeight="Light"
+                     Foreground="#FFB1B1B1"
+                     Background="#ff3f4247"
+                     Padding="4 1 4 1"
+                     Grid.Row="1"
+                     TextChanged="txtGroupName_TextChanged"/>
+
+            <!-- Members -->
+            <DockPanel Grid.Row="2"
+                       HorizontalAlignment="Stretch"
+                       LastChildFill="False"
+                       Margin="0 16 0 8">
+                <TextBlock Text="Group members"
+                           FontWeight="Normal"
+                           Foreground="#FFB1B1B1"
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Left"/>
+
+                <TextBox Name="txtSearchMembers"
+                         FontWeight="Light"
+                         Foreground="#FFB1B1B1"
+                         Background="#ff3f4247"
+                         Padding="4 1 4 1"
+                         Width="120"
+                         VerticalAlignment="Center"
+                         DockPanel.Dock="Right"
+                         TextChanged="txtSearchMembers_TextChanged"/>
+
+                <TextBlock Text="Search:"
+                           FontWeight="Normal"
+                           Foreground="#FFB1B1B1"
+                           Margin="16 0 8 0"
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Right"/>
+            </DockPanel>
+
+            <ScrollViewer Name="svMembers"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Hidden"
+                          Background="#ff3f4247"
+                          Grid.Row="3"
+                          Height="300"
+                          MaxHeight="300">
+                <ItemsControl Name="icMembers">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:AddMemberViewModel}">
+                            <Border Name="bMemberRow"
+                                    Padding="4"
+                                    Background="#ff3f4247"
+                                    MouseUp="bMemberRow_MouseUp">
+                                <DockPanel>
+                                    <CheckBox IsChecked="{Binding IsSelected}"
+                                              Background="#ff6399df"
+                                              VerticalAlignment="Center"
+                                              DockPanel.Dock="Left"
+                                              Margin="2 2 8 2"/>
+                                    <TextBlock Text="{Binding Name}"
+                                               FontWeight="Light"
+                                               Foreground="#FFB1B1B1"
+                                               VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <Button Name="btnCreateGroup"
+                    IsEnabled="False"
+                    Content="Create"
+                    Background="#ff3f4247"
+                    Padding="16"
+                    Height="48"
+                    BorderThickness="0"
+                    Grid.Row="6"
+                    Click="btnCreateGroup_Click"/>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

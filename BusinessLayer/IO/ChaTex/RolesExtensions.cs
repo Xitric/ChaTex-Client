@@ -18,11 +18,8 @@ namespace IO.ChaTex
     public static partial class RolesExtensions
     {
             /// <summary>
-            /// Get roles
+            /// Get a list of all the roles in the system
             /// </summary>
-            /// <remarks>
-            /// Get all roles in the system
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -32,11 +29,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Get roles
+            /// Get a list of all the roles in the system
             /// </summary>
-            /// <remarks>
-            /// Get all roles in the system
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>

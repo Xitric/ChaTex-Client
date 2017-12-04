@@ -37,9 +37,11 @@ namespace ChaTex_Client
             //Register windows
             iocContainer.RegisterType<Login>();
             iocContainer.RegisterType<Overview>();
-            iocContainer.RegisterType<GroupView>();
+            iocContainer.RegisterType<GroupChooser>();
             iocContainer.RegisterType<ChatView>();
-            iocContainer.RegisterType<ChannelMessageView>();
+            iocContainer.RegisterType<ChannelView>();
+            iocContainer.RegisterType<GroupView>();
+            iocContainer.RegisterType<CreateGroup>();
             iocContainer.Resolve<Login>().Show();
         }
     }

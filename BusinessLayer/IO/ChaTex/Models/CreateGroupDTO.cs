@@ -39,22 +39,22 @@ namespace IO.ChaTex.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "groupName")]
+        [JsonProperty(PropertyName = "GroupName")]
         public string GroupName { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "allowEmployeeSticky")]
+        [JsonProperty(PropertyName = "AllowEmployeeSticky")]
         public bool AllowEmployeeSticky { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "allowEmployeeAcknowledgeable")]
+        [JsonProperty(PropertyName = "AllowEmployeeAcknowledgeable")]
         public bool AllowEmployeeAcknowledgeable { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "allowEmployeeBookmark")]
+        [JsonProperty(PropertyName = "AllowEmployeeBookmark")]
         public bool AllowEmployeeBookmark { get; set; }
 
         /// <summary>

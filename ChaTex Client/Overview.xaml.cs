@@ -16,22 +16,22 @@ namespace ChaTex_Client
         private readonly IChannels channelsApi;
         private readonly IGroups groupsApi;
 
-        private readonly GroupView groupView;
+        private readonly GroupChooser groupChooser;
         private readonly ChatView chatView;
         private UserControl currentView;
 
-        public Overview(GroupView groupView, ChatView chatView, IUsers usersApi, IRoles rolesApi, IChannels channelsApi, IGroups groupsApi)
+        public Overview(GroupChooser groupChooser, ChatView chatView, IUsers usersApi, IRoles rolesApi, IChannels channelsApi, IGroups groupsApi)
         {
             this.usersApi = usersApi;
             this.rolesApi = rolesApi;
             this.channelsApi = channelsApi;
             this.groupsApi = groupsApi;
 
-            this.groupView = groupView;
+            this.groupChooser = groupChooser;
             this.chatView = chatView;
 
             InitializeComponent();
-            setCurrentView(groupView);
+            setCurrentView(groupChooser);
         }
 
         private void setCurrentView(UserControl view)
@@ -56,7 +56,7 @@ namespace ChaTex_Client
             CreateNewGroup createNewGroup = new CreateNewGroup(usersApi, rolesApi, groupsApi);
             createNewGroup.ShowDialog();
 
-            setCurrentView(groupView);
+            setCurrentView(groupChooser);
         }
 
 
@@ -67,7 +67,7 @@ namespace ChaTex_Client
 
         private void btnGroups_Click(object sender, RoutedEventArgs e)
         {
-            setCurrentView(groupView);
+            setCurrentView(groupChooser);
         }
 
         private void btnAddChannel_Click(object sender, RoutedEventArgs e)
@@ -75,7 +75,7 @@ namespace ChaTex_Client
             CreateNewChannel createNewChannel = new CreateNewChannel(usersApi, channelsApi);
             createNewChannel.ShowDialog();
             dpnlMainUI.Children.Clear();
-            dpnlMainUI.Children.Add(groupView);
+            dpnlMainUI.Children.Add(groupChooser);
         }
     }
 }

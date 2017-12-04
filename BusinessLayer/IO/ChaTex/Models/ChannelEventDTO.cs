@@ -10,26 +10,28 @@ namespace IO.ChaTex.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class MessageEventDTO
+    public partial class ChannelEventDTO
     {
         /// <summary>
-        /// Initializes a new instance of the MessageEventDTO class.
+        /// Initializes a new instance of the ChannelEventDTO class.
         /// </summary>
-        public MessageEventDTO()
+        public ChannelEventDTO()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the MessageEventDTO class.
+        /// Initializes a new instance of the ChannelEventDTO class.
         /// </summary>
         /// <param name="type">The type of action that generated this event.
         /// Possible values include: 'NewMessage', 'UpdateMessage',
-        /// 'DeleteMessage'</param>
-        public MessageEventDTO(string type, GetMessageDTO message)
+        /// 'DeleteMessage', 'RenameChannel', 'DeleteChannel'</param>
+        public ChannelEventDTO(string type, System.DateTime timeOfOccurrence, GetMessageDTO message = default(GetMessageDTO), ChannelDTO channel = default(ChannelDTO))
         {
             Type = type;
+            TimeOfOccurrence = timeOfOccurrence;
             Message = message;
+            Channel = channel;
             CustomInit();
         }
 
@@ -40,15 +42,26 @@ namespace IO.ChaTex.Models
 
         /// <summary>
         /// Gets or sets the type of action that generated this event. Possible
-        /// values include: 'NewMessage', 'UpdateMessage', 'DeleteMessage'
+        /// values include: 'NewMessage', 'UpdateMessage', 'DeleteMessage',
+        /// 'RenameChannel', 'DeleteChannel'
         /// </summary>
         [JsonProperty(PropertyName = "Type")]
         public string Type { get; set; }
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "TimeOfOccurrence")]
+        public System.DateTime TimeOfOccurrence { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "Message")]
         public GetMessageDTO Message { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "Channel")]
+        public ChannelDTO Channel { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -62,13 +75,13 @@ namespace IO.ChaTex.Models
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "Type");
             }
-            if (Message == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "Message");
-            }
             if (Message != null)
             {
                 Message.Validate();
+            }
+            if (Channel != null)
+            {
+                Channel.Validate();
             }
         }
     }

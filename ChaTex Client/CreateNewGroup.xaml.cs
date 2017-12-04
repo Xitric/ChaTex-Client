@@ -143,11 +143,7 @@ namespace ChaTex_Client
 
             try
             {
-                HttpOperationResponse response = await groupsApi.AddRolesToGroupWithHttpMessagesAsync(new AddRolesToGroupDTO()
-                {
-                    GroupId = group.Id,
-                    RoleIds = selectedRoles
-                });
+                HttpOperationResponse response = await groupsApi.AddRolesToGroupWithHttpMessagesAsync(group.Id, selectedRoles);
             }
             catch (HttpOperationException er)
             {
@@ -171,11 +167,7 @@ namespace ChaTex_Client
 
             try
             {
-                HttpOperationResponse response = await groupsApi.AddUsersToGroupWithHttpMessagesAsync(new AddUsersToGroupDTO()
-                {
-                    GroupId = group.Id,
-                    UserIds = selectedUsers
-                });
+                HttpOperationResponse response = await groupsApi.AddUsersToGroupWithHttpMessagesAsync(group.Id, selectedUsers);
             }
             catch (HttpOperationException er)
             {

@@ -19,13 +19,9 @@ namespace IO.ChaTex
     public partial interface IChats
     {
         /// <summary>
-        /// Create a new chat
+        /// Create a new chat with only the caller as a member
         /// </summary>
-        /// <remarks>
-        /// Creates a new chat
-        /// </remarks>
-        /// <param name='createChatDTO'>
-        /// The name of the group
+        /// <param name='chatName'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -39,13 +35,13 @@ namespace IO.ChaTex
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<ChatDTO>> CreateChatWithHttpMessagesAsync(CreateChatDTO createChatDTO = default(CreateChatDTO), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse<ChatDTO>> CreateChatWithHttpMessagesAsync(string chatName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Get all messages in a one-to-one chat
+        /// Get a list of all messages in a chat
         /// </summary>
-        /// <remarks>
-        /// This will get a list of messages in a chat from a specific user
-        /// </remarks>
         /// <param name='chatId'>
         /// The id of the message to get
         /// </param>

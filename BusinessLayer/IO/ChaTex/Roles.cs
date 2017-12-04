@@ -47,11 +47,8 @@ namespace IO.ChaTex
         public ChaTexWebAPI Client { get; private set; }
 
         /// <summary>
-        /// Get roles
+        /// Get a list of all the roles in the system
         /// </summary>
-        /// <remarks>
-        /// Get all roles in the system
-        /// </remarks>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>

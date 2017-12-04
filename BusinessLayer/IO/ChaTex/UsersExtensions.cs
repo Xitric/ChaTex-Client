@@ -18,11 +18,8 @@ namespace IO.ChaTex
     public static partial class UsersExtensions
     {
             /// <summary>
-            /// Get all users
+            /// Get a list of all users registered in the system
             /// </summary>
-            /// <remarks>
-            /// Get the available users in the system
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -32,11 +29,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Get all users
+            /// Get a list of all users registered in the system
             /// </summary>
-            /// <remarks>
-            /// Get the available users in the system
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -52,11 +46,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Get the available groups to a user.
+            /// Get the the groups that a user is a member of
             /// </summary>
-            /// <remarks>
-            /// Get the available groups to the user with the specified ID.
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -66,11 +57,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Get the available groups to a user.
+            /// Get the the groups that a user is a member of
             /// </summary>
-            /// <remarks>
-            /// Get the available groups to the user with the specified ID.
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -86,11 +74,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Login a user
+            /// Sign into the system
             /// </summary>
-            /// <remarks>
-            /// Login the user with the specified e-mail
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -103,11 +88,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Login a user
+            /// Sign into the system
             /// </summary>
-            /// <remarks>
-            /// Login the user with the specified e-mail
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -126,44 +108,40 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Update a user
+            /// Update the information of a user in the system
             /// </summary>
-            /// <remarks>
-            /// Update an existing user in the database
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='userId'>
-            /// User id of user to update
+            /// The id of the user to update
             /// </param>
             /// <param name='updateUserDTO'>
-            /// The name of the user
+            /// The new user information. All internal null values are ignored by the
+            /// server
             /// </param>
-            public static void UpdateUser(this IUsers operations, int userId, UpdateUserDTO updateUserDTO = default(UpdateUserDTO))
+            public static void UpdateUser(this IUsers operations, int userId, UpdateUserDTO updateUserDTO)
             {
                 operations.UpdateUserAsync(userId, updateUserDTO).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Update a user
+            /// Update the information of a user in the system
             /// </summary>
-            /// <remarks>
-            /// Update an existing user in the database
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='userId'>
-            /// User id of user to update
+            /// The id of the user to update
             /// </param>
             /// <param name='updateUserDTO'>
-            /// The name of the user
+            /// The new user information. All internal null values are ignored by the
+            /// server
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task UpdateUserAsync(this IUsers operations, int userId, UpdateUserDTO updateUserDTO = default(UpdateUserDTO), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task UpdateUserAsync(this IUsers operations, int userId, UpdateUserDTO updateUserDTO, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.UpdateUserWithHttpMessagesAsync(userId, updateUserDTO, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }

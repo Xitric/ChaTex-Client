@@ -7,6 +7,8 @@
 namespace IO.ChaTex
 {
     using Models;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -18,50 +20,39 @@ namespace IO.ChaTex
             /// <summary>
             /// Create a channel in a group
             /// </summary>
-            /// <remarks>
-            /// Creates a new channel in the specified group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='groupId'>
             /// </param>
-            /// <param name='createChannelDTO'>
-            /// The name of the channel
+            /// <param name='channelName'>
             /// </param>
-            public static void CreateChannel(this IChannels operations, int groupId, CreateChannelDTO createChannelDTO = default(CreateChannelDTO))
+            public static void CreateChannel(this IChannels operations, int groupId, string channelName)
             {
-                operations.CreateChannelAsync(groupId, createChannelDTO).GetAwaiter().GetResult();
+                operations.CreateChannelAsync(groupId, channelName).GetAwaiter().GetResult();
             }
 
             /// <summary>
             /// Create a channel in a group
             /// </summary>
-            /// <remarks>
-            /// Creates a new channel in the specified group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='groupId'>
             /// </param>
-            /// <param name='createChannelDTO'>
-            /// The name of the channel
+            /// <param name='channelName'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task CreateChannelAsync(this IChannels operations, int groupId, CreateChannelDTO createChannelDTO = default(CreateChannelDTO), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task CreateChannelAsync(this IChannels operations, int groupId, string channelName, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.CreateChannelWithHttpMessagesAsync(groupId, createChannelDTO, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.CreateChannelWithHttpMessagesAsync(groupId, channelName, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
             /// Delete a channel from a group
             /// </summary>
-            /// <remarks>
-            /// Deletes the channel from the specified group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -76,9 +67,6 @@ namespace IO.ChaTex
             /// <summary>
             /// Delete a channel from a group
             /// </summary>
-            /// <remarks>
-            /// Deletes the channel from the specified group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -94,11 +82,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Modify a channel in a group
+            /// Change the information about a channel in a group
             /// </summary>
-            /// <remarks>
-            /// Modify a channel in a group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -114,11 +99,8 @@ namespace IO.ChaTex
             }
 
             /// <summary>
-            /// Modify a channel in a group
+            /// Change the information about a channel in a group
             /// </summary>
-            /// <remarks>
-            /// Modify a channel in a group
-            /// </remarks>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
@@ -134,6 +116,56 @@ namespace IO.ChaTex
             public static async Task UpdateChannelAsync(this IChannels operations, int channelId, string channelName, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.UpdateChannelWithHttpMessagesAsync(channelId, channelName, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Wait for and get new messages, message deletions, message edits, channel
+            /// information updates, and channel deletions in a channel
+            /// </summary>
+            /// <remarks>
+            /// This request will not return from the service until at least one new
+            /// channel event has occurred
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='channelId'>
+            /// The id of the channel to listen to
+            /// </param>
+            /// <param name='since'>
+            /// The time to get channel events since
+            /// </param>
+            public static IList<ChannelEventDTO> GetChannelEvents(this IChannels operations, int channelId, System.DateTime since)
+            {
+                return operations.GetChannelEventsAsync(channelId, since).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Wait for and get new messages, message deletions, message edits, channel
+            /// information updates, and channel deletions in a channel
+            /// </summary>
+            /// <remarks>
+            /// This request will not return from the service until at least one new
+            /// channel event has occurred
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='channelId'>
+            /// The id of the channel to listen to
+            /// </param>
+            /// <param name='since'>
+            /// The time to get channel events since
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IList<ChannelEventDTO>> GetChannelEventsAsync(this IChannels operations, int channelId, System.DateTime since, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetChannelEventsWithHttpMessagesAsync(channelId, since, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
 
     }

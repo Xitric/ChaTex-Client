@@ -19,11 +19,8 @@ namespace IO.ChaTex
     public partial interface IRoles
     {
         /// <summary>
-        /// Get roles
+        /// Get a list of all the roles in the system
         /// </summary>
-        /// <remarks>
-        /// Get all roles in the system
-        /// </remarks>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>

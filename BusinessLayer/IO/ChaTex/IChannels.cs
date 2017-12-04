@@ -21,13 +21,9 @@ namespace IO.ChaTex
         /// <summary>
         /// Create a channel in a group
         /// </summary>
-        /// <remarks>
-        /// Creates a new channel in the specified group
-        /// </remarks>
         /// <param name='groupId'>
         /// </param>
-        /// <param name='createChannelDTO'>
-        /// The name of the channel
+        /// <param name='channelName'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -38,13 +34,13 @@ namespace IO.ChaTex
         /// <exception cref="Microsoft.Rest.HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        Task<HttpOperationResponse> CreateChannelWithHttpMessagesAsync(int groupId, CreateChannelDTO createChannelDTO = default(CreateChannelDTO), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse> CreateChannelWithHttpMessagesAsync(int groupId, string channelName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Delete a channel from a group
         /// </summary>
-        /// <remarks>
-        /// Deletes the channel from the specified group
-        /// </remarks>
         /// <param name='channelId'>
         /// The id of the channel to delete
         /// </param>
@@ -59,11 +55,8 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse> DeleteChannelWithHttpMessagesAsync(int channelId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Modify a channel in a group
+        /// Change the information about a channel in a group
         /// </summary>
-        /// <remarks>
-        /// Modify a channel in a group
-        /// </remarks>
         /// <param name='channelId'>
         /// The id of the channel to update
         /// </param>
@@ -83,5 +76,32 @@ namespace IO.ChaTex
         /// Thrown when a required parameter is null
         /// </exception>
         Task<HttpOperationResponse> UpdateChannelWithHttpMessagesAsync(int channelId, string channelName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Wait for and get new messages, message deletions, message edits,
+        /// channel information updates, and channel deletions in a channel
+        /// </summary>
+        /// <remarks>
+        /// This request will not return from the service until at least one
+        /// new channel event has occurred
+        /// </remarks>
+        /// <param name='channelId'>
+        /// The id of the channel to listen to
+        /// </param>
+        /// <param name='since'>
+        /// The time to get channel events since
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="Microsoft.Rest.HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        Task<HttpOperationResponse<IList<ChannelEventDTO>>> GetChannelEventsWithHttpMessagesAsync(int channelId, System.DateTime since, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

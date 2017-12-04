@@ -19,18 +19,16 @@ namespace IO.ChaTex
     public partial interface IMessages
     {
         /// <summary>
-        /// Get the messages from a specific channel
+        /// Get some of the messages from a specific channel
         /// </summary>
-        /// <remarks>
-        /// Get a number of messages from the specified channel
-        /// </remarks>
         /// <param name='channelId'>
-        /// The id of the channel to delete
+        /// The id of the channel to get messages from
         /// </param>
-        /// <param name='fromIndex'>
-        /// The index of the first message to get, beginning from the most
-        /// recently posted message. This defaults to 0, meaning the most
-        /// recent message
+        /// <param name='before'>
+        /// The point in time to get messages before. Put differently, this
+        /// specifies the latest possible creation time of messages to get.
+        /// This defaults to the current time, meaning that the latest message
+        /// will be returned
         /// </param>
         /// <param name='count'>
         /// The amount of messages to get. This defaults to 25
@@ -47,18 +45,15 @@ namespace IO.ChaTex
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<IList<GetMessageDTO>>> GetMessagesWithHttpMessagesAsync(int channelId, int? fromIndex = default(int?), int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<GetMessageDTO>>> GetMessagesWithHttpMessagesAsync(int channelId, System.DateTime? before = default(System.DateTime?), int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Create a new message
+        /// Create a new message in the specified channel
         /// </summary>
-        /// <remarks>
-        /// Create a new message in a specific channel
-        /// </remarks>
         /// <param name='channelId'>
         /// The id of the channel to post the message to
         /// </param>
-        /// <param name='messageContentDTO'>
-        /// Content of the message
+        /// <param name='messageContent'>
+        /// The content of the message
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -72,40 +67,10 @@ namespace IO.ChaTex
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse> CreateMessageWithHttpMessagesAsync(int channelId, MessageContentDTO messageContentDTO, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-        /// <summary>
-        /// Wait for and get new messages, message deletions, and message edits
-        /// in a channel
-        /// </summary>
-        /// <remarks>
-        /// This request will not return from the service until at least one
-        /// new message event has occurred
-        /// </remarks>
-        /// <param name='channelId'>
-        /// The id of the channel to listen to
-        /// </param>
-        /// <param name='since'>
-        /// The time to get message events since
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        /// <exception cref="Microsoft.Rest.HttpOperationException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
-        Task<HttpOperationResponse<IList<MessageEventDTO>>> GetMessageEventsWithHttpMessagesAsync(int channelId, System.DateTime since, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> CreateMessageWithHttpMessagesAsync(int channelId, string messageContent, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Delete a message
         /// </summary>
-        /// <remarks>
-        /// Delete the message with the specified id
-        /// </remarks>
         /// <param name='messageId'>
         /// The id of the message to delete
         /// </param>
@@ -126,7 +91,7 @@ namespace IO.ChaTex
         /// Edit the message with the specified id
         /// </remarks>
         /// <param name='messageId'>
-        /// The id of the message to delete
+        /// The id of the message to edit
         /// </param>
         /// <param name='newContent'>
         /// The new content of the message
@@ -148,7 +113,7 @@ namespace IO.ChaTex
         /// Get a message
         /// </summary>
         /// <remarks>
-        /// Get a message with the specified id
+        /// Get the message with the specified id
         /// </remarks>
         /// <param name='messageId'>
         /// The id of the message to get

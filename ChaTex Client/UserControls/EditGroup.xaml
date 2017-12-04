@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ChaTex_Client.UserControls.CreateGroup"
+﻿<UserControl x:Class="ChaTex_Client.UserControls.EditGroup"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,16 +10,16 @@
                   HorizontalScrollBarVisibility="Hidden">
         <Border Padding="16">
             <DockPanel Name="dpnlSettings">
-                <Button Name="btnCreateGroup"
+                <Button Name="btnSaveChanges"
                         IsEnabled="False"
-                        Content="Create"
+                        Content="Save changes"
                         Background="#ff3f4247"
                         Padding="16"
                         Margin="0 24 0 0"
                         Height="48"
                         BorderThickness="0"
                         DockPanel.Dock="Bottom"
-                        Click="btnCreateGroup_Click"/>
+                        Click="btnSaveChanges_Click"/>
             </DockPanel>
         </Border>
     </ScrollViewer>

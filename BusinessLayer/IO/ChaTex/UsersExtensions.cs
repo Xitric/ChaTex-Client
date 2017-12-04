@@ -146,5 +146,43 @@ namespace IO.ChaTex
                 (await operations.UpdateUserWithHttpMessagesAsync(userId, updateUserDTO, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
+            /// <summary>
+            /// Get all roles for a user
+            /// </summary>
+            /// <remarks>
+            /// Get the list of roles for a specific user
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='userId'>
+            /// </param>
+            public static IList<RoleDTO> GetAllUserRoles(this IUsers operations, int userId)
+            {
+                return operations.GetAllUserRolesAsync(userId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get all roles for a user
+            /// </summary>
+            /// <remarks>
+            /// Get the list of roles for a specific user
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='userId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IList<RoleDTO>> GetAllUserRolesAsync(this IUsers operations, int userId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAllUserRolesWithHttpMessagesAsync(userId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
     }
 }

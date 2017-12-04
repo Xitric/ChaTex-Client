@@ -19,7 +19,7 @@ namespace ChaTex_Client.UserControls
     /// <summary>
     /// Interaction logic for ChannelMessageView.xaml
     /// </summary>
-    public partial class ChannelView : UserControl, EditableElementView
+    public partial class ChannelView : UserControl
     {
         private readonly ObservableCollection<MessageViewModel> messages;
         private readonly IMessages messagesApi;
@@ -391,11 +391,6 @@ namespace ChaTex_Client.UserControls
                 scrollViewer.ScrollToVerticalOffset(scrollViewer.ScrollableHeight - oldOffsetFromBottom);
                 scrollViewer.ScrollChanged += svMessages_ScrollChanged;
             }
-        }
-
-        public bool Edit()
-        {
-            throw new NotImplementedException();
         }
     }
 }

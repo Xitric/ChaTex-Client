@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="ChaTex_Client.UserControls.SearcheableCheckboxList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:ChaTex_Client.ViewModels"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             mc:Ignorable="d" 
+             d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Foreground" Value="#FFB1B1B1"/>
+            <Setter Property="Margin" Value="0 0 0 8"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel HorizontalAlignment="Stretch"
+                   LastChildFill="False"
+                   Margin="0 16 0 8">
+            <TextBlock Text="{Binding Header}"
+                       Margin="0 0 0 0"
+                       VerticalAlignment="Center"
+                       DockPanel.Dock="Left"/>
+
+            <TextBox Name="txtSearch"
+                     FontWeight="Light"
+                     Foreground="#FFB1B1B1"
+                     Background="#ff3f4247"
+                     Padding="4 1 4 1"
+                     Width="120"
+                     VerticalAlignment="Center"
+                     DockPanel.Dock="Right"
+                     TextChanged="txtSearch_TextChanged"/>
+
+            <TextBlock Text="Search:"
+                       Margin="16 0 8 0"
+                       VerticalAlignment="Center"
+                       DockPanel.Dock="Right"/>
+        </DockPanel>
+
+        <ScrollViewer Name="svCheckboxes"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Hidden"
+                      Background="#ff3f4247"
+                      Grid.Row="1"
+                      Height="300"
+                      MaxHeight="300"
+                      Margin="0 0 0 8">
+            <ItemsControl Name="icCheckboxes">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:SearcheableCheckboxViewModel}">
+                        <Border Name="bRow"
+                                Padding="4"
+                                Background="#ff3f4247"
+                                MouseUp="bRow_MouseUp">
+                            <DockPanel LastChildFill="False">
+                                <CheckBox IsChecked="{Binding IsSelected}"
+                                          Background="#ff6399df"
+                                          VerticalAlignment="Center"
+                                          DockPanel.Dock="Left"
+                                          Margin="2 2 8 2"/>
+                                <TextBlock Text="{Binding Content}"
+                                           Foreground="#FFB1B1B1"
+                                           FontWeight="Light"
+                                           Margin="0 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

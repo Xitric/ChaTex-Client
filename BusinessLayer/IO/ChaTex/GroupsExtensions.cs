@@ -122,6 +122,46 @@ namespace IO.ChaTex
             }
 
             /// <summary>
+            /// Get all the the users with direct access to a specific group.
+            /// </summary>
+            /// <remarks>
+            /// Gets all users with direct access to the group, this will not get the users
+            /// added by roles.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
+            /// </param>
+            public static IList<UserDTO> GetAllDirectGroupUsers(this IGroups operations, int groupId)
+            {
+                return operations.GetAllDirectGroupUsersAsync(groupId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get all the the users with direct access to a specific group.
+            /// </summary>
+            /// <remarks>
+            /// Gets all users with direct access to the group, this will not get the users
+            /// added by roles.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='groupId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IList<UserDTO>> GetAllDirectGroupUsersAsync(this IGroups operations, int groupId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetAllDirectGroupUsersWithHttpMessagesAsync(groupId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
             /// Get the list of users who have access to a specific group
             /// </summary>
             /// <remarks>

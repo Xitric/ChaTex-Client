@@ -20,11 +20,11 @@ namespace ChaTex_Client.UserControls
 
         private readonly ChannelView ucChannelView;
         private readonly GroupView ucGroupView;
-        private readonly CreateGroup createGroupView;
-        private EditableElementView currentView;
+        private readonly CreateGroup ucCreateGroupView;
+        private readonly EditGroup ucEditGroupView;
         private ObservableCollection<GroupDTO> groups;
 
-        public GroupChooser(IUsers usersApi, IChannels channelsApi, ChannelView ucChannelView, GroupView ucGroupView, CreateGroup createGroupView)
+        public GroupChooser(IUsers usersApi, IChannels channelsApi, ChannelView ucChannelView, GroupView ucGroupView, CreateGroup ucCreateGroupView, EditGroup ucEditGroupView)
         {
             this.usersApi = usersApi;
             this.channelsApi = channelsApi;
@@ -33,7 +33,10 @@ namespace ChaTex_Client.UserControls
 
             this.ucChannelView = ucChannelView;
             this.ucGroupView = ucGroupView;
-            this.createGroupView = createGroupView;
+            this.ucCreateGroupView = ucCreateGroupView;
+            this.ucEditGroupView = ucEditGroupView;
+
+            ucCreateGroupView.GroupCreated += createGroupView_GroupCreated;
         }
 
         private async Task update()
@@ -59,7 +62,6 @@ namespace ChaTex_Client.UserControls
             txtViewName.Text = channel.Name;
             ucChannelView.SetChannel(channel.Id);
 
-            currentView = ucChannelView;
             bViewArea.Child = ucChannelView;
 
             btnExit.Visibility = Visibility.Visible;
@@ -73,7 +75,6 @@ namespace ChaTex_Client.UserControls
             txtViewName.Text = group.Name;
             ucGroupView.SetGroup(group);
 
-            currentView = ucGroupView;
             bViewArea.Child = ucGroupView;
 
             btnExit.Visibility = Visibility.Visible;
@@ -85,17 +86,28 @@ namespace ChaTex_Client.UserControls
             exitCurrentView();
 
             txtViewName.Text = "Create your group";
-            createGroupView.Reset();
+            ucCreateGroupView.Reset();
 
+            bViewArea.Child = ucCreateGroupView;
 
-            bViewArea.Child = createGroupView;
+            btnExit.Visibility = Visibility.Visible;
+        }
+
+        private async void enterEditGroup(GroupDTO group)
+        {
+            exitCurrentView();
+
+            txtViewName.Text = $"Edit \"{group.Name}\"";
+            await ucEditGroupView.SetGroup(group);
+
+            bViewArea.Child = ucEditGroupView;
 
             btnExit.Visibility = Visibility.Visible;
         }
 
         private void exitCurrentView()
         {
-            if (currentView == ucChannelView)
+            if (bViewArea.Child == ucChannelView)
             {
                 ucChannelView.ChannelDeleted += ucChannelView_ChannelDeleted;
                 ucChannelView.ChannelRenamed += ucChannelView_ChannelRenamed;
@@ -127,16 +139,12 @@ namespace ChaTex_Client.UserControls
 
         private async void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (currentView.Edit())
+            GroupDTO group = tvGroups.SelectedItem as GroupDTO;
+
+            if (bViewArea.Child == ucGroupView && group != null)
             {
-                //Something changed
-                await update();
+                enterEditGroup(group);
             }
-
-            //EditChannel dlgEditChannel = new EditChannel(selectedChannel, channelsApi);
-            //bool? result = dlgEditChannel.ShowDialog();
-
-            //if (result == true) await update();
         }
 
         private async void miDeleteChannel_Click(object sender, RoutedEventArgs e)
@@ -174,11 +182,50 @@ namespace ChaTex_Client.UserControls
         {
             txtViewName.Text = channel.Name;
             await update();
+            //selectChannel(channel.Id); TODO: Does not work
         }
 
         private void btnCreateGroup_Click(object sender, RoutedEventArgs e)
         {
             enterCreateGroup();
+        }
+
+        private async void createGroupView_GroupCreated(GroupDTO group)
+        {
+            await update();
+            selectGroup(group.Id);
+        }
+
+        private void selectGroup(int groupId)
+        {
+            foreach (GroupDTO group in tvGroups.Items)
+            {
+                if (group.Id == groupId)
+                {
+                    TreeViewItem groupItem = tvGroups.ItemContainerGenerator.ContainerFromItem(group) as TreeViewItem;
+                    groupItem.Focus();
+                    return;
+                }
+            }
+        }
+
+        private void selectChannel(int channelId)
+        {
+            foreach (GroupDTO group in tvGroups.Items)
+            {
+                TreeViewItem groupItem = tvGroups.ItemContainerGenerator.ContainerFromItem(group) as TreeViewItem;
+                groupItem.BringIntoView();
+
+                foreach (ChannelDTO channel in groupItem.Items)
+                {
+                    if (channel.Id == channelId)
+                    {
+                        TreeViewItem channelItem = groupItem.ItemContainerGenerator.ContainerFromItem(channel) as TreeViewItem;
+                        channelItem.Focus();
+                        return;
+                    }
+                }
+            }
         }
     }
 }

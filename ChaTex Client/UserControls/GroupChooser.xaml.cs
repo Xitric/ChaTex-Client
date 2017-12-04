@@ -36,7 +36,8 @@ namespace ChaTex_Client.UserControls
             this.ucCreateGroupView = ucCreateGroupView;
             this.ucEditGroupView = ucEditGroupView;
 
-            ucCreateGroupView.GroupCreated += createGroupView_GroupCreated;
+            ucCreateGroupView.GroupCreated += groupChanged;
+            ucEditGroupView.GroupUpdated += groupChanged;
         }
 
         private async Task update()
@@ -93,14 +94,14 @@ namespace ChaTex_Client.UserControls
             btnExit.Visibility = Visibility.Visible;
         }
 
-        private async void enterEditGroup(GroupDTO group)
+        private async Task enterEditGroup(GroupDTO group)
         {
             exitCurrentView();
 
+            bViewArea.Child = ucEditGroupView;
+
             txtViewName.Text = $"Edit \"{group.Name}\"";
             await ucEditGroupView.SetGroup(group);
-
-            bViewArea.Child = ucEditGroupView;
 
             btnExit.Visibility = Visibility.Visible;
         }
@@ -120,6 +121,38 @@ namespace ChaTex_Client.UserControls
             btnEdit.Visibility = Visibility.Hidden;
         }
 
+        private void selectGroup(int groupId)
+        {
+            foreach (GroupDTO group in tvGroups.Items)
+            {
+                if (group.Id == groupId)
+                {
+                    TreeViewItem groupItem = tvGroups.ItemContainerGenerator.ContainerFromItem(group) as TreeViewItem;
+                    groupItem.Focus();
+                    return;
+                }
+            }
+        }
+
+        private void selectChannel(int channelId)
+        {
+            foreach (GroupDTO group in tvGroups.Items)
+            {
+                TreeViewItem groupItem = tvGroups.ItemContainerGenerator.ContainerFromItem(group) as TreeViewItem;
+                groupItem.BringIntoView();
+
+                foreach (ChannelDTO channel in groupItem.Items)
+                {
+                    if (channel.Id == channelId)
+                    {
+                        TreeViewItem channelItem = groupItem.ItemContainerGenerator.ContainerFromItem(channel) as TreeViewItem;
+                        channelItem.Focus();
+                        return;
+                    }
+                }
+            }
+        }
+
         private void channelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
             if (e.NewValue is ChannelDTO channel)
@@ -133,7 +166,7 @@ namespace ChaTex_Client.UserControls
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
-        {
+        {   
             exitCurrentView();
         }
 
@@ -143,7 +176,7 @@ namespace ChaTex_Client.UserControls
 
             if (bViewArea.Child == ucGroupView && group != null)
             {
-                enterEditGroup(group);
+                await enterEditGroup(group);
             }
         }
 
@@ -190,42 +223,10 @@ namespace ChaTex_Client.UserControls
             enterCreateGroup();
         }
 
-        private async void createGroupView_GroupCreated(GroupDTO group)
+        private async void groupChanged(GroupDTO group)
         {
             await update();
             selectGroup(group.Id);
-        }
-
-        private void selectGroup(int groupId)
-        {
-            foreach (GroupDTO group in tvGroups.Items)
-            {
-                if (group.Id == groupId)
-                {
-                    TreeViewItem groupItem = tvGroups.ItemContainerGenerator.ContainerFromItem(group) as TreeViewItem;
-                    groupItem.Focus();
-                    return;
-                }
-            }
-        }
-
-        private void selectChannel(int channelId)
-        {
-            foreach (GroupDTO group in tvGroups.Items)
-            {
-                TreeViewItem groupItem = tvGroups.ItemContainerGenerator.ContainerFromItem(group) as TreeViewItem;
-                groupItem.BringIntoView();
-
-                foreach (ChannelDTO channel in groupItem.Items)
-                {
-                    if (channel.Id == channelId)
-                    {
-                        TreeViewItem channelItem = groupItem.ItemContainerGenerator.ContainerFromItem(channel) as TreeViewItem;
-                        channelItem.Focus();
-                        return;
-                    }
-                }
-            }
         }
     }
 }

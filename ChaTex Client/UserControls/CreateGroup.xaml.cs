@@ -36,6 +36,7 @@ namespace ChaTex_Client.UserControls
 
         public void Reset()
         {
+            svMasterScroll.ScrollToTop();
             ucGroupSettings.Reset();
         }
 

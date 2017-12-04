@@ -53,6 +53,8 @@ namespace ChaTex_Client.UserControls
                 await fetchInformationTask;
             }
 
+            txtGroupName.Text = group.Name;
+
             IList<int> users;
             IList<int> roles;
 
@@ -174,6 +176,7 @@ namespace ChaTex_Client.UserControls
             {
                 channels.Add(new ChannelDTO()
                 {
+                    Id = -1,
                     Name = txtChannelName.Text
                 });
 

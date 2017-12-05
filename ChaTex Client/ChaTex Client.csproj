@@ -13,6 +13,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +26,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -49,20 +49,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ChaTexIcon.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommonServiceLocator, Version=2.0.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.3.1\lib\net45\CommonServiceLocator.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.1.953, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.10\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -77,6 +81,27 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Unity.Abstractions, Version=2.3.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.3.1\lib\net45\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Configuration, Version=5.0.7.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.3.1\lib\net45\Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.3.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.3.1\lib\net45\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Interception, Version=5.0.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.3.1\lib\net45\Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Interception.Configuration, Version=5.0.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.3.1\lib\net45\Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RegistrationByConvention, Version=2.1.0.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.3.1\lib\net45\Unity.RegistrationByConvention.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ServiceLocation, Version=2.0.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.3.1\lib\net45\Unity.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -89,19 +114,54 @@
     <Compile Include="CreateChat.xaml.cs">
       <DependentUpon>CreateChat.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CreateNewChannel.xaml.cs">
+      <DependentUpon>CreateNewChannel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditChannel.xaml.cs">
       <DependentUpon>EditChannel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ChannelMessageView.xaml.cs">
-      <DependentUpon>ChannelMessageView.xaml</DependentUpon>
+    <Compile Include="UserControls\ChannelView.xaml.cs">
+      <DependentUpon>ChannelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ChatView.xaml.cs">
       <DependentUpon>ChatView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CreateGroup.xaml.cs">
+      <DependentUpon>CreateGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\EditGroup.xaml.cs">
+      <DependentUpon>EditGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\GroupChooser.xaml.cs">
+      <DependentUpon>GroupChooser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\GroupSettings.xaml.cs">
+      <DependentUpon>GroupSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\GroupView.xaml.cs">
       <DependentUpon>GroupView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MemberView.xaml.cs">
+      <DependentUpon>MemberView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SearcheableCheckboxList.xaml.cs">
+      <DependentUpon>SearcheableCheckboxList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserDialogs\ErrorDialog.xaml.cs">
+      <DependentUpon>ErrorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserDialogs\ExceptionDialog.xaml.cs">
+      <DependentUpon>ExceptionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\MemberViewModel.cs" />
+    <Compile Include="ViewModels\MessageViewModel.cs" />
+    <Compile Include="ViewModels\SearcheableCheckboxViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="CreateChat.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateNewChannel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -131,7 +191,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\ChannelMessageView.xaml">
+    <Page Include="UserControls\ChannelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,7 +199,39 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\CreateGroup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\EditGroup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\GroupChooser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\GroupSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\GroupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MemberView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SearcheableCheckboxList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserDialogs\ErrorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserDialogs\ExceptionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -193,35 +285,61 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ChaTexIcon.ico" />
-    <Resource Include="pictures\button\emojiIcon.png" />
-    <Resource Include="pictures\button\gifIcon.png" />
-    <Resource Include="pictures\person\person-icon.png" />
+    <Resource Include="Pictures\icon\ChaTexIcon.ico" />
+    <Resource Include="Pictures\button\emojiIcon.png" />
+    <Resource Include="Pictures\button\gifIcon.png" />
+    <Resource Include="Pictures\person\person-icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pictures\button\settingsIcon.png" />
+    <Resource Include="Pictures\button\settingsIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pictures\button\fileicon.png" />
+    <Resource Include="Pictures\button\fileicon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pictures\button\friends.png" />
+    <Resource Include="Pictures\button\friends.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pictures\button\friends2.png" />
+    <Resource Include="Pictures\button\friends2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pictures\button\friends3.png" />
+    <Resource Include="Pictures\button\friends3.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pictures\button\chat.png" />
+    <Resource Include="Pictures\button\chat.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pictures\button\AddGroup.png" />
+    <Resource Include="Pictures\button\AddGroup.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="pictures\button\dotsIcon.png" />
+    <Resource Include="Pictures\button\dotsIcon.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Pictures\icon\alert-circle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\icon\nuke.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\icon\CHATEX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\AddChannel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\Background\ChannelBackground.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\chevron-left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\icon\crown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\account-multiple-plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\close-box.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,19 +1,12 @@
-﻿using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
+﻿using ChaTex_Client.UserDialogs;
+using IO.ChaTex;
+using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ChaTex_Client
 {
@@ -22,114 +15,167 @@ namespace ChaTex_Client
     /// </summary>
     public partial class CreateNewGroup : Window
     {
-        private IUsersApi usersApi;
-        private IRolesApi rolesApi = new RolesApi();
+        private readonly IUsers usersApi;
+        private readonly IRoles rolesApi;
+        private readonly IGroups groupsApi;
 
         private String employeeAcknowledgeableString = "Is acknowledgeable allowed for employees?";
         private String employeeBookmarkString = "Is bookmarks allowed for employees?";
         private String employeeStickyString = "Is stickies allowed for employees";
 
-        public CreateNewGroup()
+        public CreateNewGroup(IUsers usersApi, IRoles rolesApi, IGroups groupsApi)
         {
+            this.usersApi = usersApi;
+            this.rolesApi = rolesApi;
+            this.groupsApi = groupsApi;
+
             InitializeComponent();
-            usersApi = new UsersApi();
-            rolesApi = new RolesApi();
             populateUI();
-           
-           
         }
 
-        private void populateUI()
+        private async Task populateUsersListBox()
         {
-            lstBoxUsers.ItemsSource = usersApi.GetAllUsers();
-            lstBoxRoles.ItemsSource = rolesApi.GetAllRoles();
-
-            List<String> AllowableList = new List<string>();
-            AllowableList.Add(employeeAcknowledgeableString);
-            AllowableList.Add(employeeBookmarkString);
-            AllowableList.Add(employeeStickyString);
-            lstBoxAllowables.ItemsSource = AllowableList;
-        }
-
-        private void btnCreateGroup_Click(object sender, RoutedEventArgs e)
-        {
-            List<int?> rolesToAdd = new List<int?>();
-            List<int?> usersToAdd = new List<int?>();
-            bool AllowEA = false;
-            bool AllowEB = false;
-            bool AllowES = false;
             try
-
             {
-                GroupsApi groupsApi = new GroupsApi();
-
-                foreach (String item in lstBoxAllowables.Items)
-                {
-                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeAcknowledgeableString)))
-                    {
-                        AllowEA = true;
-                    }
-                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeBookmarkString)))
-                    {
-                        AllowEB = true;
-                    }
-                    if ((lstBoxAllowables.SelectedItems.Contains(item) == true) & (item.Equals(employeeStickyString)))
-                    {
-                        AllowES = true;
-                    }
-                }
-
-                GroupDTO group = groupsApi.CreateGroup(new CreateGroupDTO()
-                {
-                    AllowEmployeeAcknowledgeable = AllowEA,
-                    AllowEmployeeBookmark = AllowEB,
-                    AllowEmployeeSticky = AllowES,
-                    GroupName = txtGroupName.Text
-                });
-
-                foreach (RoleDTO item in lstBoxRoles.Items)
-                {
-                    if (lstBoxRoles.SelectedItems.Contains(item) == true)
-                    {
-                        rolesToAdd.Add(item.Id);
-                    }
-                }
-
-                foreach (UserDTO item in lstBoxUsers.Items)
-                {
-                    if (lstBoxUsers.SelectedItems.Contains(item) == true)
-                    {
-                        usersToAdd.Add(item.Id);
-                    }
-                }
-
-
-                groupsApi.AddRolesToGroup(new AddRolesToGroupDTO()
-                {
-                    GroupId = group.Id,
-                    RoleIds = rolesToAdd
-                });
-
-                groupsApi.AddUsersToGroup(new AddUsersToGroupDTO()
-                {
-                    GroupId = group.Id,
-                    UserIds = usersToAdd
-                });
-
-                MessageBox.Show("The group has now been created!");
-
-
+                IList<UserDTO> allUsers = await usersApi.GetAllUsersAsync();
+                lstBoxUsers.ItemsSource = allUsers;
             }
-            catch (ApiException er)
+            catch (HttpOperationException er)
             {
-                MessageBox.Show("An error occured: " + er.InnerException.Message);
-                throw er;
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+            }
+        }
+
+        private async Task populateRolesListBox()
+        {
+            try
+            {
+                IList<RoleDTO> allRoles = await rolesApi.GetAllRolesAsync();
+                lstBoxUsers.ItemsSource = allRoles;
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+            }
+        }
+
+        private async void populateUI()
+        {
+            await populateUsersListBox();
+            await populateRolesListBox();
+
+            List<String> allowableList = new List<string>
+            {
+                employeeAcknowledgeableString,
+                employeeBookmarkString,
+                employeeStickyString
+            };
+            lstBoxAllowables.ItemsSource = allowableList;
+        }
+
+        private async void btnCreateGroup_Click(object sender, RoutedEventArgs e)
+        {
+            List<int?> usersToAdd = new List<int?>();
+            bool allowEmployeeAcknowledgeable = isEmployeeAcknowledgeableAllowed();
+            bool allowEmployeeBookmark = isEmployeeBookmarkAllowed();
+            bool allowEmployeeSticky = isEmployeeStickyAllowed();
+
+            var group = await createGroup(new CreateGroupDTO()
+            {
+                AllowEmployeeAcknowledgeable = allowEmployeeAcknowledgeable,
+                AllowEmployeeBookmark = allowEmployeeBookmark,
+                AllowEmployeeSticky = allowEmployeeSticky,
+                GroupName = txtGroupName.Text
+            });
+
+            if (group == null) return;
+
+            bool rolesAdded = await addSelectedRolesToGroup(group);
+            bool usersAdded = await addSelectedUsersToGroup(group);
+
+            if (!rolesAdded || !usersAdded) return;
+
+            MessageBox.Show("The group has now been created!");
+            Close();
+        }
+
+        private bool isEmployeeAcknowledgeableAllowed()
+        {
+            return lstBoxAllowables.SelectedItems.Contains(employeeAcknowledgeableString);
+        }
+
+        private bool isEmployeeBookmarkAllowed()
+        {
+            return lstBoxAllowables.SelectedItems.Contains(employeeBookmarkString);
+        }
+
+        private bool isEmployeeStickyAllowed()
+        {
+            return lstBoxAllowables.SelectedItems.Contains(employeeStickyString);
+        }
+
+        private async Task<GroupDTO> createGroup(CreateGroupDTO group)
+        {
+            GroupDTO createdGroup = null;
+
+            try
+            {
+                createdGroup = await groupsApi.CreateGroupAsync();
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
             }
 
-            finally
+            return createdGroup;
+        }
+
+        private async Task<bool> addSelectedRolesToGroup(GroupDTO group)
+        {
+            List<int?> selectedRoles = new List<int?>();
+            foreach (RoleDTO roleDto in lstBoxRoles.Items)
             {
-                Close();
+                if (lstBoxRoles.SelectedItems.Contains(roleDto) == true)
+                {
+                    selectedRoles.Add(roleDto.Id);
+                }
             }
+
+            try
+            {
+                HttpOperationResponse response = await groupsApi.AddRolesToGroupWithHttpMessagesAsync(group.Id, selectedRoles);
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> addSelectedUsersToGroup(GroupDTO group)
+        {
+            List<int?> selectedUsers = new List<int?>();
+            foreach (UserDTO userDto in lstBoxUsers.Items)
+            {
+                if (lstBoxUsers.SelectedItems.Contains(userDto) == true)
+                {
+                    selectedUsers.Add(userDto.Id);
+                }
+            }
+
+            try
+            {
+                HttpOperationResponse response = await groupsApi.AddUsersToGroupWithHttpMessagesAsync(group.Id, selectedUsers);
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                return false;
+            }
+
+            return true;
         }
 
         private void txtGroupName_TextChanged(object sender, TextChangedEventArgs e)

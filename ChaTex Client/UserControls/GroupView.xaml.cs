@@ -1,9 +1,14 @@
-﻿using IO.Swagger.Api;
-using IO.Swagger.Model;
+﻿using ChaTex_Client.UserDialogs;
+using ChaTex_Client.ViewModels;
+using IO.ChaTex;
+using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ChaTex_Client.UserControls
 {
@@ -12,75 +17,126 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class GroupView : UserControl
     {
-        private ObservableCollection<GroupDTO> groups;
-        private readonly UsersApi usersApi;
-        ChannelDTO selectedChannel;
-        private readonly ChannelsApi channelsApi;
+        private readonly ObservableCollection<MemberViewModel> members;
+        private readonly ObservableCollection<RoleDTO> roles;
+        private readonly IGroups groupsApi;
+        private readonly IUsers usersApi;
 
-        public static GroupView m_Instance;
+        private GroupDTO currentGroup;
+        private Task fetchMembersTask;
 
-        private GroupView()
+        public GroupView(IGroups groupsApi, IUsers usersApi)
         {
+            this.groupsApi = groupsApi;
+            this.usersApi = usersApi;
+
             InitializeComponent();
-            usersApi = new UsersApi();
-            channelsApi = new ChannelsApi();
+
+            members = new ObservableCollection<MemberViewModel>();
+            icMembers.ItemsSource = members;
+            roles = new ObservableCollection<RoleDTO>();
+            icRoles.ItemsSource = roles;
         }
 
-        private void populateUI()
+        public void SetGroup(GroupDTO group)
         {
-            groups = new ObservableCollection<GroupDTO>(usersApi.GetGroupsForUser());
-            tvGroups.ItemsSource = groups;
+            currentGroup = group;
+            fetchMembersTask = updateDisplay();
         }
 
-        public static GroupView GetInstance()
+        private async Task updateDisplay()
         {
-            if (m_Instance == null)
+            //Wait for current job to finish
+            if (fetchMembersTask != null)
             {
-                m_Instance = new GroupView();
+                await fetchMembersTask;
             }
 
-            m_Instance.populateUI();
-            return m_Instance;
+            Task membersUpdate = updateMembers();
+            Task rolesUpdate = updateRoles();
+
+            await membersUpdate;
+            await rolesUpdate;
         }
 
-        private void ChannelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<Object> e)
-        {            
-            if (e.NewValue is ChannelDTO channel)
+        private async Task updateMembers()
+        {
+            members.Clear();
+
+            IList<UserDTO> users = await groupsApi.GetAllGroupUsersAsync(currentGroup.Id);
+            IList<UserDTO> admins = await groupsApi.GetAllGroupAdminsAsync(currentGroup.Id);
+            List<MemberViewModel> memberList = new List<MemberViewModel>();
+
+            //Construct list of member view models
+            foreach (UserDTO user in users)
             {
-                selectedChannel = channel;
-                ucChannelMessageView.SetChannel((int)channel.Id);
-                
+                bool isAdmin = false;
+                foreach (UserDTO admin in admins)
+                {
+                    if (admin.Id == user.Id)
+                    {
+                        isAdmin = true;
+                        break;
+                    }
+                }
+
+                MemberViewModel member = new MemberViewModel(user, isAdmin);
+                memberList.Add(member);
+            }
+
+            //Sort members. Administrators first, the regular members. Members are sorted alphabetically by their names, beginning with their first names
+            memberList.Sort((first, second) => {
+                if (first.IsAdmin == second.IsAdmin)
+                {
+                    return string.Compare(first.Name, second.Name);
+                }
+
+                return first.IsAdmin ? -1 : 1;
+            });
+
+            //Add sorted members to the view
+            foreach (MemberViewModel member in memberList)
+            {
+                members.Add(member);
             }
         }
 
-        private void btnEditChannel_Click(object sender, RoutedEventArgs e)
+        private async Task updateRoles()
         {
-            var wEditChannel = new EditChannel(selectedChannel);
-            wEditChannel.ShowDialog();
-            populateUI();
-        }
-
-        private void ucChannelMessageView_Loaded(object sender, RoutedEventArgs e)
-        {
+            roles.Clear();
             
-          
+            IList<RoleDTO> getRoles = await groupsApi.GetAllGroupRolesAsync(currentGroup.Id);
 
+            foreach (RoleDTO role in getRoles)
+            {
+                roles.Add(role);
+            }
         }
 
-        private void miDeleteChannel_Click(object sender, RoutedEventArgs e)
+        private async void dpnlMemberRow_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var menuItem = sender as MenuItem;
-            ChannelDTO channel = (ChannelDTO)menuItem.DataContext;
-            MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete: " + channel.Name + "?","Delete channel", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            switch (result)
+            DockPanel memberRow = sender as DockPanel;
+            MemberViewModel memberViewModel = memberRow.DataContext as MemberViewModel;
+
+            memberRow.ContextMenu.DataContext = memberViewModel;
+
+            if (e.ChangedButton == MouseButton.Left)
             {
-                case MessageBoxResult.Yes:
-                    channelsApi.DeleteChannel(channel.Id);
-                    MessageBox.Show("The channel was succesfully deleted!", "Delete channel");
-                    populateUI();
-                    break;
-                case MessageBoxResult.No:
-                    break;
+                memberRow.ContextMenu.PlacementTarget = memberRow;
+                memberRow.ContextMenu.IsOpen = true;
+            }
+
+            if (memberViewModel.Roles == null)
+            {
+                try
+                {
+                    memberViewModel.Roles = await usersApi.GetAllUserRolesAsync(memberViewModel.Id);
+                }
+                catch (HttpOperationException er)
+                {
+                    new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                    return;
+                }
             }
         }
     }

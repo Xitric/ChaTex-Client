@@ -4,16 +4,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChaTex_Client"
-        xmlns:BLayer="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"
-        xmlns:usercontrols="clr-namespace:ChaTex_Client.UserControls"
         mc:Ignorable="d"
          TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
-        Icon="ChaTexIcon.ico"
+        Icon="pictures/icon/ChaTexIcon.ico"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-        Title="ChaTex" Height="484.81" Width="655.696" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" >
+        Title="ChaTex" Height="800" Width="1200" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF36393E" Offset="0"/>
@@ -79,15 +76,20 @@
                         <TextBlock>Chat</TextBlock>
                     </StackPanel>
                 </Button>
-                
+                <Button x:Name="btnAddChannel" Grid.Row="4" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnAddChannel_Click">
+                    <StackPanel>
+                        <Image Source="pictures/button/AddChannel.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </StackPanel>                    
+                </Button>
             </Grid>
         </StackPanel>
 
         <!-- This window, is the one we replace when switching between views (Chat, Group) -->
-        <DockPanel Name="dpnlMainUI" Grid.Column="1"
-                                  Grid.ColumnSpan="1"
-                                  Grid.Row="1"
-                                  Grid.RowSpan="1"/>
+        <DockPanel Name="dpnlMainUI"
+                   Grid.Column="1"
+                   Grid.ColumnSpan="1"
+                   Grid.Row="1"
+                   Grid.RowSpan="1"/>
     </Grid>
 
 </Window>

@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="ChaTex_Client.UserControls.MemberView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dto="clr-namespace:IO.ChaTex.Models;assembly=BusinessLayer"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="StyleTxtMemberName">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsAdmin}" Value="False">
+                    <Setter Property="Foreground" Value="#FFB1B1B1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsAdmin}" Value="True">
+                    <Setter Property="Foreground" Value="#fff0ab36"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Me}" Value="True">
+                    <Setter Property="Foreground" Value="#ff2e72cb"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image" x:Key="StyleImgAdminIcon">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsAdmin}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsAdmin}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <UserControl.BitmapEffect>
+        <DropShadowBitmapEffect Color="#FF000000" ShadowDepth="2" Opacity="0.5"/>
+    </UserControl.BitmapEffect>
+
+    <Border Margin="4"
+            Background="#FF36393E"
+            Padding="8">
+        <DockPanel>
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Pictures/person/person-icon.png"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="0 0 16 0"
+                       Width="75"
+                       MinWidth="75"
+                       Grid.RowSpan="2"/>
+
+                <DockPanel Grid.Column="1"
+                           LastChildFill="False">
+                    <TextBlock Text="{Binding DataContext.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}}"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource StyleTxtMemberName}"
+                               DockPanel.Dock="Left"/>
+
+                    <Image Source="/Pictures/icon/crown.png"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           VerticalAlignment="Center"
+                           Height="16"
+                           Margin="8 -2 0 0"
+                           Style="{StaticResource StyleImgAdminIcon}"
+                           DockPanel.Dock="Left"/>
+                </DockPanel>
+
+                <TextBlock Text="{Binding DataContext.Email, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}}"
+                           Grid.Column="1"
+                           Grid.Row="1"
+                           Foreground="#FFB1B1B1"
+                           VerticalAlignment="Center"/>
+            </Grid>
+
+            <TextBlock Text="Roles"
+                       Foreground="#FFB1B1B1"
+                       Margin="0 8 0 8"
+                       DockPanel.Dock="Top"/>
+
+            <ScrollViewer Name="svRoles"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Hidden"
+                          Margin="16 0 0 0"
+                          DockPanel.Dock="Top"
+                          MaxHeight="200">
+                <ItemsControl Name="icRoles" ItemsSource="{Binding DataContext.Roles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type dto:RoleDTO}">
+                            <DockPanel Height="32"
+                                       MaxHeight="32">
+                                <TextBlock Text="{Binding Name}"
+                                           VerticalAlignment="Center"
+                                           Foreground="#FFB1B1B1"
+                                           DockPanel.Dock="Left"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>

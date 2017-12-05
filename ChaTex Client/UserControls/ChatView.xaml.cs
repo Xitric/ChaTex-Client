@@ -1,20 +1,7 @@
-﻿using IO.Swagger.Api;
-using IO.Swagger.Model;
-using System;
-using System.Collections.Generic;
+﻿using IO.ChaTex;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ChaTex_Client.UserControls
 {
@@ -23,29 +10,21 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class ChatView : UserControl
     {
-        ObservableCollection<ChatDTO> chats;
+        private readonly IUsers usersApi;
+
+        //TODO: ObservableCollection<ChatDTO> chats;
         //ChatAPI _chatApi = null;
-
         public static ChatView m_Instance = null;
-       
 
-        public static ChatView GetInstance()
+        public ChatView(IUsers usersApi)
         {
-            if (m_Instance == null)
-            {
-                m_Instance = new ChatView();
-            }
-            m_Instance.populateUI();
-            return m_Instance;
-        }
-        private ChatView()
-        {
+            this.usersApi = usersApi;
+      
             InitializeComponent();
-
             //_chatApi = new ChatApi();
         }
 
-        private void populateUI()
+        public void Update()
         {
             //chats = new ObservableCollection<ChatDTO>(_chatApi.GetAllChats());
             //lstBoxChats.ItemsSource = chats;
@@ -65,18 +44,25 @@ namespace ChaTex_Client.UserControls
 
         private void lstBoxChats_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //TODO: 
+            /*
             var chat = (ChatDTO)lstBoxChats.SelectedItem;
             if (chat != null)
             {
                 //_chatApi.GetMessagesBetweenUser((int)user.Id);
                 ucChannelMessageView.SetChat((int)chat.Id);
-            }
+            }*/
         }
 
         private void btnCreateChat_Click(object sender, RoutedEventArgs e)
         {
-            CreateChat createChat = new CreateChat();
+            CreateChat createChat = new CreateChat(usersApi);
             createChat.ShowDialog();
+        }
+
+        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            Update();
         }
     }
 }

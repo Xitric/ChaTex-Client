@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChaTex_Client"
-         xmlns:BLayer="clr-namespace:IO.Swagger.Model;assembly=BusinessLayer"  
         mc:Ignorable="d"
+         Icon="pictures/icon/ChaTexIcon.ico"
         Title="Create new group" Height="630" Width="500" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Background="#FF36393E">
 
     <StackPanel>
@@ -30,10 +29,10 @@
                             Content="{Binding Name}"  
                             IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" />
                     </DataTemplate>
-                </ListBox.ItemTemplate> 
+                </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
-        
+
         <Label Content="Select members to add:" HorizontalAlignment="Left" Margin="0,20,0,0" Foreground="#FFCED2D8" />
         <Grid>
             <ListBox Foreground="#FFB1B1B1"
@@ -50,7 +49,7 @@
                             IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-            
+
             </ListBox>
         </Grid>
 

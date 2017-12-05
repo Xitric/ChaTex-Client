@@ -1,39 +1,39 @@
-﻿using IO.Swagger.Api;
-using IO.Swagger.Model;
-using System;
-using System.Collections.Generic;
+﻿using ChaTex_Client.UserDialogs;
+using IO.ChaTex;
+using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ChaTex_Client
 {
-  
+
     public partial class CreateChat : Window
     {
-        ObservableCollection<UserDTO> users;
-        UsersApi _userApi = null;
+        private readonly IUsers usersApi;
+        private ObservableCollection<UserDTO> users;
 
-        public CreateChat()
+        public CreateChat(IUsers usersApi)
         {
+            this.usersApi = usersApi;
+
             InitializeComponent();
-            _userApi = new UsersApi();
             populateUI();
         }
 
-        private void populateUI()
+        private async void populateUI()
         {
-            users = new ObservableCollection<UserDTO>(_userApi.GetAllUsers());
-            lstBoxUsers.ItemsSource = users;
+            try
+            {
+                users = new ObservableCollection<UserDTO>(await usersApi.GetAllUsersAsync());
+                lstBoxUsers.ItemsSource = users;
+            }
+            catch (HttpOperationException er)
+            {
+                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+            }
         }
 
         private void lstBoxUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -42,6 +42,7 @@ namespace ChaTex_Client
 
             if (users != null)
             {
+                //Chat hasent been implemented yet, so thats why this is out commented
                 //_chatApi.GetMessagesBetweenUser((int)user.Id);
                 //ucChannelMessageView.SetChat((int)chat.Id);
             }

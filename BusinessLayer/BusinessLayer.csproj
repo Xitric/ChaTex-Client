@@ -5,13 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="API\API\" />
+    <Compile Remove="BusinessFacade.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.10" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="RestSharp" Version="105.2.3" />
   </ItemGroup>
 
 </Project>

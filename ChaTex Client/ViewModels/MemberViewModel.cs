@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace ChaTex_Client.ViewModels
 {
-    class MemberViewModel : INotifyPropertyChanged
+    class MemberViewModel : ViewModelBase
     {
         private int id;
         private string name;
@@ -14,8 +14,6 @@ namespace ChaTex_Client.ViewModels
         private bool me;
         private bool isAdmin;
         private IList<RoleDTO> roles;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public MemberViewModel(UserDTO user, bool isAdmin)
         {
@@ -106,11 +104,6 @@ namespace ChaTex_Client.ViewModels
                     NotifyPropertyChanged();
                 }
             }
-        }
-
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

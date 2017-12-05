@@ -1,13 +1,10 @@
 ﻿using ChaTex_Client.UserDialogs;
-using ChaTex_Client.ViewModels;
 using IO.ChaTex;
 using IO.ChaTex.Models;
 using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,105 +15,44 @@ namespace ChaTex_Client.UserControls
     /// </summary>
     public partial class CreateGroup : UserControl
     {
-        private readonly List<AddMemberViewModel> users;
-        private readonly ObservableCollection<AddMemberViewModel> displayUsers;
-        private readonly IUsers usersApi;
         private readonly IGroups groupsApi;
+        private readonly IChannels channelsApi;
+        private readonly GroupSettings ucGroupSettings;
 
-        private Task fetchInformationTask;
+        public event Action<GroupDTO> GroupCreated;
 
-        public CreateGroup(IUsers usersApi, IGroups groupsApi)
+        public CreateGroup(IGroups groupsApi, IChannels channelsApi, GroupSettings ucGroupSettings)
         {
-            this.usersApi = usersApi;
             this.groupsApi = groupsApi;
+            this.channelsApi = channelsApi;
 
             InitializeComponent();
 
-            users = new List<AddMemberViewModel>();
-            displayUsers = new ObservableCollection<AddMemberViewModel>();
-            icMembers.ItemsSource = displayUsers;
+            this.ucGroupSettings = ucGroupSettings;
+            ucGroupSettings.GroupValidStateChanged += ucGroupSettings_GroupValidStateChanged;
+            DockPanel.SetDock(ucGroupSettings, Dock.Top);
+            dpnlSettings.Children.Add(ucGroupSettings);
         }
 
         public void Reset()
         {
-            fetchInformationTask = UpdateDisplay();
-        }
-
-        private async Task UpdateDisplay()
-        {
-            //Wait for current job to finish
-            if (fetchInformationTask != null)
-            {
-                await fetchInformationTask;
-            }
-
-            IList<UserDTO> allUsers;
-            users.Clear();
-            displayUsers.Clear();
-
-            try
-            {
-                allUsers = await usersApi.GetAllUsersAsync();
-            }
-            catch (HttpOperationException er)
-            {
-                new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
-                return;
-            }
-
-            users.AddRange(allUsers.Where(u => !u.Me).Select(u => new AddMemberViewModel(u)));
-            users.Sort((first, second) =>
-            {
-                return string.Compare(first.Name, second.Name);
-            });
-
-            foreach (AddMemberViewModel user in users)
-            {
-                displayUsers.Add(user);
-            }
-        }
-
-        private void txtSearchMembers_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            displayUsers.Clear();
-
-            foreach (AddMemberViewModel user in users)
-            {
-                bool match = txtSearchMembers.Text.Length == 0 ||
-                    user.Name.IndexOf(txtSearchMembers.Text, StringComparison.InvariantCultureIgnoreCase) >= 0;
-
-                if (match)
-                {
-                    displayUsers.Add(user);
-                }
-            }
-        }
-
-        private void bMemberRow_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            Border memberRow = sender as Border;
-            AddMemberViewModel memberViewModel = memberRow.DataContext as AddMemberViewModel;
-
-            memberViewModel.IsSelected = !memberViewModel.IsSelected;
-        }
-
-        private void txtGroupName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            btnCreateGroup.IsEnabled = txtGroupName.Text.Length > 0;
+            svMasterScroll.ScrollToTop();
+            ucGroupSettings.Reset();
         }
 
         private async void btnCreateGroup_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             GroupDTO group = null;
 
+            //Create group
             try
             {
                 group = await groupsApi.CreateGroupAsync(new CreateGroupDTO()
                 {
-                    AllowEmployeeSticky = true,
-                    AllowEmployeeAcknowledgeable = true,
-                    AllowEmployeeBookmark = true,
-                    GroupName = txtGroupName.Text
+                    AllowEmployeeAcknowledgeable = ucGroupSettings.IsAcknowledgeableSelected(),
+                    AllowEmployeeBookmark = ucGroupSettings.IsBookmarkSelected(),
+                    AllowEmployeeSticky = ucGroupSettings.IsStickySelected(),
+                    GroupName = ucGroupSettings.GetGroupName()
                 });
             }
             catch (HttpOperationException er)
@@ -125,11 +61,18 @@ namespace ChaTex_Client.UserControls
                 return;
             }
 
-            List<int?> userIdList = users.Where(u => u.IsSelected).Select(u => (int?)u.Id).ToList();
+            //Add users, roles, and channels
+            List<string> channelNames = ucGroupSettings.GetChannels().Select(c => c.Name).ToList();
 
             try
             {
-                await groupsApi.AddUsersToGroupAsync(group.Id, userIdList);
+                await groupsApi.AddUsersToGroupAsync(group.Id, ucGroupSettings.GetSelectedUsers());
+                await groupsApi.AddRolesToGroupAsync(group.Id, ucGroupSettings.GetSelectedRoles());
+
+                foreach (string channelName in channelNames)
+                {
+                    await channelsApi.CreateChannelAsync(group.Id, channelName);
+                }
             }
             catch (HttpOperationException er)
             {
@@ -138,6 +81,12 @@ namespace ChaTex_Client.UserControls
             }
 
             MessageBox.Show("The group has now been created!");
+            GroupCreated?.Invoke(group);
+        }
+
+        private void ucGroupSettings_GroupValidStateChanged(bool valid)
+        {
+            btnCreateGroup.IsEnabled = valid;
         }
     }
 }

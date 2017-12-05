@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace ChaTex_Client.ViewModels
 {
-    public class MessageViewModel : INotifyPropertyChanged
+    class MessageViewModel : ViewModelBase
     {
         private int id;
         private string authorName;
@@ -16,8 +16,6 @@ namespace ChaTex_Client.ViewModels
         private DateTime creationDate;
         private DateTime? deletionDate;
         private DateTime? editDate;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public MessageViewModel(GetMessageDTO message)
         {
@@ -164,11 +162,6 @@ namespace ChaTex_Client.ViewModels
         public bool Edited
         {
             get => editDate != null;
-        }
-
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

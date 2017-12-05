@@ -1,6 +1,8 @@
-﻿using ChaTex_Client.ViewModels;
+﻿using ChaTex_Client.UserDialogs;
+using ChaTex_Client.ViewModels;
 using IO.ChaTex;
 using IO.ChaTex.Models;
+using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +15,7 @@ namespace ChaTex_Client.UserControls
     /// <summary>
     /// Interaction logic for GroupView.xaml
     /// </summary>
-    public partial class GroupView : UserControl, EditableElementView
+    public partial class GroupView : UserControl
     {
         private readonly ObservableCollection<MemberViewModel> members;
         private readonly ObservableCollection<RoleDTO> roles;
@@ -40,11 +42,6 @@ namespace ChaTex_Client.UserControls
         {
             currentGroup = group;
             fetchMembersTask = updateDisplay();
-        }
-
-        public bool Edit()
-        {
-            throw new NotImplementedException();
         }
 
         private async Task updateDisplay()
@@ -107,25 +104,13 @@ namespace ChaTex_Client.UserControls
         private async Task updateRoles()
         {
             roles.Clear();
+            
+            IList<RoleDTO> getRoles = await groupsApi.GetAllGroupRolesAsync(currentGroup.Id);
 
-            //TODO: Temporary
-            for (int i = 0; i < 10; i++)
+            foreach (RoleDTO role in getRoles)
             {
-                roles.Add(new RoleDTO()
-                {
-                    Id = i,
-                    IsDeleted = false,
-                    Name = "Role" + i
-                });
+                roles.Add(role);
             }
-
-            //TODO: Not yet implemented on server
-            //IList<RoleDTO> getRoles = await groupsApi.GetAllGroupRolesAsync(currentGroup.Id);
-
-            //foreach (RoleDTO role in getRoles)
-            //{
-            //    roles.Add(role);
-            //}
         }
 
         private async void dpnlMemberRow_MouseDown(object sender, MouseButtonEventArgs e)
@@ -143,70 +128,15 @@ namespace ChaTex_Client.UserControls
 
             if (memberViewModel.Roles == null)
             {
-                //TODO: Service to get roles for a user
-                List<RoleDTO> roles = new List<RoleDTO>();
-                roles.Add(new RoleDTO()
+                try
                 {
-                    Id = 0,
-                    IsDeleted = false,
-                    Name = "Student"
-                });
-                roles.Add(new RoleDTO()
+                    memberViewModel.Roles = await usersApi.GetAllUserRolesAsync(memberViewModel.Id);
+                }
+                catch (HttpOperationException er)
                 {
-                    Id = 1,
-                    IsDeleted = false,
-                    Name = "Time Boss"
-                });
-                roles.Add(new RoleDTO()
-                {
-                    Id = 2,
-                    IsDeleted = false,
-                    Name = "Raid Boss"
-                });
-                roles.Add(new RoleDTO()
-                {
-                    Id = 3,
-                    IsDeleted = false,
-                    Name = "Dictator"
-                });
-                roles.Add(new RoleDTO()
-                {
-                    Id = 4,
-                    IsDeleted = false,
-                    Name = "Robot"
-                });
-                roles.Add(new RoleDTO()
-                {
-                    Id = 5,
-                    IsDeleted = false,
-                    Name = "Gamer"
-                });
-                roles.Add(new RoleDTO()
-                {
-                    Id = 6,
-                    IsDeleted = false,
-                    Name = "Thief"
-                });
-                roles.Add(new RoleDTO()
-                {
-                    Id = 7,
-                    IsDeleted = false,
-                    Name = "Academic"
-                });
-                roles.Add(new RoleDTO()
-                {
-                    Id = 8,
-                    IsDeleted = false,
-                    Name = "Low-life"
-                });
-                roles.Add(new RoleDTO()
-                {
-                    Id = 9,
-                    IsDeleted = false,
-                    Name = "Dovahkiin"
-                });
-
-                memberViewModel.Roles = roles;
+                    new ErrorDialog(er.Response.ReasonPhrase, er.Response.Content).ShowDialog();
+                    return;
+                }
             }
         }
     }

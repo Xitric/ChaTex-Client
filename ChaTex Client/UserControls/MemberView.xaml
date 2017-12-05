@@ -89,7 +89,7 @@
                        DockPanel.Dock="Top"/>
 
             <ScrollViewer Name="svRoles"
-                          VerticalScrollBarVisibility="Visible"
+                          VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Hidden"
                           Margin="16 0 0 0"
                           DockPanel.Dock="Top"

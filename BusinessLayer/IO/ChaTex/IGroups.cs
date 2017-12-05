@@ -78,6 +78,28 @@ namespace IO.ChaTex
         /// </exception>
         Task<HttpOperationResponse> UpdateGroupWithHttpMessagesAsync(int groupId, string groupName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
+        /// Get all the the users with direct access to a specific group.
+        /// </summary>
+        /// <remarks>
+        /// Gets all users with direct access to the group, this will not get
+        /// the users added by roles.
+        /// </remarks>
+        /// <param name='groupId'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="Microsoft.Rest.HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="Microsoft.Rest.SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        Task<HttpOperationResponse<IList<UserDTO>>> GetAllDirectGroupUsersWithHttpMessagesAsync(int groupId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
         /// Get the list of users who have access to a specific group
         /// </summary>
         /// <remarks>

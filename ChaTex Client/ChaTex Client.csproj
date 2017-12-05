@@ -129,9 +129,14 @@
     <Compile Include="UserControls\CreateGroup.xaml.cs">
       <DependentUpon>CreateGroup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\EditableElementView.cs" />
+    <Compile Include="UserControls\EditGroup.xaml.cs">
+      <DependentUpon>EditGroup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\GroupChooser.xaml.cs">
       <DependentUpon>GroupChooser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\GroupSettings.xaml.cs">
+      <DependentUpon>GroupSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\GroupView.xaml.cs">
       <DependentUpon>GroupView.xaml</DependentUpon>
@@ -139,15 +144,19 @@
     <Compile Include="UserControls\MemberView.xaml.cs">
       <DependentUpon>MemberView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SearcheableCheckboxList.xaml.cs">
+      <DependentUpon>SearcheableCheckboxList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserDialogs\ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserDialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\AddMemberViewModel.cs" />
     <Compile Include="ViewModels\MemberViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
+    <Compile Include="ViewModels\SearcheableCheckboxViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="CreateChat.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -194,9 +203,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\EditGroup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\GroupChooser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\GroupSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\GroupView.xaml">
       <SubType>Designer</SubType>
@@ -205,6 +222,10 @@
     <Page Include="UserControls\MemberView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SearcheableCheckboxList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserDialogs\ErrorDialog.xaml">
       <SubType>Designer</SubType>
@@ -316,6 +337,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pictures\button\account-multiple-plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\button\close-box.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

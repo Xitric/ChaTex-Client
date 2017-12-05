@@ -289,8 +289,8 @@ namespace IO.ChaTex
         /// <summary>
         /// Sign into the system
         /// </summary>
-        /// <param name='userEmail'>
-        /// The user's email
+        /// <param name='userCredentials'>
+        /// The user's email and password
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -313,11 +313,11 @@ namespace IO.ChaTex
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<string>> LoginWithHttpMessagesAsync(string userEmail, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<string>> LoginWithHttpMessagesAsync(UserCredentials userCredentials, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (userEmail == null)
+            if (userCredentials == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "userEmail");
+                throw new ValidationException(ValidationRules.CannotBeNull, "userCredentials");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -326,26 +326,17 @@ namespace IO.ChaTex
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("userEmail", userEmail);
+                tracingParameters.Add("userCredentials", userCredentials);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Login", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "users/login").ToString();
-            List<string> _queryParameters = new List<string>();
-            if (userEmail != null)
-            {
-                _queryParameters.Add(string.Format("userEmail={0}", System.Uri.EscapeDataString(userEmail)));
-            }
-            if (_queryParameters.Count > 0)
-            {
-                _url += "?" + string.Join("&", _queryParameters);
-            }
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
-            _httpRequest.Method = new HttpMethod("GET");
+            _httpRequest.Method = new HttpMethod("POST");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
 
@@ -364,6 +355,12 @@ namespace IO.ChaTex
 
             // Serialize Request
             string _requestContent = null;
+            if(userCredentials != null)
+            {
+                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(userCredentials, Client.SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
+            }
             // Send Request
             if (_shouldTrace)
             {

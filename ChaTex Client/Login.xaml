@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Icon="pictures/icon/ChaTexIcon.ico" 
-        Title="Login" Height="450" Width="300" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="Login" Height="520" Width="300" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -37,6 +37,10 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="48"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="16"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="8"/>
@@ -49,10 +53,27 @@
                        HorizontalAlignment="Center"
                        Grid.Row="1"/>
 
+            <TextBlock Text="Email:"
+                       Foreground="#ff673ab7"
+                       FontSize="10"
+                       FontWeight="Thin"
+                       Grid.Row="3"/>
+            
             <TextBox x:Name="txtUserEmail"
                      HorizontalAlignment="Stretch"
                      TextChanged="txtUserEmail_TextChanged"
-                     Grid.Row="3"/>
+                     Grid.Row="4"/>
+
+            <TextBlock Text="Password:"
+                       Foreground="#ff673ab7"
+                       FontSize="10"
+                       FontWeight="Thin"
+                       Grid.Row="6"/>
+            
+            <PasswordBox x:Name="txtUserPassword"
+                         HorizontalAlignment="Stretch"
+                         PasswordChanged="txtUserPassword_PasswordChanged"
+                         Grid.Row="7"/>
 
             <Button x:Name="btnSignIn"
                     Content="Sign In"
@@ -60,14 +81,14 @@
                     Click="btnSignIn_Click"
                     IsEnabled="False"
                     IsDefault="True"
-                    Grid.Row="5"/>
+                    Grid.Row="9"/>
             
             <Button x:Name="btnExit"
                     Content="Exit"
                     HorizontalAlignment="Stretch"
                     Click="btnExit_Click"
                     IsEnabled="True"
-                    Grid.Row="7"/>
+                    Grid.Row="11"/>
         </Grid>
         
         <Border Padding="0, 16, 0, 16"

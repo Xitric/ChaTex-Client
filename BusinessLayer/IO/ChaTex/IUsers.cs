@@ -53,8 +53,8 @@ namespace IO.ChaTex
         /// <summary>
         /// Sign into the system
         /// </summary>
-        /// <param name='userEmail'>
-        /// The user's email
+        /// <param name='userCredentials'>
+        /// The user's email and password
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -71,7 +71,7 @@ namespace IO.ChaTex
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<string>> LoginWithHttpMessagesAsync(string userEmail, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<string>> LoginWithHttpMessagesAsync(UserCredentials userCredentials, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Update the information of a user in the system
         /// </summary>

@@ -4,8 +4,8 @@ using ChaTex_Client.UserDialogs;
 using IO.ChaTex;
 using Microsoft.Rest;
 using BusinessLayer;
-using System.Net;
 using System.Threading.Tasks;
+using IO.ChaTex.Models;
 
 namespace ChaTex_Client
 {
@@ -26,13 +26,17 @@ namespace ChaTex_Client
             txtUserEmail.Text = Properties.Settings.Default.Username;
         }
 
-        private async Task<string> login(string email)
+        private async Task<string> login(string email, string password)
         {
             string token = null;
 
             try
             {
-                token = await usersApi.LoginAsync(email);
+                token = await usersApi.LoginAsync(new UserCredentials()
+                {
+                    Email = email,
+                    Password = password
+                });
             }
             catch (HttpOperationException er)
             {
@@ -51,9 +55,9 @@ namespace ChaTex_Client
 
         private async void btnSignIn_Click(object sender, RoutedEventArgs e)
         {
-            btnSignIn.IsEnabled = false;
-            string token = await login(txtUserEmail.Text);
-            btnSignIn.IsEnabled = true;
+            Task<string> loginTask = login(txtUserEmail.Text, txtUserPassword.Password);
+            txtUserPassword.Clear();
+            string token = await loginTask;
 
             if (token != null)
             {
@@ -65,7 +69,12 @@ namespace ChaTex_Client
 
         private void txtUserEmail_TextChanged(object sender, TextChangedEventArgs e)
         {
-            btnSignIn.IsEnabled = txtUserEmail.Text.Length > 0;
+            btnSignIn.IsEnabled = txtUserEmail.Text.Length > 0 && txtUserPassword.Password.Length > 0;
+        }
+
+        private void txtUserPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            btnSignIn.IsEnabled = txtUserEmail.Text.Length > 0 && txtUserPassword.Password.Length > 0;
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)

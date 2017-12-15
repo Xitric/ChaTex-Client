@@ -70,17 +70,6 @@
                         <Image Source="pictures/button/friends3.png" RenderOptions.BitmapScalingMode="HighQuality" />
                     </StackPanel>
                 </Button>
-                <Button x:Name="btnAddGroup" Grid.Row="3" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnAddGroup_Click">
-                    <StackPanel>
-                        <Image Source="pictures/button/AddGroup.png" RenderOptions.BitmapScalingMode="HighQuality" />
-                        <TextBlock>Chat</TextBlock>
-                    </StackPanel>
-                </Button>
-                <Button x:Name="btnAddChannel" Grid.Row="4" d:LayoutOverrides="Height" BorderBrush="{x:Null}" BorderThickness="1"  Style="{DynamicResource MaterialDesignFloatingActionButton}" Background="Transparent" Click="btnAddChannel_Click">
-                    <StackPanel>
-                        <Image Source="pictures/button/AddChannel.png" RenderOptions.BitmapScalingMode="HighQuality" />
-                    </StackPanel>                    
-                </Button>
             </Grid>
         </StackPanel>
 

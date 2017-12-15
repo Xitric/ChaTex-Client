@@ -26,7 +26,7 @@ namespace ChaTex_Client
             txtUserEmail.Text = Properties.Settings.Default.Username;
         }
 
-        private async Task<string> login(string email, string password)
+        private async Task<string> loginAsync(string email, string password)
         {
             string token = null;
 
@@ -55,7 +55,7 @@ namespace ChaTex_Client
 
         private async void btnSignIn_Click(object sender, RoutedEventArgs e)
         {
-            Task<string> loginTask = login(txtUserEmail.Text, txtUserPassword.Password);
+            Task<string> loginTask = loginAsync(txtUserEmail.Text, txtUserPassword.Password);
             txtUserPassword.Clear();
             string token = await loginTask;
 

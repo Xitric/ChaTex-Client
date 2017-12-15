@@ -50,15 +50,6 @@ namespace ChaTex_Client
             dpnlMainUI.Children.Clear();
             dpnlMainUI.Children.Add(view);
         }
-        
-        private void btnAddGroup_Click(object sender, RoutedEventArgs e)
-        {
-            CreateNewGroup createNewGroup = new CreateNewGroup(usersApi, rolesApi, groupsApi);
-            createNewGroup.ShowDialog();
-
-            setCurrentView(groupChooser);
-        }
-
 
         private void btnChat_Click(object sender, RoutedEventArgs e)
         {
@@ -68,14 +59,6 @@ namespace ChaTex_Client
         private void btnGroups_Click(object sender, RoutedEventArgs e)
         {
             setCurrentView(groupChooser);
-        }
-
-        private void btnAddChannel_Click(object sender, RoutedEventArgs e)
-        {
-            CreateNewChannel createNewChannel = new CreateNewChannel(usersApi, channelsApi);
-            createNewChannel.ShowDialog();
-            dpnlMainUI.Children.Clear();
-            dpnlMainUI.Children.Add(groupChooser);
         }
     }
 }

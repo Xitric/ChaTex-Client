@@ -114,12 +114,6 @@
     <Compile Include="CreateChat.xaml.cs">
       <DependentUpon>CreateChat.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CreateNewChannel.xaml.cs">
-      <DependentUpon>CreateNewChannel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditChannel.xaml.cs">
-      <DependentUpon>EditChannel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\ChannelView.xaml.cs">
       <DependentUpon>ChannelView.xaml</DependentUpon>
     </Compile>
@@ -161,18 +155,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CreateNewChannel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EditChannel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CreateNewGroup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -180,9 +162,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CreateNewGroup.xaml.cs">
-      <DependentUpon>CreateNewGroup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>

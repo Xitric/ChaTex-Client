@@ -112,16 +112,12 @@ namespace ChaTex_Client.UserControls
             {
                 try
                 {
-                    IEnumerable<ChannelEventDTO> channelEvents = null;
+                    //Get channel events
+                    //When calling await, control is passed back to the caller, so this while loop does not block the UI thread
+                    IEnumerable<ChannelEventDTO> channelEvents =
+                        await channelsApi.GetChannelEventsAsync((int)currentChannelId, latestEventTime, messageFetchCancellation.Token);
 
-                    if (state == MessageViewState.Channel)
-                    {
-                        //Get channel events
-                        //When we call await we pass control back to the caller, so this while loop does not block the UI
-                        channelEvents = await channelsApi.GetChannelEventsAsync((int)currentChannelId, latestEventTime, messageFetchCancellation.Token);
-                    }
-
-                    await handleChannelEventsAsync(channelEvents, messageFetchCancellation.Token);
+                    handleChannelEvents(channelEvents, messageFetchCancellation.Token);
                 }
                 catch (TaskCanceledException)
                 {
@@ -134,45 +130,41 @@ namespace ChaTex_Client.UserControls
             }
         }
 
-        private async Task handleChannelEventsAsync(IEnumerable<ChannelEventDTO> channelEvents, CancellationToken token)
+        private void handleChannelEvents(IEnumerable<ChannelEventDTO> channelEvents, CancellationToken token)
         {
             if (channelEvents == null)
             {
                 throw new ApplicationException("Null content received when getting new channel events!");
             }
 
-            //Add to ui when ready
-            await Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate ()
+            foreach (ChannelEventDTO channelEvent in channelEvents)
             {
-                foreach (ChannelEventDTO channelEvent in channelEvents)
+                if (token.IsCancellationRequested)
                 {
-                    if (token.IsCancellationRequested)
-                    {
-                        return;
-                    }
-
-                    switch (channelEvent.Type)
-                    {
-                        case "newMessage":
-                            appendMessage(channelEvent.Message);
-                            break;
-                        case "updateMessage":
-                            updateMessage(channelEvent.Message);
-                            break;
-                        case "deleteMessage":
-                            deleteMessage(channelEvent.Message);
-                            break;
-                        case "renameChannel":
-                            ChannelRenamed?.Invoke(channelEvent.Channel);
-                            break;
-                        case "deleteChannel":
-                            ChannelDeleted?.Invoke(channelEvent.Channel);
-                            break;
-                    }
-
-                    updateLatestEventTime(channelEvent.TimeOfOccurrence);
+                    return;
                 }
-            });
+
+                switch (channelEvent.Type)
+                {
+                    case "newMessage":
+                        appendMessage(channelEvent.Message);
+                        break;
+                    case "updateMessage":
+                        updateMessage(channelEvent.Message);
+                        break;
+                    case "deleteMessage":
+                        deleteMessage(channelEvent.Message);
+                        break;
+                    case "renameChannel":
+                        ChannelRenamed?.Invoke(channelEvent.Channel);
+                        break;
+                    case "deleteChannel":
+                        ChannelDeleted?.Invoke(channelEvent.Channel);
+                        break;
+                }
+
+                updateLatestEventTime(channelEvent.TimeOfOccurrence);
+            }
         }
 
         /// <summary>

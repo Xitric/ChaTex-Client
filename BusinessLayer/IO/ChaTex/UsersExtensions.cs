@@ -79,12 +79,12 @@ namespace IO.ChaTex
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='userEmail'>
-            /// The user's email
+            /// <param name='userCredentials'>
+            /// The user's email and password
             /// </param>
-            public static string Login(this IUsers operations, string userEmail)
+            public static string Login(this IUsers operations, UserCredentials userCredentials)
             {
-                return operations.LoginAsync(userEmail).GetAwaiter().GetResult();
+                return operations.LoginAsync(userCredentials).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -93,15 +93,15 @@ namespace IO.ChaTex
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='userEmail'>
-            /// The user's email
+            /// <param name='userCredentials'>
+            /// The user's email and password
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<string> LoginAsync(this IUsers operations, string userEmail, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<string> LoginAsync(this IUsers operations, UserCredentials userCredentials, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.LoginWithHttpMessagesAsync(userEmail, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.LoginWithHttpMessagesAsync(userCredentials, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
